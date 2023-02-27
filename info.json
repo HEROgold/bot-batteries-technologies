@@ -1,0 +1,9 @@
+{
+  "name": "bot-batteries-technologies",
+  "version": "1.0.0",
+  "title": "Bot Batteries Technologies",
+  "author": "HEROgold",
+  "factorio_version": "1.1",
+  "dependencies": ["base >= 1.1"],
+  "description": "A  mod that adds infinite battery and recharge research!"
+}
