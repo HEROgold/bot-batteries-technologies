@@ -37,12 +37,13 @@ do
     RoboportIncrEntity.energy_source = {
         type = "electric",
         usage_priority = "secondary-input",
-        input_flow_limit = tostring(5+ i*input_flow_limit_modifier) .. "MW", --5 is default
-        buffer_capacity = tostring(100+ i*10*buffer_capacity_modifier) .. "100MJ" --100 is default
+        input_flow_limit = tostring(5+ 5*i*input_flow_limit_modifier) .. "MW", --5 is default, add same amount for each level
+        buffer_capacity = tostring(100+ 100*i*buffer_capacity_modifier) .. "100MJ" --100 is default, add same amount for each level
     }
-    RoboportIncrEntity.recharge_minimum = tostring(50+ i*recharge_minimum_modifier) .. "MJ" --50 is defualt in mj, upgrade by 1 each upgrade
-    RoboportIncrEntity.energy_usage = tostring(200+ i*100*energy_usage_modifier) .. "kW" -- 200 is default in kw, upgrade by 100 each upgrade
-    RoboportIncrEntity.charging_energy = tostring(500+ i*100*charging_energy_modifier) .. "kW" -- 500 is default in kw, increase by 100 every upgrade
+    RoboportIncrEntity.recharge_minimum = tostring(50+ 50*i*recharge_minimum_modifier) .. "MJ" --50 is defualt in mj, add same amount for each level
+    RoboportIncrEntity.energy_usage = tostring(200+ 200*i*energy_usage_modifier) .. "kW" -- 200 is default in kw, add same amount for each level
+    RoboportIncrEntity.charging_energy = tostring(500+ 500*i*charging_energy_modifier) .. "kW" -- 500 is default in kw, add same amount for each level
+
     -- RoboportIncrEntity.robot_slots_count = 5 + math.floor(i/10) -- 7 is default amount of slots for robots inside roboport, increment every 10 upgrades
     -- RoboportIncrEntity.material_slots_count = 5 + math.floor(i/10) -- 7 is default slots for repair packs, increment every 10 upgrades
     -- RoboportIncrEntity.charge_approach_distance = 5 .. math.floor(i/5) -- 5 is default approach distance, increase by 1 for every 5 upgrades
