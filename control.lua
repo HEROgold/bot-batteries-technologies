@@ -33,7 +33,7 @@ function Is_valid_roboport(roboport)
 end
 
 function Is_research_valid()
-    return global.BatteryRoboportResearchLevel > 0 and global.BatteryRoboportResearchLevel < maximum_level
+    return global.BatteryRoboportResearchLevel > 0 and global.BatteryRoboportResearchLevel <= maximum_level
 end
 
 -- End of helper functions
