@@ -3,7 +3,7 @@
 
 local base_roboport_entity = data.raw["roboport"]["roboport"]
 local base_roboport_item = data.raw["item"]["roboport"]
-local maximum = tonumber(settings.startup["battery-roboport-research-limit"].value)
+local maximum_level = tonumber(settings.startup["battery-roboport-research-limit"].value)
 local input_flow_limit_modifier = tonumber(settings.startup["battery-roboport-input-flow-limit-modifier"].value)
 local buffer_capacity_modifier = tonumber(settings.startup["battery-roboport-buffer-capacity-modifier"].value)
 local recharge_minimum_modifier = tonumber(settings.startup["battery-roboport-recharge-minimum-modifier"].value)
@@ -11,7 +11,7 @@ local energy_usage_modifier = tonumber(settings.startup["battery-roboport-energy
 local charging_energy_modifier = tonumber(settings.startup["battery-roboport-charging-energy-modifier"].value)
 
 
-for i=1, maximum
+for i=1, maximum_level
 do
     RoboportIncrItem = table.deepcopy(base_roboport_item)
     local name = tostring("battery-roboport-mk-" .. i)
@@ -22,11 +22,11 @@ do
 end
 
 
-for i=1, maximum
+for i=1, maximum_level
 do
     RoboportIncrEntity = table.deepcopy(base_roboport_entity)
 
-    if i < maximum then
+    if i < maximum_level then
         RoboportIncrEntity.next_upgrade = tostring("battery-roboport-mk-" .. i+1)
     end
 

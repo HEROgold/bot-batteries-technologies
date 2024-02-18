@@ -1,3 +1,4 @@
+local maximum_level = tonumber(settings.startup["battery-roboport-research-limit"].value)
 
 script.on_init(
     function ()
@@ -24,18 +25,15 @@ function Is_valid_roboport(roboport)
         -- The entity is from vanilla Factorio
         return true
     elseif Starts_with(obj_name, "battery-roboport-mk-") then
-        -- Entity is from our mod
-        if global.BatteryRoboportResearchLevel > 0 and global.BatteryRoboportResearchLevel < 100 then
-            -- Entity is upgradable
             return true
-        else
-            -- Entity is not upgradable
-            return true
-        end
     else
         -- Entity is from another mod
         return false
     end
+end
+
+function Is_research_valid()
+    return global.BatteryRoboportResearchLevel > 0 and global.BatteryRoboportResearchLevel < maximum_level
 end
 
 -- End of helper functions
@@ -80,5 +78,7 @@ script.on_event(defines.events.on_research_finished,
 
 script.on_nth_tick(3600,
 function (event)
-    Update_roboports()
+    if Is_research_valid() then
+        Update_roboports()
+    end
 end)
