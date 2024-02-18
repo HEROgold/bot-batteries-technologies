@@ -70,7 +70,6 @@ end
 
 script.on_event(defines.events.on_research_finished,
     function (event)
-        game.print(event.research.name)
         if Starts_with(event.research.name, "roboport-charge-speed-") then
             global.BatteryRoboportResearchLevel = global.BatteryRoboportResearchLevel + 1
             Update_roboports()
