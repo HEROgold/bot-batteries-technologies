@@ -6,58 +6,80 @@ script.on_init(
 )
 
 function Init_Vars()
-    if global.RoboportChargeSpeedLevel == nil then
-		global.RoboportChargeSpeedLevel = 1
-	end
-    if global.BotBatteryTechnologiesResearchCount == nil then
-        global.BotBatteryTechnologiesResearchCount = 0
+    if global.BatteryRoboportResearchLevel == nil then
+        global.BatteryRoboportResearchLevel = 0
     end
 end
 
 
-function Update_roboport_charge_speed(entities)
-    if (global.RoboportChargeSpeedLevel < 1) then
-        return
+function Starts_with(to_check, target)
+    return string.sub(to_check, 1, string.len(target)) == target
+end
+
+
+function Is_valid_roboport(roboport)
+    local obj_name = roboport.name
+
+    if obj_name == "roboport" then
+        -- The entity is from vanilla Factorio
+        return true
+    elseif Starts_with(obj_name, "battery-roboport-mk-") then
+        -- Entity is from our mod
+        if global.BatteryRoboportResearchLevel > 0 and global.BatteryRoboportResearchLevel < 100 then
+            -- Entity is upgradable
+            return true
+        else
+            -- Entity is not upgradable
+            return true
+        end
+    else
+        -- Entity is from another mod
+        return false
     end
-    for _, entity in pairs(entities) do
-        player = game.get_player("HEROgoldmw")
-        player.print(tostring("before:" .. entity.charging_energy) .. " ".. tostring(entity.input_flow_limit))
-        entity.charging_energy = (settings.startup["BotBatteriesTechnologies-battery-modifier"].value * global.BotBatteryTechnologiesResearchCount)
-        entity.input_flow_limit = (settings.startup["BotBatteriesTechnologies-battery-modifier"].value * global.BotBatteryTechnologiesResearchCount)
-        player.print(tostring("after:" .. entity.charging_energy) .. " ".. tostring(entity.input_flow_limit))
-        -- entity.charging_distance
-        -- charging_station_count
+end
+
+-- End of helper functions
+-- Start of main functions
+
+function Update_roboports()
+    for _, surface in pairs(game.surfaces) do
+        for chunk in surface.get_chunks() do
+            local area = {
+                left_top = {chunk.x * 32, chunk.y * 32},
+                right_bottom = {(chunk.x + 1) * 32, (chunk.y + 1) * 32}
+            }
+            local roboports = surface.find_entities_filtered{
+                type = "roboport",
+                area = area
+            }
+            for _, roboport in pairs(roboports) do
+                if Is_valid_roboport(roboport) then
+                    local to_create = {
+                        name = "battery-roboport-mk-" .. global.BatteryRoboportResearchLevel,
+                        position = roboport.position,
+                        force = roboport.force
+                    }
+                    roboport.destroy()
+                    surface.create_entity(to_create)
+                end
+            end
+        end
     end
 end
 
 
 script.on_event(defines.events.on_research_finished,
-function(event)
-    player = game.get_player("HEROgoldmw")
-    global.BotBatteryTechnologiesResearchCount = global.BotBatteryTechnologiesResearchCount + 1
-    for _, surface in pairs(game.surfaces) do
-        -- for chunk in surface.get_chunks() do
-            -- player.print("x: " .. chunk.x .. ", y: " .. chunk.y)
-            -- player.print("area: " .. serpent.line(chunk.area))
-        -- end
-        for chunk in surface.get_chunks() do
-            local roboports = surface.find_entities_filtered{
-                area = chunk.area,
-                position = {
-                    x=chunk.x,
-                    y=chunk.y
-                },
-                force = event.research.force,
-                type = "roboport"
-            }
-            player.print("BotBatteryTechnologiesResearchCount: " .. global.BotBatteryTechnologiesResearchCount)
-            local status, error = pcall(Update_roboport_charge_speed, roboports) 
-            if status then
-                player.print("No error")
-            else
-                player.print("ERROR! DURING ROBOPORT UPDATE")
-            player.print("" .. tostring(status) .. " " .. tostring(error))
-            end
+    function (event)
+        game.print(event.research.name)
+        if Starts_with(event.research.name, "roboport-charge-speed-") then
+            global.BatteryRoboportResearchLevel = global.BatteryRoboportResearchLevel + 1
+            Update_roboports()
         end
     end
+)
+
+
+script.on_nth_tick(3600,
+function (event)
+    Update_roboports()
 end)

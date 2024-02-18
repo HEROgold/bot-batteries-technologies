@@ -1,0 +1,16 @@
+{
+    "Lua.diagnostics.globals": [
+        "on_research_finished",
+        "script",
+        "game",
+        "global",
+        "defines",
+        "util",
+        "data",
+        "settings"
+    ],
+    "cSpell.words": [
+        "Roboport",
+        "roboports"
+    ]
+}

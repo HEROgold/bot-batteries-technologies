@@ -1,4 +1,4 @@
-function util.technology_icon_constant_battery(technology_icon)
+function util.add_technology_icon_constant_battery(technology_icon)
   local icons =
   {
     {
