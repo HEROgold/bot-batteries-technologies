@@ -33,7 +33,7 @@ function Is_valid_roboport(roboport)
 end
 
 function Is_research_valid()
-    Setup_Vars()
+    Setup_Vars() -- Shouldn't need to be used here, but is here as a bandaid fix
     return global.BatteryRoboportResearchLevel > 0 and global.BatteryRoboportResearchLevel <= maximum_level
 end
 
