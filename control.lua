@@ -63,7 +63,6 @@ function Update_roboports()
                         fast_replace = true,
                         create_build_effect_smoke = false
                     }
-                    -- roboport.destroy()
                     surface.create_entity(to_create)
                 end
             end
