@@ -79,7 +79,9 @@ function Update_roboports()
                         fast_replace = true,
                         create_build_effect_smoke = false
                     }
-                    surface.create_entity(to_create)
+                    created_robo = surface.create_entity(to_create)
+                    created_robo.energy = 1000000000
+                    -- created_robo.energy = roboport.energy
                     roboport.destroy()
                 end
             end
