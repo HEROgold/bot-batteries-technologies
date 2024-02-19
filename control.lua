@@ -2,11 +2,11 @@ local maximum_level = tonumber(settings.startup["battery-roboport-research-limit
 
 script.on_init(
     function ()
-        Init_Vars()
+        Setup_Vars()
     end
 )
 
-function Init_Vars()
+function Setup_Vars()
     if global.BatteryRoboportResearchLevel == nil then
         global.BatteryRoboportResearchLevel = 0
     end
@@ -33,6 +33,7 @@ function Is_valid_roboport(roboport)
 end
 
 function Is_research_valid()
+    Setup_Vars()
     return global.BatteryRoboportResearchLevel > 0 and global.BatteryRoboportResearchLevel <= maximum_level
 end
 
