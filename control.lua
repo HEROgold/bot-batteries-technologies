@@ -71,6 +71,7 @@ function Update_roboports()
                 if Is_valid_roboport(roboport) then
                     local robo_slots = roboport.get_inventory(defines.inventory.roboport_robot)
                     local robo_material = roboport.get_inventory(defines.inventory.roboport_material)
+                    local old_energy = roboport.energy
 
                     local to_create = {
                         name = "battery-roboport-mk-" .. global.BatteryRoboportResearchLevel,
@@ -80,8 +81,7 @@ function Update_roboports()
                         create_build_effect_smoke = false
                     }
                     created_robo = surface.create_entity(to_create)
-                    created_robo.energy = 1000000000
-                    -- created_robo.energy = roboport.energy
+                    created_robo.energy = old_energy
                     roboport.destroy()
                 end
             end
