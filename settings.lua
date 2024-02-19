@@ -1,7 +1,7 @@
 data:extend({
     {
         type = "double-setting",
-        name = "battery-roboport-robot-battery-modifier",
+        name = "battery-roboport-robot-battery-percentage",
         setting_type = "startup",
         default_value = 0.15,
     },
@@ -10,7 +10,7 @@ data:extend({
         name = "battery-roboport-research-limit",
         setting_type = "startup",
         default_value = 100,
-        description = "Maximum amount of research and roboport levels."
+        -- description = "Maximum amount of research and roboport levels."
     },
     {
         type = "double-setting",

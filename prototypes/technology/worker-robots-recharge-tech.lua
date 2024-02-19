@@ -12,7 +12,7 @@ data:extend(
       effects = {
         {
           type = "worker-robot-battery",
-          modifier = settings.startup["battery-roboport-robot-battery-modifier"].value
+          modifier = settings.startup["battery-roboport-robot-battery-percentage"].value
         }
       },
       unit = {
