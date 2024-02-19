@@ -53,12 +53,17 @@ function Update_roboports()
             }
             for _, roboport in pairs(roboports) do
                 if Is_valid_roboport(roboport) then
+                    local robo_slots = roboport.get_inventory(defines.inventory.roboport_robot)
+                    local robo_material = roboport.get_inventory(defines.inventory.roboport_material)
+
                     local to_create = {
                         name = "battery-roboport-mk-" .. global.BatteryRoboportResearchLevel,
                         position = roboport.position,
-                        force = roboport.force
+                        force = roboport.force,
+                        fast_replace = true,
+                        create_build_effect_smoke = false
                     }
-                    roboport.destroy()
+                    -- roboport.destroy()
                     surface.create_entity(to_create)
                 end
             end
