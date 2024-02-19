@@ -12,6 +12,19 @@ function Setup_Vars()
     end
 end
 
+function Get_level_from_name(to_check)
+    local lvl = ""
+    if global.BatteryRoboportResearchLevel < 10 then
+        lvl = string.sub(to_check, -1, -1)
+    elseif global.BatteryRoboportResearchLevel < 100 then
+        lvl = string.sub(to_check, -1, -2)
+    elseif global.BatteryRoboportResearchLevel < 1000 then
+        lvl = string.sub(to_check, -1, -3)
+    elseif global.BatteryRoboportResearchLevel < 10000 then
+        lvl = string.sub(to_check, -1, -4)
+    end
+    return tonumber(lvl)
+end
 
 function Starts_with(to_check, target)
     return string.sub(to_check, 1, string.len(target)) == target
@@ -25,7 +38,10 @@ function Is_valid_roboport(roboport)
         -- The entity is from vanilla Factorio
         return true
     elseif Starts_with(obj_name, "battery-roboport-mk-") then
+        local level = Get_level_from_name(roboport.name)
+        if level < global.BatteryRoboportResearchLevel then
             return true
+        end
     else
         -- Entity is from another mod
         return false
