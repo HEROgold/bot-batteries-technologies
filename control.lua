@@ -3,6 +3,7 @@ require("lualib.utils")
 local max_effectivity_level = tonumber(settings.startup["battery-roboport-energy-research-limit"].value)
 local max_productivity_level = tonumber(settings.startup["battery-roboport-energy-research-limit"].value)
 local max_speed_level = tonumber(settings.startup["battery-roboport-energy-research-limit"].value)
+local update_timer = tonumber(settings.startup["battery-roboport-update-timer"].value)
 
 script.on_init(
     function ()
@@ -119,7 +120,7 @@ script.on_event(defines.events.on_research_reversed,
     end
 )
 
-script.on_nth_tick(3600,
+script.on_nth_tick(update_timer,
 function (event)
     if Is_research_valid() then
         Update_roboports()
