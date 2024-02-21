@@ -43,6 +43,8 @@ f.add_all_roboports = function ()
                 local bru = tonumber(string.sub(base_roboport_entity.energy_usage, 1, -3))
                 local bce = tonumber(string.sub(base_roboport_entity.charging_energy, 1, -3))
                 local bcsc = base_roboport_entity.charging_station_count or 4
+                local rsc = base_roboport_entity.robot_slots_count
+                local msc = base_roboport_entity.material_slots_count
 
                 roboport_entity.energy_source = {
                     type = "electric",
@@ -59,8 +61,8 @@ f.add_all_roboports = function ()
 
                 fdiv = math.floor((i+j+k) / 10)
                 if fdiv % 10 then
-                    roboport_entity.robot_slots_count = base_roboport_entity.robot_slots_count * fdiv -- Kinly add robot slot's every 10 levels
-                    roboport_entity.material_slots_count = base_roboport_entity.material_slots_count * fdiv -- Kinly add  material slot's every 10 levels
+                    roboport_entity.robot_slots_count = rsc + rsc * fdiv -- Kindly add robot slot's every 10 levels
+                    roboport_entity.material_slots_count = msc + msc * fdiv -- Kindly add  material slot's every 10 levels
                 end
 
                 data:extend({roboport_item})
