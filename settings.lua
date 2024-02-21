@@ -1,16 +1,18 @@
 data:extend({
     {
-        type = "double-setting",
-        name = "battery-roboport-robot-battery-percentage",
+        type = "int-setting",
+        name = "battery-roboport-energy-research-limit",
         setting_type = "startup",
-        default_value = 0.15,
+        default_value = 9,
+        maximum_value = 9
+        --Maximum amount of research and roboport levels. > MASSIVELY impacts the game loading, as it becomes a*b*c amount. (a, b and c are all this setting)
     },
     {
         type = "int-setting",
-        name = "battery-roboport-research-limit",
+        name = "battery-roboport-energy-research-minimum",
         setting_type = "startup",
-        default_value = 100,
-        -- description = "Maximum amount of research and roboport levels."
+        default_value = 3,
+        -- Minimum amount of researches required
     },
     {
         type = "double-setting",
