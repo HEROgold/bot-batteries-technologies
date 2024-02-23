@@ -4,7 +4,7 @@ local max_effectivity_level = tonumber(settings.startup["battery-roboport-energy
 local max_productivity_level = tonumber(settings.startup["battery-roboport-energy-research-limit"].value)
 local max_speed_level = tonumber(settings.startup["battery-roboport-energy-research-limit"].value)
 local update_timer = tonumber(settings.startup["battery-roboport-update-timer"].value)
-local chunks_to_upgrade = {}
+local roboports_to_upgrade = {}
 
 script.on_init(
     function ()
@@ -58,35 +58,23 @@ function Is_research_valid()
     return eff and prod and speed
 end
 
--- Function to check if a chunk is already in the table
-local function isChunkTracked(chunk)
-    for _, v in pairs(chunks_to_upgrade) do
-        if v.x == chunk.x and v.y == chunk.y then
-            return true
-        end
-    end
-    return false
-end
-
 -- End of helper functions
 -- Start of main functions
 
 local function update_roboports()
-    for i, chunk in pairs(chunks_to_upgrade) do
-        for _, surface in pairs(game.surfaces) do
-            local area = {
-                left_top = {chunk.x * 32, chunk.y * 32},
-                right_bottom = {(chunk.x + 1) * 32, (chunk.y + 1) * 32}
-            }
-            local roboports = surface.find_entities_filtered{
-                type = "roboport",
-                area = area
-            }
-            for _, roboport in pairs(roboports) do
-                if Is_valid_roboport(roboport) then
+    local updated = false
+
+    ---@param roboport LuaEntity
+    for roboport, needs_upgrade in pairs(roboports_to_upgrade) do
+        if needs_upgrade then
+            for _, surface in pairs(game.surfaces) do
+                if roboport.surface ~= surface then
+                    goto continue
+                end
+                if Is_valid_roboport(roboport) then -- excess check, leaving it here for reliability
                     local old_energy = roboport.energy
                     local suffix = utils.get_internal_suffix(global.EffectivityResearchLevel, global.ProductivityResearchLevel, global.SpeedResearchLevel)
-
+                    
                     local to_create = {
                         name = "battery-roboport-mk-" .. suffix,
                         position = roboport.position,
@@ -97,26 +85,33 @@ local function update_roboports()
                     local created_rport = surface.create_entity(to_create)
                     created_rport.energy = old_energy
                     roboport.destroy()
+                    roboports_to_upgrade[roboport] = false
+                    updated = true
                 end
+                ::continue::
             end
         end
-    -- Remove the chunk from the table after updating
-    table.remove(chunks_to_upgrade, i)
-
-    -- Break after updating one chunk to avoid lag
-    break
+    -- Break after updating one roboport to force a timed update (every X ticks)
+    if updated then
+        break
+    end
     end
 end
+
 
 local function mark_roboports_for_upgrade()
     for _, surface in pairs(game.surfaces) do
-        for chunk in surface.get_chunks() do
-            if not isChunkTracked(chunk) then
-                table.insert(chunks_to_upgrade, chunk)
+        -- surface.find_entities_filtered() -- consider upgrading all at once
+        for i, roboport in pairs(surface.find_entities_filtered{
+            type = "roboport"
+        }) do
+            if Is_valid_roboport(roboport) then
+                roboports_to_upgrade[roboport] = true -- force unique chunks
             end
         end
     end
 end
+
 
 script.on_event(defines.events.on_research_finished,
     function (event)
@@ -133,6 +128,7 @@ script.on_event(defines.events.on_research_finished,
     end
 )
 
+
 script.on_event(defines.events.on_research_reversed,
     function (event)
         if utils.starts_with(event.research.name, "roboport-effectivity") then
@@ -145,15 +141,16 @@ script.on_event(defines.events.on_research_reversed,
     end
 )
 
+
 script.on_nth_tick(update_timer,
 function (event)
     if Is_research_valid() then
         mark_roboports_for_upgrade()
     end
-
-    update_roboports()
 end)
 
 
--- Call the updateChunks function every second
-script.on_nth_tick(60, update_roboports)
+script.on_nth_tick(
+    update_timer / 60,
+    update_roboports
+)
