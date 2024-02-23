@@ -54,7 +54,7 @@ data:extend({
         name = "battery-roboport-update-timer",
         setting_type = "startup",
         minimum_value = 1,
-        default_value = 600,
+        default_value = 60,
         maximum_value = 3600
     },
 })
