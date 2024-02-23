@@ -2,7 +2,7 @@
 Version: 1.0.3
 Date: 2024-02-23
   Changes:
-    - Implemented a slower chunk iterator which would help with lag when updating roboports
+    - Implemented a tick limited roboport iterator which helps with lag when updating roboports
 ---------------------------------------------------------------------------------------------------
 Version: 1.0.1
 Date: 2024-02-21
