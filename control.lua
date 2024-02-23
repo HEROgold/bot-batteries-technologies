@@ -4,6 +4,7 @@ local max_effectivity_level = tonumber(settings.startup["battery-roboport-energy
 local max_productivity_level = tonumber(settings.startup["battery-roboport-energy-research-limit"].value)
 local max_speed_level = tonumber(settings.startup["battery-roboport-energy-research-limit"].value)
 local update_timer = tonumber(settings.startup["battery-roboport-update-timer"].value)
+local chunks_to_upgrade = {}
 
 script.on_init(
     function ()
@@ -51,18 +52,28 @@ end
 
 function Is_research_valid()
     Setup_Vars() -- Shouldn't need to be used here, but is here as a bandaid fix
-    eff = global.EffectivityResearchLevel > 0 and global.EffectivityResearchLevel <= max_effectivity_level
-    prod = global.ProductivityResearchLevel > 0 and global.ProductivityResearchLevel <= max_productivity_level
-    speed = global.SpeedResearchLevel > 0 and global.SpeedResearchLevel <= max_speed_level
+    local eff = global.EffectivityResearchLevel > 0 and global.EffectivityResearchLevel <= max_effectivity_level
+    local prod = global.ProductivityResearchLevel > 0 and global.ProductivityResearchLevel <= max_productivity_level
+    local speed = global.SpeedResearchLevel > 0 and global.SpeedResearchLevel <= max_speed_level
     return eff and prod and speed
+end
+
+-- Function to check if a chunk is already in the table
+local function isChunkTracked(chunk)
+    for _, v in pairs(chunks_to_upgrade) do
+        if v.x == chunk.x and v.y == chunk.y then
+            return true
+        end
+    end
+    return false
 end
 
 -- End of helper functions
 -- Start of main functions
 
-function Update_roboports()
-    for _, surface in pairs(game.surfaces) do
-        for chunk in surface.get_chunks() do
+local function update_roboports()
+    for i, chunk in pairs(chunks_to_upgrade) do
+        for _, surface in pairs(game.surfaces) do
             local area = {
                 left_top = {chunk.x * 32, chunk.y * 32},
                 right_bottom = {(chunk.x + 1) * 32, (chunk.y + 1) * 32}
@@ -89,21 +100,35 @@ function Update_roboports()
                 end
             end
         end
+    -- Remove the chunk from the table after updating
+    table.remove(chunks_to_upgrade, i)
+
+    -- Break after updating one chunk to avoid lag
+    break
     end
 end
 
+local function mark_roboports_for_upgrade()
+    for _, surface in pairs(game.surfaces) do
+        for chunk in surface.get_chunks() do
+            if not isChunkTracked(chunk) then
+                table.insert(chunks_to_upgrade, chunk)
+            end
+        end
+    end
+end
 
 script.on_event(defines.events.on_research_finished,
     function (event)
         if utils.starts_with(event.research.name, "roboport-effectivity") then
             global.EffectivityResearchLevel = global.EffectivityResearchLevel + 1
-            Update_roboports()
+            mark_roboports_for_upgrade()
         elseif utils.starts_with(event.research.name, "roboport-productivity") then
             global.ProductivityResearchLevel = global.ProductivityResearchLevel + 1
-            Update_roboports()
+            mark_roboports_for_upgrade()
         elseif utils.starts_with(event.research.name, "roboport-speed") then
             global.SpeedResearchLevel = global.SpeedResearchLevel + 1
-            Update_roboports()
+            mark_roboports_for_upgrade()
         end
     end
 )
@@ -123,6 +148,12 @@ script.on_event(defines.events.on_research_reversed,
 script.on_nth_tick(update_timer,
 function (event)
     if Is_research_valid() then
-        Update_roboports()
+        mark_roboports_for_upgrade()
     end
+
+    update_roboports()
 end)
+
+
+-- Call the updateChunks function every second
+script.on_nth_tick(60, update_roboports)
