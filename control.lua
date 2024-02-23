@@ -4,7 +4,9 @@ local max_effectivity_level = tonumber(settings.startup["battery-roboport-energy
 local max_productivity_level = tonumber(settings.startup["battery-roboport-energy-research-limit"].value)
 local max_speed_level = tonumber(settings.startup["battery-roboport-energy-research-limit"].value)
 local update_timer = tonumber(settings.startup["battery-roboport-update-timer"].value)
+local upgrade_timer = tonumber(settings.startup["battery-roboport-upgrade-timer"].value)
 local roboports_to_upgrade = {}
+
 
 script.on_init(
     function ()
@@ -61,53 +63,43 @@ end
 -- End of helper functions
 -- Start of main functions
 
-local function update_roboports()
-    local updated = false
+local function upgrade_roboport()
+    -- ---@param roboport LuaEntity
+    local roboport, needs_upgrade = next(roboports_to_upgrade)
+    if roboport == nil then
+        return
+    end
+        if roboport.valid and needs_upgrade == true then
+            local surface = roboport.surface
+            if Is_valid_roboport(roboport) then
+                local old_energy = roboport.energy
+                local suffix = utils.get_internal_suffix(global.EffectivityResearchLevel, global.ProductivityResearchLevel, global.SpeedResearchLevel)
 
-    ---@param roboport LuaEntity
-    for roboport, needs_upgrade in pairs(roboports_to_upgrade) do
-        if needs_upgrade then
-            for _, surface in pairs(game.surfaces) do
-                if roboport.surface ~= surface then
-                    goto continue
+                local to_create = {
+                    name = "battery-roboport-mk-" .. suffix,
+                    position = roboport.position,
+                    force = roboport.force,
+                    fast_replace = true,
+                    create_build_effect_smoke = false
+                }
+                local created_rport = surface.create_entity(to_create)
+                created_rport.energy = old_energy
+                roboports_to_upgrade[roboport] = nil
+
+                roboport.destroy()
                 end
-                if Is_valid_roboport(roboport) then -- excess check, leaving it here for reliability
-                    local old_energy = roboport.energy
-                    local suffix = utils.get_internal_suffix(global.EffectivityResearchLevel, global.ProductivityResearchLevel, global.SpeedResearchLevel)
-                    
-                    local to_create = {
-                        name = "battery-roboport-mk-" .. suffix,
-                        position = roboport.position,
-                        force = roboport.force,
-                        fast_replace = true,
-                        create_build_effect_smoke = false
-                    }
-                    local created_rport = surface.create_entity(to_create)
-                    created_rport.energy = old_energy
-                    roboport.destroy()
-                    roboports_to_upgrade[roboport] = false
-                    updated = true
-                end
-                ::continue::
-            end
+        else
+            roboports_to_upgrade[roboport] = nil
         end
-    -- Break after updating one roboport to force a timed update (every X ticks)
-    if updated then
-        break
-    end
-    end
 end
 
 
 local function mark_roboports_for_upgrade()
     for _, surface in pairs(game.surfaces) do
-        -- surface.find_entities_filtered() -- consider upgrading all at once
         for i, roboport in pairs(surface.find_entities_filtered{
             type = "roboport"
         }) do
-            if Is_valid_roboport(roboport) then
-                roboports_to_upgrade[roboport] = true -- force unique chunks
-            end
+            roboports_to_upgrade[roboport] = true
         end
     end
 end
@@ -141,16 +133,24 @@ script.on_event(defines.events.on_research_reversed,
     end
 )
 
-
-script.on_nth_tick(update_timer,
-function (event)
-    if Is_research_valid() then
-        mark_roboports_for_upgrade()
+local function mark_roboport_for_upgrade(roboport)
+    if Is_valid_roboport(roboport) then
+        roboports_to_upgrade[roboport] = true
     end
+end
+
+script.on_event(defines.events.on_built_entity,
+function (event)
+    mark_roboport_for_upgrade(event.created_entity)
+end)
+
+script.on_event(defines.events.on_robot_built_entity,
+function (event)
+    mark_roboport_for_upgrade(event.created_entity)
 end)
 
 
 script.on_nth_tick(
-    update_timer / 60,
-    update_roboports
+    upgrade_timer,
+    upgrade_roboport
 )
