@@ -30,7 +30,7 @@ f.add_all_roboports = function ()
 
                 roboport_entity.fast_replaceable_group = "roboport"
                 roboport_entity.minable = base_roboport_entity.minable
-                roboport_entity.minable.result = roboport_item.name
+                roboport_entity.minable.result = base_roboport_item.name
 
                 -- shorter var names, all changes follow the same logic.
                 -- base + base * research_count * modifier.
