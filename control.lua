@@ -80,7 +80,8 @@ local function upgrade_roboport()
                     position = roboport.position,
                     force = roboport.force,
                     fast_replace = true,
-                    create_build_effect_smoke = false
+                    spill = false,
+                    create_build_effect_smoke = false,
                 }
                 local created_rport = surface.create_entity(to_create)
                 created_rport.energy = old_energy
