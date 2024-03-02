@@ -46,17 +46,18 @@ f.add_all_roboports = function ()
                 local rsc = base_roboport_entity.robot_slots_count
                 local msc = base_roboport_entity.material_slots_count
 
+                -- effectivity upgrades
                 roboport_entity.energy_source = {
                     type = "electric",
                     usage_priority = "secondary-input",
                     input_flow_limit = tostring(bifl + bifl*i*input_flow_limit_modifier) .. "MW", --5 is default
                     buffer_capacity = tostring(bfc + bfc*i*buffer_capacity_modifier) .. "MJ", --100 is default
                 }
-
                 roboport_entity.recharge_minimum = tostring(brm + brm *i*recharge_minimum_modifier) .. "MJ" --50 is default in mj
                 roboport_entity.energy_usage = tostring(bru + bru*i*energy_usage_modifier) .. "kW" -- 50 is default in kw, idle draw
+                -- speed upgrade
                 roboport_entity.charging_energy = tostring(bce + bce*k*charging_energy_modifier) .. "kW" -- 1000 is default in kw, amount of energy given to bots
-
+                -- productivity upgrade
                 roboport_entity.charging_station_count = bcsc + bcsc * j -- 4 is default, amount of bots that can charge at once
 
                 local fdiv = math.floor((i+j+k) / 10)
