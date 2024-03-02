@@ -11,9 +11,9 @@ local charging_energy_modifier = tonumber(settings.startup["battery-roboport-cha
 local f = {}
 
 f.add_all_roboports = function ()
-    for i=0, limits["effectivity"] do
-        for j=0, limits["productivity"] do
-            for k=0, limits["speed"] do
+    for i=0, Limits["effectivity"] do
+        for j=0, Limits["productivity"] do
+            for k=0, Limits["speed"] do
                 local roboport_item = table.deepcopy(base_roboport_item)
                 local roboport_entity = table.deepcopy(base_roboport_entity)
 
@@ -32,7 +32,7 @@ f.add_all_roboports = function ()
                 roboport_entity.minable = base_roboport_entity.minable
                 roboport_entity.minable.result = base_roboport_item.name
 
-                -- shorter var names, all changes follow the same logic.
+                -- shorter var names, all changes follow the same logic. linear upgrade
                 -- base + base * research_count * modifier.
                 -- This makes sure we always get 200%, 300%, 400% etc from base 100%
 
@@ -59,7 +59,7 @@ f.add_all_roboports = function ()
 
                 roboport_entity.charging_station_count = bcsc + bcsc * j -- 4 is default, amount of bots that can charge at once
 
-                fdiv = math.floor((i+j+k) / 10)
+                local fdiv = math.floor((i+j+k) / 10)
                 if fdiv % 10 then
                     roboport_entity.robot_slots_count = rsc + rsc * fdiv -- Kindly add robot slot's every 10 levels
                     roboport_entity.material_slots_count = msc + msc * fdiv -- Kindly add  material slot's every 10 levels
