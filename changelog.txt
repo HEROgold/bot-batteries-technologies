@@ -6,7 +6,7 @@ Date: 2024-03-02
     - Changed the sprites on the technology to reflect the research more accurately. (Uses SE graphics)
     - Bugfix for marking non-roboports for upgrading, causing slow upgrades
     - Robots no longer charge in the very middle of the roboport
-    - Removed an unused setting
+    - Removed an unused setting (update timer)
 ---------------------------------------------------------------------------------------------------
 Version: 1.0.5
 Date: 2024-02-23
