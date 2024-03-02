@@ -184,7 +184,7 @@ end
 local function on_built(event)
     if event.created_entity.name == "entity-ghost" or event.created_entity.type == "entity-ghost" then
         mark_ghost_for_update(event.created_entity)
-    else
+    elseif event.created_entity.type == "roboport" then
         mark_roboport_for_update(event.created_entity)
     end
 end
