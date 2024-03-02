@@ -36,13 +36,13 @@ function Get_level_from_name(to_check)
 end
 
 function Is_valid_roboport(roboport)
-    local r_name = roboport.name
+    local roboport_name = roboport.name
 
-    if r_name == "roboport" then
+    if roboport_name == "roboport" then
         -- The entity is from vanilla Factorio
         return true
-    elseif utils.starts_with(r_name, mod_roboport_name) then
-        local level = Get_level_from_name(r_name)
+    elseif utils.starts_with(roboport_name, mod_roboport_name) then
+        local level = Get_level_from_name(roboport_name)
         -- Check for correct levels, to avoid replacing already correct roboports.
         if level[1] ~= global.EffectivityResearchLevel or level[2] ~= global.ProductivityResearchLevel or level[3] ~= global.SpeedResearchLevel then
             return true
