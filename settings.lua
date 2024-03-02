@@ -48,13 +48,6 @@ data:extend({
         setting_type = "startup",
         minimum_value = 0.1,
         default_value = 1,
-    },
-    {
-        type = "int-setting",
-        name = "battery-roboport-update-timer",
-        setting_type = "startup",
-        minimum_value = 1,
-        default_value = 60
     },{
         type = "int-setting",
         name = "battery-roboport-upgrade-timer",

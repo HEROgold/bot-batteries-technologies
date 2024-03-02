@@ -3,7 +3,6 @@ require("lualib.utils")
 local max_effectivity_level = tonumber(settings.startup["battery-roboport-energy-research-limit"].value)
 local max_productivity_level = tonumber(settings.startup["battery-roboport-energy-research-limit"].value)
 local max_speed_level = tonumber(settings.startup["battery-roboport-energy-research-limit"].value)
-local update_timer = tonumber(settings.startup["battery-roboport-update-timer"].value)
 local upgrade_timer = tonumber(settings.startup["battery-roboport-upgrade-timer"].value)
 local roboports_to_update = {}
 local ghosts_to_update = {}
