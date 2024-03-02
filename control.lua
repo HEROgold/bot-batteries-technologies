@@ -44,7 +44,7 @@ function Is_valid_roboport(roboport)
     elseif utils.starts_with(r_name, mod_roboport_name) then
         local level = Get_level_from_name(r_name)
         -- Check for correct levels, to avoid replacing already correct roboports.
-        if level[1] < global.EffectivityResearchLevel or level[2] < global.ProductivityResearchLevel or level[3] < global.SpeedResearchLevel then
+        if level[1] ~= global.EffectivityResearchLevel or level[2] ~= global.ProductivityResearchLevel or level[3] ~= global.SpeedResearchLevel then
             return true
         end
     else
