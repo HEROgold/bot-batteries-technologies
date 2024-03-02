@@ -1,6 +1,6 @@
 {
   "name": "bot-batteries-technologies",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "title": "Roboport Technology",
   "author": "HEROgold",
   "factorio_version": "1.1",
@@ -8,7 +8,8 @@
     "base >= 1.1",
     "? space-exploration",
     "? modules-t4",
-    "? bobmodules"
+    "? bobmodules",
+    "space-exploration-graphics"
 ],
   "description": "A  mod that adds battery and recharge research for roboports!\nEvery 'tier' or upgrade adds the same value, Vanilla is 100%, level 2 would be 200%, and level 3 300%, level 4 is 400%."
 }
