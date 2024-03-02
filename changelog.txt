@@ -4,6 +4,7 @@ Date: 2024-03-02
   Changes:
     - Balance change to be about twice as expensive as the robots unlock
     - Changed the sprites on the technology to reflect the research more accurately.
+    - Bugfix for marking non-roboports for upgrading, causing slow upgrades
 ---------------------------------------------------------------------------------------------------
 Version: 1.0.5
 Date: 2024-02-23
