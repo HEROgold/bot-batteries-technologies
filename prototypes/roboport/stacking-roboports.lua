@@ -3,6 +3,9 @@ require("lualib.utils")
 
 local base_roboport_entity = data.raw["roboport"]["roboport"]
 local base_roboport_item = data.raw["item"]["roboport"]
+---@type number
+---@diagnostic disable-next-line: assign-type-mismatch
+local research_mimimum = settings.startup["battery-roboport-energy-research-minimum"].value
 local input_flow_limit_modifier = tonumber(settings.startup["battery-roboport-input-flow-limit-modifier"].value)
 local buffer_capacity_modifier = tonumber(settings.startup["battery-roboport-buffer-capacity-modifier"].value)
 local recharge_minimum_modifier = tonumber(settings.startup["battery-roboport-recharge-minimum-modifier"].value)
@@ -29,9 +32,9 @@ end
 
 
 f.add_all_roboports = function ()
-    for i=0, Limits["effectivity"] do
-        for j=0, Limits["productivity"] do
-            for k=0, Limits["speed"] do
+    for i=0, math.max(Limits["effectivity"], research_mimimum) do
+        for j=0, math.max(Limits["productivity"], research_mimimum) do
+            for k=0, math.max(Limits["speed"], research_mimimum) do
                 local roboport_item = table.deepcopy(base_roboport_item)
                 local roboport_entity = table.deepcopy(base_roboport_entity)
 
