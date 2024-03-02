@@ -31,10 +31,15 @@ f.generate_charging_offsets = function (n)
 end
 
 
+local effectivity_limit = math.max(Limits["effectivity"], research_mimimum)
+local productivity_limit = math.max(Limits["productivity"], research_mimimum)
+local speed_limit = math.max(Limits["speed"], research_mimimum)
+
+
 f.add_all_roboports = function ()
-    for i=0, math.max(Limits["effectivity"], research_mimimum) do
-        for j=0, math.max(Limits["productivity"], research_mimimum) do
-            for k=0, math.max(Limits["speed"], research_mimimum) do
+    for i=0, effectivity_limit do
+        for j=0, productivity_limit do
+            for k=0, speed_limit do
                 local roboport_item = table.deepcopy(base_roboport_item)
                 local roboport_entity = table.deepcopy(base_roboport_entity)
 
