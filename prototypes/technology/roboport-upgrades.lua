@@ -143,23 +143,10 @@ f.get_research_prerequisites = function(module_type, level)
 end
 
 f.get_tech_sprite = function (module_type, level)
-  local sprite_level = math.floor(level % 3) -- sort of supports SE's 9 modules.
-  if sprite_level == 1 then
     return utils.sprite_add_icon(
       "__base__/graphics/technology/robotics.png",
-      "__base__/graphics/icons/"..module_type.."-module.png"
+      "__space-exploration-graphics__/graphics/icons/modules/"..module_type.."-"..level..".png"
     )
-  elseif sprite_level == 0 then
-    return utils.sprite_add_icon(
-      "__base__/graphics/technology/robotics.png",
-      "__base__/graphics/icons/"..module_type.."-module-3.png"
-    )
-  else
-    return utils.sprite_add_icon(
-      "__base__/graphics/technology/robotics.png",
-      "__base__/graphics/icons/"..module_type.."-module-"..sprite_level..".png"
-    )
-  end
 end
 
 f.add_module_upgrade_research = function()
