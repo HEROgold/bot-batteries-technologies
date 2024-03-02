@@ -5,8 +5,8 @@ local max_productivity_level = tonumber(settings.startup["battery-roboport-energ
 local max_speed_level = tonumber(settings.startup["battery-roboport-energy-research-limit"].value)
 local update_timer = tonumber(settings.startup["battery-roboport-update-timer"].value)
 local upgrade_timer = tonumber(settings.startup["battery-roboport-upgrade-timer"].value)
-local roboports_to_upgrade = {}
-local roboports_to_downgrade = {}
+local roboports_to_update = {}
+local ghosts_to_update = {}
 local mod_roboport_name = "battery-roboport-mk-"
 
 script.on_init(
@@ -62,11 +62,13 @@ function Is_research_valid()
 end
 
 
-local function upgrade_roboport()
-    local roboport, needs_upgrade = next(roboports_to_upgrade)
+local function update_roboport_level()
+    local roboport, needs_upgrade = next(roboports_to_update)
+
     if roboport == nil then
         return
     end
+
     if roboport.valid and needs_upgrade == true then
         local surface = roboport.surface
         if Is_valid_roboport(roboport) then
@@ -83,20 +85,23 @@ local function upgrade_roboport()
             }
             local created_rport = surface.create_entity(to_create)
             created_rport.energy = old_energy
-            roboports_to_upgrade[roboport] = nil
+            roboports_to_update[roboport] = nil
 
             roboport.destroy()
             end
     else
-        roboports_to_upgrade[roboport] = nil
+        roboports_to_update[roboport] = nil
     end
 end
 
-local function downgrade_ghost_roboport()
-    local roboport, needs_downgrade = next(roboports_to_downgrade)
+
+local function update_ghost_level()
+    local roboport, needs_downgrade = next(ghosts_to_update)
+
     if roboport == nil then
         return
     end
+
     if roboport.valid and needs_downgrade == true then
         local surface = roboport.surface
         if roboport.name == "entity-ghost" and utils.starts_with(roboport.ghost_name, mod_roboport_name) then
@@ -113,21 +118,22 @@ local function downgrade_ghost_roboport()
                 create_build_effect_smoke = false,
             }
             local created_rport = surface.create_entity(to_create)
-            roboports_to_downgrade[roboport] = nil
+            ghosts_to_update[roboport] = nil
 
             roboport.destroy()
             end
     else
-        roboports_to_downgrade[roboport] = nil
+        ghosts_to_update[roboport] = nil
     end
 end
 
-local function mark_roboports_for_upgrade()
+
+local function mark_all_roboports_for_update()
     for _, surface in pairs(game.surfaces) do
         for i, roboport in pairs(surface.find_entities_filtered{
             type = "roboport"
         }) do
-            roboports_to_upgrade[roboport] = true
+            roboports_to_update[roboport] = true
         end
     end
 end
@@ -137,13 +143,13 @@ script.on_event(defines.events.on_research_finished,
     function (event)
         if utils.starts_with(event.research.name, "roboport-effectivity") then
             global.EffectivityResearchLevel = global.EffectivityResearchLevel + 1
-            mark_roboports_for_upgrade()
+            mark_all_roboports_for_update()
         elseif utils.starts_with(event.research.name, "roboport-productivity") then
             global.ProductivityResearchLevel = global.ProductivityResearchLevel + 1
-            mark_roboports_for_upgrade()
+            mark_all_roboports_for_update()
         elseif utils.starts_with(event.research.name, "roboport-speed") then
             global.SpeedResearchLevel = global.SpeedResearchLevel + 1
-            mark_roboports_for_upgrade()
+            mark_all_roboports_for_update()
         end
     end
 )
@@ -153,42 +159,52 @@ script.on_event(defines.events.on_research_reversed,
     function (event)
         if utils.starts_with(event.research.name, "roboport-effectivity") then
             global.EffectivityResearchLevel = global.EffectivityResearchLevel - 1
+            mark_all_roboports_for_update()
         elseif utils.starts_with(event.research.name, "roboport-productivity") then
             global.ProductivityResearchLevel = global.ProductivityResearchLevel - 1
+            mark_all_roboports_for_update()
         elseif utils.starts_with(event.research.name, "roboport-speed") then
             global.SpeedResearchLevel = global.SpeedResearchLevel - 1
+            mark_all_roboports_for_update()
         end
     end
 )
 
-local function mark_roboport_for_upgrade(roboport)
-    if Is_valid_roboport(roboport) then
-        roboports_to_upgrade[roboport] = true
-    end
+
+local function mark_roboport_for_update(roboport)
+    roboports_to_update[roboport] = true
 end
 
 
-local function mark_roboport_for_downgrade(roboport)
-    roboports_to_downgrade[roboport] = true
+local function mark_ghost_for_update(roboport)
+    ghosts_to_update[roboport] = true
 end
 
 
 local function on_built(event)
     if event.created_entity.name == "entity-ghost" or event.created_entity.type == "entity-ghost" then
-        mark_roboport_for_downgrade(event.created_entity)
+        mark_ghost_for_update(event.created_entity)
     else
-        mark_roboport_for_upgrade(event.created_entity)
+        mark_roboport_for_update(event.created_entity)
     end
 end
 
-script.on_event(defines.events.on_built_entity, on_built)
-script.on_event(defines.events.on_robot_built_entity, on_built)
+script.on_event(defines.events.on_built_entity,
+function (event)
+    on_built(event)
+end
+)
+script.on_event(defines.events.on_robot_built_entity,
+function (event)
+    on_built(event)
+end
+)
 
 
 script.on_nth_tick(
     upgrade_timer,
     function ()
-        upgrade_roboport()
-        downgrade_ghost_roboport()
+        update_roboport_level()
+        update_ghost_level()
     end
 )
