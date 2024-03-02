@@ -66,7 +66,7 @@ f.highest_module_number_by_name = function()
 end
 
 f.get_highest_module_number = function ()
-  effectivity, productivity, speed = f.highest_module_number_by_name()
+  local effectivity, productivity, speed = f.highest_module_number_by_name()
   
   -- the following mods don't can't be found using highest_module_number_by_name()
   -- we set the limits manually
@@ -96,6 +96,7 @@ end
 
 
 f.get_suffix_by_level = function(i)
+  local module_name = nil
   if i == 1 then
     module_name = ""
   else
@@ -105,22 +106,24 @@ f.get_suffix_by_level = function(i)
 end
 
 
-effectivity, productivity, speed = f.get_highest_module_number()
+local effectivity, productivity, speed = f.get_highest_module_number()
 
 -- Respect the setting a user has provided
 local effectivity_limit = math.min(research_limit, effectivity)
 local productivity_limit = math.min(research_limit, productivity)
 local speed_limit = math.min(research_limit, speed)
 
-limits = {}
-limits["effectivity"] = effectivity_limit
-limits["productivity"] = productivity_limit
-limits["speed"] = speed_limit
+Limits = {}
+Limits["effectivity"] = effectivity_limit
+Limits["productivity"] = productivity_limit
+Limits["speed"] = speed_limit
 
-local module_count = limits["effectivity"] -- modules usually are paired, so should be fine like this.
+local module_count = Limits["effectivity"] -- modules usually are paired, so should be fine like this.
 
 -- the module technology is the 1st prerequisite
 f.get_research_prerequisites = function(module_type, level)
+  local prerequisites = nil
+
   if level == 1 then
     prerequisites = {
       module_type .. "-module" .. f.get_suffix_by_level(level),
@@ -139,9 +142,29 @@ f.get_research_prerequisites = function(module_type, level)
   return prerequisites
 end
 
+f.get_tech_sprite = function (module_type, level)
+  local sprite_level = math.floor(level % 3) -- sort of supports SE's 9 modules.
+  if sprite_level == 1 then
+    return utils.sprite_add_icon(
+      "__base__/graphics/technology/robotics.png",
+      "__base__/graphics/icons/"..module_type.."-module.png"
+    )
+  elseif sprite_level == 0 then
+    return utils.sprite_add_icon(
+      "__base__/graphics/technology/robotics.png",
+      "__base__/graphics/icons/"..module_type.."-module-3.png"
+    )
+  else
+    return utils.sprite_add_icon(
+      "__base__/graphics/technology/robotics.png",
+      "__base__/graphics/icons/"..module_type.."-module-"..sprite_level..".png"
+    )
+  end
+end
+
 f.add_module_upgrade_research = function()
   for _, module_type in pairs(module_names) do
-    limit = limits[module_type]
+    local limit = Limits[module_type]
 
     for i=1, limit do
       data:extend(
@@ -152,9 +175,8 @@ f.add_module_upgrade_research = function()
             localised_name = f.get_research_localized_name(module_type, i),
             icon_size = 256,
             icon_mipmaps = 4,
-            icons = utils.add_technology_icon_constant_battery("__base__/graphics/technology/worker-robots-speed.png"),
+            icons = f.get_tech_sprite(module_type, i),
             upgrade = true,
-            -- max_level = tostring(limit),
             order = "c-k-f-a",
             prerequisites = f.get_research_prerequisites(module_type, i),
             effects = {
@@ -164,9 +186,8 @@ f.add_module_upgrade_research = function()
               }
             },
             unit = {
-              -- count_formula = "2(L-6)*10",
-              count_formula = "250*(L)",
-              time = 100,
+              count_formula = "500*(L)",
+              time = 60,
               ingredients = f.get_module_research_ingredients(module_type, i)
             },
           }

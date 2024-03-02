@@ -1,3 +1,3 @@
 require("lualib.utils")
-require("prototypes.technology.worker-robots-recharge-tech")
+require("prototypes.technology.roboport-upgrades")
 require("prototypes.roboport.stacking-roboports")
