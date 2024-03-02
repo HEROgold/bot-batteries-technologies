@@ -3,7 +3,7 @@ Version: 1.0.6
 Date: 2024-03-02
   Changes:
     - Balance change to be about twice as expensive as the robots unlock
-    - Changed the sprites on the technology to reflect the research more accurately.
+    - Changed the sprites on the technology to reflect the research more accurately. (Uses SE graphics)
     - Bugfix for marking non-roboports for upgrading, causing slow upgrades
     - Robots no longer charge in the very middle of the roboport
     - Removed an unused setting
