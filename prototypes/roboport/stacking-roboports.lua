@@ -10,6 +10,24 @@ local energy_usage_modifier = tonumber(settings.startup["battery-roboport-energy
 local charging_energy_modifier = tonumber(settings.startup["battery-roboport-charging-energy-modifier"].value)
 local f = {}
 
+f.generate_charging_offsets = function (n)
+    local offsets = {}
+    local min_offset = 1 -- 0.5
+    local max_offset = 2 -- 1.5
+    local step = 2 * math.pi / n
+
+    for i = 0, n - 1 do
+        local theta = step * i
+        local r = (i % 2 == 0) and max_offset or min_offset
+        local x = r * math.cos(theta)
+        local y = r * math.sin(theta)
+        table.insert(offsets, {x, y})
+    end
+
+    return offsets
+end
+
+
 f.add_all_roboports = function ()
     for i=0, Limits["effectivity"] do
         for j=0, Limits["productivity"] do
@@ -42,7 +60,7 @@ f.add_all_roboports = function ()
                 local brm = tonumber(string.sub(base_roboport_entity.recharge_minimum, 1, -3))
                 local bru = tonumber(string.sub(base_roboport_entity.energy_usage, 1, -3))
                 local bce = tonumber(string.sub(base_roboport_entity.charging_energy, 1, -3))
-                local bcsc = base_roboport_entity.charging_station_count or 4
+                local bcsc = #base_roboport_entity.charging_offsets
                 local rsc = base_roboport_entity.robot_slots_count
                 local msc = base_roboport_entity.material_slots_count
 
@@ -57,8 +75,8 @@ f.add_all_roboports = function ()
                 roboport_entity.energy_usage = tostring(bru + bru*i*energy_usage_modifier) .. "kW" -- 50 is default in kw, idle draw
                 -- speed upgrade
                 roboport_entity.charging_energy = tostring(bce + bce*k*charging_energy_modifier) .. "kW" -- 1000 is default in kw, amount of energy given to bots
-                -- productivity upgrade
-                roboport_entity.charging_station_count = bcsc + bcsc * j -- 4 is default, amount of bots that can charge at once
+                -- productivity upgrade -- 4 is default, amount of bots that can charge at once
+                roboport_entity.charging_offsets = f.generate_charging_offsets(bcsc + bcsc * j)
 
                 local fdiv = math.floor((i+j+k) / 10)
                 if fdiv % 10 then
