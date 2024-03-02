@@ -12,6 +12,7 @@ data:extend({
         name = "battery-roboport-energy-research-minimum",
         setting_type = "startup",
         default_value = 3,
+        maximum_value = 9
         -- Minimum amount of researches required
     },
     {

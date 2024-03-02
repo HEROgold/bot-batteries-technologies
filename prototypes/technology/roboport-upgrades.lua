@@ -3,6 +3,8 @@ require("lualib.utils")
 ---@type number
 ---@diagnostic disable-next-line: assign-type-mismatch
 local research_limit = settings.startup["battery-roboport-energy-research-limit"].value
+---@type number
+---@diagnostic disable-next-line: assign-type-mismatch
 local research_mimimum = settings.startup["battery-roboport-energy-research-minimum"].value
 local modules = data.raw["module"]
 
@@ -118,7 +120,7 @@ Limits["effectivity"] = effectivity_limit
 Limits["productivity"] = productivity_limit
 Limits["speed"] = speed_limit
 
-local module_count = Limits["effectivity"] -- modules usually are paired, so should be fine like this.
+local module_count = effectivity -- modules usually are paired, so should be fine like this.
 
 -- the module technology is the 1st prerequisite
 f.get_research_prerequisites = function(module_type, level)
@@ -129,7 +131,7 @@ f.get_research_prerequisites = function(module_type, level)
       module_type .. "-module" .. f.get_suffix_by_level(level),
       "robotics"
     }
-  elseif module_count < research_mimimum and level < research_limit then
+  elseif module_count < research_mimimum and level <= research_limit then
     prerequisites = {
       f.get_research_name(module_type, level-1)
     }
@@ -151,7 +153,7 @@ end
 
 f.add_module_upgrade_research = function()
   for _, module_type in pairs(module_names) do
-    local limit = Limits[module_type]
+    local limit = math.max(Limits[module_type], research_mimimum)
 
     for i=1, limit do
       data:extend(
