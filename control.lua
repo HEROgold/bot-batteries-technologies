@@ -198,6 +198,10 @@ function (event)
     on_built(event)
 end
 )
+script.on_event(defines.events.on_post_entity_died,
+function (event)
+    on_built(event)
+end)
 
 
 script.on_nth_tick(
