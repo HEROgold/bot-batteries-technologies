@@ -1,4 +1,3 @@
----@diagnostic disable: undefined-field
 require("lualib.utils")
 
 local base_roboport_entity = data.raw["roboport"]["roboport"]

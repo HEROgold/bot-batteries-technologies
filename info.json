@@ -6,6 +6,7 @@
   "factorio_version": "1.1",
   "dependencies": [
     "base >= 1.1",
+    "heroic_library >= 0.0.0",
     "? space-exploration",
     "? modules-t4",
     "? bobmodules",

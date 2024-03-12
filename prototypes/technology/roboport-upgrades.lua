@@ -1,4 +1,4 @@
-require("lualib.utils")
+require("__heroic_library__.utilities")
 
 ---@type number
 ---@diagnostic disable-next-line: assign-type-mismatch
@@ -48,17 +48,17 @@ f.highest_module_number_by_name = function()
     
       local number = math.max(n, 1)
     
-      if utils.starts_with(k, "effectivity-module") then
+      if utilities.string_starts_with(k, "effectivity-module") then
         if number > effectivity then
           effectivity = number
         end
       end
-      if utils.starts_with(k, "productivity-module") then
+      if utilities.string_starts_with(k, "productivity-module") then
         if number > productivity then
           productivity = number
         end
       end
-      if utils.starts_with(k, "speed-module") then
+      if utilities.string_starts_with(k, "speed-module") then
         if number > speed then
           speed = number
         end
@@ -145,7 +145,7 @@ f.get_research_prerequisites = function(module_type, level)
 end
 
 f.get_tech_sprite = function (module_type, level)
-    return utils.sprite_add_icon(
+    return utilities.technology_sprite_add_item_icon(
       "__base__/graphics/technology/robotics.png",
       "__space-exploration-graphics__/graphics/icons/modules/"..module_type.."-"..level..".png"
     )
