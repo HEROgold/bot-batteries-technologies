@@ -138,7 +138,7 @@ end
 
 local function mark_all_roboports_for_update()
     for _, surface in pairs(game.surfaces) do
-        for i, roboport in pairs(surface.find_entities_filtered{
+        for _, roboport in pairs(surface.find_entities_filtered{
             type = "roboport"
         }) do
             global.roboports_to_update[roboport] = true
@@ -179,22 +179,44 @@ script.on_event(defines.events.on_research_reversed,
 )
 
 
+---@param roboport LuaEntity
 local function mark_roboport_for_update(roboport)
     global.roboports_to_update[roboport] = true
 end
 
 
+---@param roboport LuaEntity
 local function mark_ghost_for_update(roboport)
     global.ghosts_to_update[roboport] = true
 end
 
 
+---@param to_update table<LuaEntity, boolean>
+local function filter_to_update(to_update)
+    for roboport, needs_update in pairs(to_update) do
+        if roboport == nil then
+            goto continue
+        elseif roboport.valid == false then
+            to_update[roboport] = nil
+        end
+    ::continue::
+    end
+end
+
+
+---@param entity LuaEntity
 local function on_built(entity)
     if entity.name == "entity-ghost" or entity.type == "entity-ghost" then
         mark_ghost_for_update(entity)
-    elseif entity.type == "roboport" then
+    end
+    if entity.type == "roboport" then
         mark_roboport_for_update(entity)
     end
+end
+
+---@param entity LuaEntity
+local function on_remove(entity)
+    global.roboports_to_update[entity] = nil
 end
 
 script.on_event(defines.events.on_built_entity,
@@ -223,7 +245,68 @@ end)
 script.on_nth_tick(
     upgrade_timer,
     function ()
+        filter_to_update(global.roboports_to_update)
+        filter_to_update(global.ghosts_to_update)
         update_roboport_level()
         update_ghost_level()
+    end
+)
+
+script.on_event(defines.events.on_player_mined_entity,
+    function (event)
+        on_remove(event.entity)
+    end
+)
+script.on_event(defines.events.on_robot_mined_entity,
+function (event)
+    on_remove(event.entity)
+end
+)
+script.on_event(defines.events.on_entity_died,
+function (event)
+    on_remove(event.entity)
+end
+)
+script.on_event(defines.events.script_raised_destroy,
+function (event)
+    on_remove(event.entity)
+end
+)
+
+local function clear_marked()
+    global.roboports_to_update = {}
+    global.ghosts_to_update = {}
+end
+
+commands.add_command(
+    "battery-roboport-upgrade-all",
+    "Forces all roboports to be checked for upgrades",
+    function ()
+        mark_all_roboports_for_update()
+        game.print(#global.roboports_to_update .. " roboports marked for upgrade")
+        game.print(#global.ghosts_to_update .. " ghosts marked for update")
+    end
+)
+
+commands.add_command(
+    "battery-roboport-clear-marked",
+    "Forces all marked roboports and ghosts to be unmarked",
+    function ()
+        clear_marked()
+        total = #global.roboports_to_update + #global.ghosts_to_update
+        game.print("Cleared all marked roboports, left with " .. total .. " roboports after clear")
+    end
+)
+
+commands.add_command(
+    "battery-roboport-force-upgrade-all",
+    "Forces all roboports to be checked for upgrades (shortcut for  clear-marked and upgrade-all)",
+    function ()
+        clear_marked()
+        total = #global.roboports_to_update + #global.ghosts_to_update
+        game.print("Cleared all marked roboports, left with " .. total .. " roboports after clear")
+        mark_all_roboports_for_update()
+        game.print(#global.roboports_to_update .. " roboports marked for upgrade")
+        game.print(#global.ghosts_to_update .. " ghosts marked for update")
     end
 )
