@@ -139,9 +139,7 @@ end
 
 local function mark_all_roboports_for_update()
     for _, surface in pairs(game.surfaces) do
-        for _, roboport in pairs(surface.find_entities_filtered{
-            type = "roboport"
-        }) do
+        for _, roboport in pairs(surface.find_entities_filtered{type = "roboport"}) do
             global.roboports_to_update[roboport] = true
         end
     end
