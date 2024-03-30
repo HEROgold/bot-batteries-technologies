@@ -124,6 +124,7 @@ local function update_ghost_level()
                 fast_replace = true,
                 spill = false,
                 create_build_effect_smoke = false,
+                raise_built = false
             }
             local created_rport = surface.create_entity(to_create)
             global.ghosts_to_update[roboport] = nil
