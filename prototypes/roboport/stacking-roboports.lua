@@ -50,6 +50,7 @@ f.add_all_roboports = function ()
                 roboport_entity.name = name
                 roboport_entity.localised_name = localised_name
                 roboport_item.localised_name = localised_name
+                roboport_item.hidden = true
 
                 roboport_item.place_result = roboport_entity.name
 
