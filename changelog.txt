@@ -7,6 +7,8 @@ Date: 2024-03-02
     - Bugfix for marking non-roboports for upgrading, causing slow upgrades
     - Robots no longer charge in the very middle of the roboport
     - Removed an unused setting (update timer)
+    - Added commands to manage updates on roboports
+    - Added a selection tool to force updates on roboports
 ---------------------------------------------------------------------------------------------------
 Version: 1.0.5
 Date: 2024-02-23

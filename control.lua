@@ -42,7 +42,7 @@ function Get_level_from_name(to_check)
     return {tonumber(eff), tonumber(prod), tonumber(speed)}
 end
 
-function validate_roboport(roboport)
+local function validate_roboport(roboport)
     if roboport == nil then
         return
     end
@@ -52,7 +52,6 @@ function validate_roboport(roboport)
     end
 
     local roboport_name = roboport.name
-
     if roboport_name == "roboport" then
         -- The entity is from vanilla Factorio
         return true
@@ -68,12 +67,26 @@ function validate_roboport(roboport)
     end
 end
 
-function Is_research_valid()
-    Setup_Vars() -- Shouldn't need to be used here, but is here as a bandaid fix
-    local eff = global.EffectivityResearchLevel > 0 and global.EffectivityResearchLevel <= max_effectivity_level
-    local prod = global.ProductivityResearchLevel > 0 and global.ProductivityResearchLevel <= max_productivity_level
-    local speed = global.SpeedResearchLevel > 0 and global.SpeedResearchLevel <= max_speed_level
-    return eff and prod and speed
+
+---@param ghost LuaEntity
+---@return boolean
+local function validate_ghost(ghost)
+    if ghost == nil then
+        return false
+    end
+    if (
+        not ghost.valid
+        or not utilities.string_starts_with(ghost.ghost_name, mod_roboport_name)
+    ) then
+        global.ghosts_to_update[ghost] = nil
+        return false
+    end
+    return true
+end
+
+---@param entity LuaEntity
+local function is_ghost_entity(entity)
+    return entity.name == "entity-ghost" or entity.type == "entity-ghost"
 end
 
 
@@ -83,63 +96,65 @@ local function update_roboport_level(roboport)
         return
     end
 
-    if roboport.valid and needs_upgrade == true then
-        local surface = roboport.surface
-        if Is_valid_roboport(roboport) then
-            local old_energy = roboport.energy
-            local suffix = utils.get_internal_suffix(global.EffectivityResearchLevel, global.ProductivityResearchLevel, global.SpeedResearchLevel)
+    local surface = roboport.surface
+    local old_energy = roboport.energy
+    local suffix = utils.get_internal_suffix(global.EffectivityResearchLevel, global.ProductivityResearchLevel, global.SpeedResearchLevel)
 
-            local created_rport = surface.create_entity{
-                name = mod_roboport_name .. suffix,
-                position = roboport.position,
-                force = roboport.force,
-                fast_replace = true,
-                spill = false,
-                create_build_effect_smoke = false,
-                raise_built = true
-            }
+    local created_rport = surface.create_entity{
+        name = mod_roboport_name .. suffix,
+        position = roboport.position,
+        force = roboport.force,
+        fast_replace = true,
+        spill = false,
+        create_build_effect_smoke = false,
+        raise_built = true
+    }
 
-            created_rport.energy = old_energy
-            global.roboports_to_update[roboport] = nil
+    created_rport.energy = old_energy
+    global.roboports_to_update[roboport] = nil
 
-            roboport.destroy()
-            end
-    else
-        global.roboports_to_update[roboport] = nil
+    roboport.destroy()
+end
+
+---@param roboport LuaEntity
+local function update_ghost_level(roboport)
+    if not validate_ghost(roboport) then
+        return
+    end
+
+    local surface = roboport.surface
+    local to_create = {
+        name = "entity-ghost",
+        type = "entity-ghost",
+        ghost_name = "roboport",
+        ghost_type = "roboport",
+        ghost_prototype = "roboport",
+        position = roboport.position,
+        force = roboport.force,
+        fast_replace = true,
+        spill = false,
+        create_build_effect_smoke = false,
+        raise_built = false
+    }
+    local created_rport = surface.create_entity(to_create)
+    global.ghosts_to_update[roboport] = nil
+
+    roboport.destroy()
+end
+
+
+local function tick_update_roboport_level()
+    local roboport, needs_upgrade = next(global.roboports_to_update)
+    if needs_upgrade then
+        update_roboport_level(roboport)
     end
 end
 
 
-local function update_ghost_level()
+local function tick_update_ghost_level()
     local roboport, needs_downgrade = next(global.ghosts_to_update)
-
-    if roboport == nil then
-        return
-    end
-
-    if roboport.valid and needs_downgrade == true then
-        local surface = roboport.surface
-        if roboport.name == "entity-ghost" and utilities.string_starts_with(roboport.ghost_name, mod_roboport_name) then
-            local to_create = {
-                name = "entity-ghost",
-                type = "entity-ghost",
-                ghost_name = "roboport",
-                ghost_type = "roboport",
-                ghost_prototype = "roboport",
-                position = roboport.position,
-                force = roboport.force,
-                fast_replace = true,
-                spill = false,
-                create_build_effect_smoke = false,
-                raise_built = false
-            }
-            local created_rport = surface.create_entity(to_create)
-            global.ghosts_to_update[roboport] = nil
-
-            roboport.destroy()
-            end
-    else
-        global.ghosts_to_update[roboport] = nil
+    if needs_downgrade then
+        update_ghost_level(roboport)
     end
 end
 
@@ -152,6 +167,15 @@ local function mark_all_roboports_for_update()
     end
 end
 
+local function mark_all_ghosts_for_update()
+    for _, surface in pairs(game.surfaces) do
+        for _, roboport in pairs(surface.find_entities_filtered{type = "entity-ghost"}) do
+            if roboport.ghost_type == "roboport" then
+                global.ghosts_to_update[roboport] = true
+            end
+        end
+    end
+end
 
 script.on_event(defines.events.on_research_finished,
     function (event)
@@ -197,19 +221,6 @@ local function mark_ghost_for_update(roboport)
 end
 
 
----@param to_update table<LuaEntity, boolean>
-local function filter_to_update(to_update)
-    for roboport, needs_update in pairs(to_update) do
-        if roboport == nil then
-            goto continue
-        elseif roboport.valid == false then
-            to_update[roboport] = nil
-        end
-    ::continue::
-    end
-end
-
-
 ---@param entity LuaEntity
 local function on_built(entity)
     if entity.name == "entity-ghost" or entity.type == "entity-ghost" then
@@ -251,10 +262,8 @@ end)
 script.on_nth_tick(
     upgrade_timer,
     function ()
-        filter_to_update(global.roboports_to_update)
-        filter_to_update(global.ghosts_to_update)
-        update_roboport_level()
-        update_ghost_level()
+        tick_update_roboport_level()
+        tick_update_ghost_level()
     end
 )
 
@@ -289,6 +298,7 @@ commands.add_command(
     "Forces all roboports to be checked for upgrades",
     function ()
         mark_all_roboports_for_update()
+        mark_all_ghosts_for_update()
         game.print(#global.roboports_to_update .. " roboports marked for upgrade")
         game.print(#global.ghosts_to_update .. " ghosts marked for update")
     end
@@ -312,7 +322,24 @@ commands.add_command(
         total = #global.roboports_to_update + #global.ghosts_to_update
         game.print("Cleared all marked roboports, left with " .. total .. " roboports after clear")
         mark_all_roboports_for_update()
+        mark_all_ghosts_for_update()
         game.print(#global.roboports_to_update .. " roboports marked for upgrade")
         game.print(#global.ghosts_to_update .. " ghosts marked for update")
     end
+)
+
+script.on_event(defines.events.on_player_selected_area,
+function(event)
+    if event.item ~= "roboport-updater" then
+        return
+    end
+
+    for _, entity in pairs(event.entities) do
+        if is_ghost_entity(entity) then
+            update_ghost_level(entity)
+        else
+            update_roboport_level(entity)
+        end
+    end
+end
 )
