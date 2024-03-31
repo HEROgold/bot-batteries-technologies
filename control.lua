@@ -42,7 +42,15 @@ function Get_level_from_name(to_check)
     return {tonumber(eff), tonumber(prod), tonumber(speed)}
 end
 
-function Is_valid_roboport(roboport)
+function validate_roboport(roboport)
+    if roboport == nil then
+        return
+    end
+    if not roboport.valid then
+        global.roboports_to_update[roboport] = nil
+        return
+    end
+
     local roboport_name = roboport.name
 
     if roboport_name == "roboport" then
@@ -69,10 +77,9 @@ function Is_research_valid()
 end
 
 
-local function update_roboport_level()
-    local roboport, needs_upgrade = next(global.roboports_to_update)
-
-    if roboport == nil then
+---@param roboport LuaEntity
+local function update_roboport_level(roboport)
+    if not validate_roboport(roboport) then
         return
     end
 
