@@ -12,7 +12,7 @@ local energy_usage_modifier = tonumber(settings.startup["battery-roboport-energy
 local charging_energy_modifier = tonumber(settings.startup["battery-roboport-charging-energy-modifier"].value)
 local f = {}
 
-f.generate_charging_offsets = function (n)
+function generate_charging_offsets(n)
     local offsets = {}
     local min_offset = 1 -- 0.5
     local max_offset = 2 -- 1.5
@@ -35,7 +35,7 @@ local productivity_limit = math.max(Limits["productivity"], research_mimimum)
 local speed_limit = math.max(Limits["speed"], research_mimimum)
 
 
-f.add_all_roboports = function ()
+local function add_all_roboports()
     for i=0, effectivity_limit do
         for j=0, productivity_limit do
             for k=0, speed_limit do
@@ -84,7 +84,7 @@ f.add_all_roboports = function ()
                 -- speed upgrade
                 roboport_entity.charging_energy = tostring(bce + bce*k*charging_energy_modifier) .. "kW" -- 1000 is default in kw, amount of energy given to bots
                 -- productivity upgrade -- 4 is default, amount of bots that can charge at once
-                roboport_entity.charging_offsets = f.generate_charging_offsets(bcsc + bcsc * j)
+                roboport_entity.charging_offsets = generate_charging_offsets(bcsc + bcsc * j)
 
                 local fdiv = math.floor((i+j+k) / 10)
                 if fdiv % 10 then
@@ -99,5 +99,40 @@ f.add_all_roboports = function ()
     end
 end
 
+local function add_storage_roboport()
+    local roboport_item = table.deepcopy(base_roboport_item)
+    local roboport_entity = table.deepcopy(base_roboport_entity)
+    local name = "storage-roboport"
+    local localised_name = tostring("Storage Roboport")
 
-f.add_all_roboports()
+    roboport_item.name = name
+    roboport_entity.name = name
+    roboport_entity.localised_name = localised_name
+    roboport_item.localised_name = localised_name
+    roboport_item.hidden = false
+
+    roboport_item.place_result = roboport_entity.name
+
+    roboport_entity.fast_replaceable_group = "roboport"
+    roboport_entity.minable = base_roboport_entity.minable
+    roboport_entity.minable.result = base_roboport_item.name
+
+    roboport_entity.energy_source = {
+        type = "electric",
+        usage_priority = "secondary-input",
+        input_flow_limit = "0W",
+        buffer_capacity = "0J",
+    }
+    roboport_entity.recharge_minimum = "0J"
+    roboport_entity.energy_usage = "0W"
+    roboport_entity.charging_energy = "0W"
+    roboport_entity.charging_station_count = 0
+    roboport_entity.robot_slots_count = 20
+    roboport_entity.material_slots_count = 0
+
+    data:extend({roboport_item})
+    data:extend({roboport_entity})
+end
+
+add_all_roboports()
+add_storage_roboport()
