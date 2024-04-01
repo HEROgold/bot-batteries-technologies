@@ -130,8 +130,22 @@ local function add_storage_roboport()
     roboport_entity.robot_slots_count = 20
     roboport_entity.material_slots_count = 0
 
+    ---@type data.RecipePrototype
+    local storage_roboport_recipe = {
+        type = "recipe",
+        name = "storage-roboport",
+        enabled = false,
+        ingredients = {
+            {"roboport", 1},
+            {"steel-plate", 100},
+        },
+        result = "storage-roboport",
+        category = "crafting",
+    }
+
     data:extend({roboport_item})
     data:extend({roboport_entity})
+    data:extend({storage_roboport_recipe})
 end
 
 add_all_roboports()
