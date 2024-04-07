@@ -92,7 +92,9 @@ local function add_all_roboports()
                     roboport_entity.material_slots_count = msc + msc * fdiv -- Kindly add  material slot's every 10 levels
                 end
 
-                data:extend({roboport_item})
+                if settings.startup["show-items"].value == true then
+                    data:extend({roboport_item})
+                end
                 data:extend({roboport_entity})
             end
         end

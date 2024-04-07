@@ -55,5 +55,11 @@ data:extend({
         setting_type = "startup",
         minimum_value = 1,
         default_value = 8
+    },
+    {
+        type = "bool-setting",
+        name = "show-items",
+        setting_type = "startup",
+        default_value = false
     }
 })
