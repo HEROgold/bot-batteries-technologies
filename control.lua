@@ -374,5 +374,4 @@ function(event)
     end
 end
 )
--- TODO: add command that replaces modded roboports with vanilla ones, and disables upgrading them.
 
