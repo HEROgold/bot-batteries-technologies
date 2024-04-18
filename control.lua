@@ -294,7 +294,7 @@ local function clear_marked()
 end
 
 commands.add_command(
-    "battery-roboport-upgrade-all",
+    "br-upgrade-all",
     "Forces all roboports to be checked for upgrades",
     function ()
         mark_all_roboports_for_update()
@@ -305,7 +305,7 @@ commands.add_command(
 )
 
 commands.add_command(
-    "battery-roboport-clear-marked",
+    "br-clear-marked",
     "Forces all marked roboports and ghosts to be unmarked",
     function ()
         clear_marked()
@@ -315,7 +315,7 @@ commands.add_command(
 )
 
 commands.add_command(
-    "battery-roboport-force-upgrade-all",
+    "br-force-upgrade-all",
     "Forces all roboports to be checked for upgrades (shortcut for  clear-marked and upgrade-all)",
     function ()
         clear_marked()
@@ -325,6 +325,37 @@ commands.add_command(
         mark_all_ghosts_for_update()
         game.print(#global.roboports_to_update .. " roboports marked for upgrade")
         game.print(#global.ghosts_to_update .. " ghosts marked for update")
+    end
+)
+
+commands.add_command(
+    "br-uninstall",
+    "Forces roboports to be vanilla, usefull for uninstalled the mod",
+    function ()
+        for _, surface in pairs(game.surfaces) do
+            for _, roboport in pairs(surface.find_entities_filtered{type = "roboport"}) do
+                if not roboport.valid then
+                    goto continue
+                end
+                if not utilities.string_starts_with(roboport.name, mod_roboport_name) or roboport.name ~= "roboport" then
+                    goto continue
+                end
+
+                local old_energy = roboport.energy
+                local created_rport = surface.create_entity{
+                    name = "roboport",
+                    position = roboport.position,
+                    force = roboport.force,
+                    fast_replace = true,
+                    spill = false,
+                    create_build_effect_smoke = false,
+                    raise_built = false
+                }
+                created_rport.energy = old_energy
+                roboport.destroy()
+                ::continue::
+            end
+        end
     end
 )
 
@@ -343,3 +374,5 @@ function(event)
     end
 end
 )
+-- TODO: add command that replaces modded roboports with vanilla ones, and disables upgrading them.
+
