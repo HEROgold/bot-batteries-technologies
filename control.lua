@@ -330,7 +330,7 @@ commands.add_command(
 
 commands.add_command(
     "br-uninstall",
-    "Forces roboports to be vanilla, usefull for uninstalled the mod",
+    "Forces roboports to be vanilla, usefull for uninstalling this mod",
     function ()
         for _, surface in pairs(game.surfaces) do
             for _, roboport in pairs(surface.find_entities_filtered{type = "roboport"}) do
