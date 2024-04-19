@@ -254,7 +254,7 @@ commands.add_command(
                 if not roboport.valid then
                     goto continue
                 end
-                if not utilities.string_starts_with(roboport.name, mod_roboport_name) or roboport.name ~= "roboport" then
+                if not utilities.string_starts_with(roboport.name, mod_roboport_name) or roboport.name == "roboport" then
                     goto continue
                 end
 
