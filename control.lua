@@ -1,9 +1,6 @@
 require("lualib.utils")
 require("__heroic_library__.utilities")
 
-local max_effectivity_level = tonumber(settings.startup["battery-roboport-energy-research-limit"].value)
-local max_productivity_level = tonumber(settings.startup["battery-roboport-energy-research-limit"].value)
-local max_speed_level = tonumber(settings.startup["battery-roboport-energy-research-limit"].value)
 local upgrade_timer = tonumber(settings.startup["battery-roboport-upgrade-timer"].value)
 local mod_roboport_name = "battery-roboport-mk-"
 
@@ -35,7 +32,7 @@ function Setup_Vars()
 end
 
 
-function Get_level_from_name(to_check)
+local function get_level_from_name(to_check)
     local eff = string.sub(to_check, -5, -5)
     local prod = string.sub(to_check, -3, -3)
     local speed = string.sub(to_check, -1, -1)
@@ -56,7 +53,7 @@ local function validate_roboport(roboport)
         -- The entity is from vanilla Factorio
         return true
     elseif utilities.string_starts_with(roboport_name, mod_roboport_name) then
-        local level = Get_level_from_name(roboport_name)
+        local level = get_level_from_name(roboport_name)
         -- Check for correct levels, to avoid replacing already correct roboports.
         if level[1] ~= global.EffectivityResearchLevel or level[2] ~= global.ProductivityResearchLevel or level[3] ~= global.SpeedResearchLevel then
             return true
@@ -107,7 +104,7 @@ local function update_roboport_level(roboport)
         fast_replace = true,
         spill = false,
         create_build_effect_smoke = false,
-        raise_built = true
+        raise_built = false
     }
 
     created_rport.energy = old_energy
@@ -167,15 +164,6 @@ local function mark_all_roboports_for_update()
     end
 end
 
-local function mark_all_ghosts_for_update()
-    for _, surface in pairs(game.surfaces) do
-        for _, roboport in pairs(surface.find_entities_filtered{type = "entity-ghost"}) do
-            if roboport.ghost_type == "roboport" then
-                global.ghosts_to_update[roboport] = true
-            end
-        end
-    end
-end
 
 script.on_event(defines.events.on_research_finished,
     function (event)
@@ -209,25 +197,13 @@ script.on_event(defines.events.on_research_reversed,
 )
 
 
----@param roboport LuaEntity
-local function mark_roboport_for_update(roboport)
-    global.roboports_to_update[roboport] = true
-end
-
-
----@param roboport LuaEntity
-local function mark_ghost_for_update(roboport)
-    global.ghosts_to_update[roboport] = true
-end
-
-
 ---@param entity LuaEntity
 local function on_built(entity)
     if entity.name == "entity-ghost" or entity.type == "entity-ghost" then
-        mark_ghost_for_update(entity)
+        update_ghost_level(entity)
     end
     if entity.type == "roboport" then
-        mark_roboport_for_update(entity)
+        update_roboport_level(entity)
     end
 end
 
@@ -236,95 +212,36 @@ local function on_remove(entity)
     global.roboports_to_update[entity] = nil
 end
 
-script.on_event(defines.events.on_built_entity,
+script.on_event(
+    {
+        defines.events.on_built_entity,
+        defines.events.on_robot_built_entity,
+        defines.events.on_post_entity_died,
+        defines.events.script_raised_built,
+        defines.events.script_raised_revive,
+    },
 function (event)
     on_built(event.created_entity)
 end
 )
-script.on_event(defines.events.on_robot_built_entity,
-function (event)
-    on_built(event.created_entity)
-end
-)
-script.on_event(defines.events.on_post_entity_died,
-function (event)
-    if event.ghost == nil then
-        return
-    end
-    on_built(event.ghost)
-end)
 
-script.on_event(defines.events.script_raised_built,
-function (event)
-    on_built(event.entity)
-end)
+script.on_event(
+    {
+        defines.events.on_player_mined_entity,
+        defines.events.on_robot_mined_entity,
+        defines.events.on_entity_died,
+        defines.events.script_raised_destroy,
+    },
+    function (event)
+        on_remove(event.entity)
+    end
+)
 
 script.on_nth_tick(
     upgrade_timer,
     function ()
         tick_update_roboport_level()
         tick_update_ghost_level()
-    end
-)
-
-script.on_event(defines.events.on_player_mined_entity,
-    function (event)
-        on_remove(event.entity)
-    end
-)
-script.on_event(defines.events.on_robot_mined_entity,
-function (event)
-    on_remove(event.entity)
-end
-)
-script.on_event(defines.events.on_entity_died,
-function (event)
-    on_remove(event.entity)
-end
-)
-script.on_event(defines.events.script_raised_destroy,
-function (event)
-    on_remove(event.entity)
-end
-)
-
-local function clear_marked()
-    global.roboports_to_update = {}
-    global.ghosts_to_update = {}
-end
-
-commands.add_command(
-    "br-upgrade-all",
-    "Forces all roboports to be checked for upgrades",
-    function ()
-        mark_all_roboports_for_update()
-        mark_all_ghosts_for_update()
-        game.print(#global.roboports_to_update .. " roboports marked for upgrade")
-        game.print(#global.ghosts_to_update .. " ghosts marked for update")
-    end
-)
-
-commands.add_command(
-    "br-clear-marked",
-    "Forces all marked roboports and ghosts to be unmarked",
-    function ()
-        clear_marked()
-        total = #global.roboports_to_update + #global.ghosts_to_update
-        game.print("Cleared all marked roboports, left with " .. total .. " roboports after clear")
-    end
-)
-
-commands.add_command(
-    "br-force-upgrade-all",
-    "Forces all roboports to be checked for upgrades (shortcut for  clear-marked and upgrade-all)",
-    function ()
-        clear_marked()
-        total = #global.roboports_to_update + #global.ghosts_to_update
-        game.print("Cleared all marked roboports, left with " .. total .. " roboports after clear")
-        mark_all_roboports_for_update()
-        mark_all_ghosts_for_update()
-        game.print(#global.roboports_to_update .. " roboports marked for upgrade")
-        game.print(#global.ghosts_to_update .. " ghosts marked for update")
     end
 )
 
@@ -374,4 +291,3 @@ function(event)
     end
 end
 )
-
