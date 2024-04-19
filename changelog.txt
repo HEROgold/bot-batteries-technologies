@@ -5,6 +5,7 @@ Date: 2024-04-19
     - Added command to help uninstalling this mod
     - Added a item tab that contains the mod's items to reduce clutter
     - Removed commands that are obsolute because of the selection tool, and the addition of the new command /br-uninstall
+    - Cleaned up some of the code
 ---------------------------------------------------------------------------------------------------
 Version: 1.0.7
 Date: 2024-03-31
