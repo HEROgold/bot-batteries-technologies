@@ -221,6 +221,9 @@ script.on_event(
         defines.events.script_raised_revive,
     },
 function (event)
+    if event.entity == nil or not event.entity.valid then
+        return
+    end
     on_built(event.created_entity)
 end
 )
@@ -233,6 +236,9 @@ script.on_event(
         defines.events.script_raised_destroy,
     },
     function (event)
+        if event.entity == nil or not event.entity.valid then
+            return
+        end
         on_remove(event.entity)
     end
 )
