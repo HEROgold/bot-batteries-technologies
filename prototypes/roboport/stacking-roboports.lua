@@ -34,6 +34,14 @@ local effectivity_limit = math.max(Limits["effectivity"], research_mimimum)
 local productivity_limit = math.max(Limits["productivity"], research_mimimum)
 local speed_limit = math.max(Limits["speed"], research_mimimum)
 
+---@type data.ItemGroup
+local item_group = {
+    icon = base_roboport_item.icon,
+    type = "item-group",
+    name = "br-roboports",
+    order = "z",
+}
+
 
 local function add_all_roboports()
     for i=0, effectivity_limit do
@@ -93,6 +101,7 @@ local function add_all_roboports()
                 end
 
                 if settings.startup["show-items"].value == true then
+                    roboport_item.subgroup = "br-roboports"
                     data:extend({roboport_item})
                 end
                 data:extend({roboport_entity})
@@ -150,5 +159,6 @@ local function add_storage_roboport()
     data:extend({storage_roboport_recipe})
 end
 
+data:extend({item_group})
 add_all_roboports()
 add_storage_roboport()
