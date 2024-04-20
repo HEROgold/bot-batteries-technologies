@@ -221,7 +221,7 @@ script.on_event(
         defines.events.script_raised_revive,
     },
 function (event)
-    if event.entity == nil or not event.entity.valid then
+    if event.created_entity == nil or not event.created_entity.valid or event.entity == nil or not event.entity.valid then
         return
     end
     on_built(event.created_entity)
