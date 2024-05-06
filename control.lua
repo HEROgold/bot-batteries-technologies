@@ -207,10 +207,6 @@ local function on_built(entity)
     end
 end
 
----@param entity LuaEntity
-local function on_remove(entity)
-    global.roboports_to_update[entity] = nil
-end
 
 script.on_event(
     {
@@ -221,10 +217,18 @@ script.on_event(
         defines.events.script_raised_revive,
     },
 function (event)
-    if event.created_entity == nil or not event.created_entity.valid or event.entity == nil or not event.entity.valid then
+    if event.ghost then
+        on_built(event.ghost)
         return
     end
-    on_built(event.created_entity)
+    if event.entity then
+        on_built(event.entity)
+        return
+    end
+    if event.created_entity then
+        on_built(event.created_entity)
+        return
+    end
 end
 )
 
@@ -239,7 +243,7 @@ script.on_event(
         if event.entity == nil or not event.entity.valid then
             return
         end
-        on_remove(event.entity)
+        global.roboports_to_update[event.entity] = nil
     end
 )
 
