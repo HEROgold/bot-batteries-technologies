@@ -154,7 +154,7 @@ local function add_storage_roboport()
     local storage_roboport_recipe = {
         type = "recipe",
         name = "storage-roboport",
-        enabled = false,
+        enabled = true,
         ingredients = {
             {"roboport", 1},
             {"steel-plate", 100},
