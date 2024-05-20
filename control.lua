@@ -301,7 +301,6 @@ local function on_built(entity)
         validate_ghost(entity)
         update_ghost_level(entity)
     end
-    if not entity.valid then return end
     if entity.type == "roboport" then
         validate_roboport(entity)
         update_roboport_level(entity)
