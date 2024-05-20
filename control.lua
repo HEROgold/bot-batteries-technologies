@@ -200,9 +200,11 @@ script.on_event(defines.events.on_research_reversed,
 ---@param entity LuaEntity
 local function on_built(entity)
     if entity.name == "entity-ghost" or entity.type == "entity-ghost" then
+        validate_ghost(entity)
         update_ghost_level(entity)
     end
     if entity.type == "roboport" then
+        validate_roboport(entity)
         update_roboport_level(entity)
     end
 end
