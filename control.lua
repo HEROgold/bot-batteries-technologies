@@ -202,6 +202,7 @@ local function on_built(entity)
     if entity.name == "entity-ghost" or entity.type == "entity-ghost" then
         update_ghost_level(entity)
     end
+    if not entity.valid then return end
     if entity.type == "roboport" then
         update_roboport_level(entity)
     end
