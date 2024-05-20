@@ -1,4 +1,6 @@
 require("lualib.utils")
+require("prototypes.item-groups")
+require("prototypes.selection-tool")
 require("prototypes.technology.roboport-upgrades")
 require("prototypes.roboport.stacking-roboports")
-require("prototypes.selection-tool")
+require("prototypes.roboport.storage-roboport")

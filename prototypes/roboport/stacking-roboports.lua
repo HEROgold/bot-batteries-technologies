@@ -4,12 +4,12 @@ local base_roboport_entity = data.raw["roboport"]["roboport"]
 local base_roboport_item = data.raw["item"]["roboport"]
 ---@type number
 ---@diagnostic disable-next-line: assign-type-mismatch
-local research_mimimum = settings.startup["battery-roboport-energy-research-minimum"].value
-local input_flow_limit_modifier = tonumber(settings.startup["battery-roboport-input-flow-limit-modifier"].value)
-local buffer_capacity_modifier = tonumber(settings.startup["battery-roboport-buffer-capacity-modifier"].value)
-local recharge_minimum_modifier = tonumber(settings.startup["battery-roboport-recharge-minimum-modifier"].value)
-local energy_usage_modifier = tonumber(settings.startup["battery-roboport-energy-usage-modifier"].value)
-local charging_energy_modifier = tonumber(settings.startup["battery-roboport-charging-energy-modifier"].value)
+local research_mimimum = settings.startup["energy-research-minimum"].value
+local input_flow_limit_modifier = tonumber(settings.startup["input-flow-limit-modifier"].value)
+local buffer_capacity_modifier = tonumber(settings.startup["buffer-capacity-modifier"].value)
+local recharge_minimum_modifier = tonumber(settings.startup["recharge-minimum-modifier"].value)
+local energy_usage_modifier = tonumber(settings.startup["energy-usage-modifier"].value)
+local charging_energy_modifier = tonumber(settings.startup["charging-energy-modifier"].value)
 local f = {}
 
 function generate_charging_offsets(n)
@@ -34,24 +34,6 @@ local effectivity_limit = math.max(Limits["effectivity"], research_mimimum)
 local productivity_limit = math.max(Limits["productivity"], research_mimimum)
 local speed_limit = math.max(Limits["speed"], research_mimimum)
 
----@type data.ItemGroup
-local item_group = {
-    icon = base_roboport_item.icon,
-    icon_size = base_roboport_item.icon_size,
-    icon_mipmaps = base_roboport_item.icon_mipmaps,
-    type = "item-group",
-    name = "br-roboports",
-    order = "z",
-}
----@type data.ItemSubGroup
-local item_subgroup = {
-    type = "item-subgroup",
-    name = "br-roboports",
-    group = "br-roboports",
-    order = "a",
-}
-
-
 local function add_all_roboports()
     for i=0, effectivity_limit do
         for j=0, productivity_limit do
@@ -60,8 +42,8 @@ local function add_all_roboports()
                 local roboport_entity = table.deepcopy(base_roboport_entity)
 
                 local suffix = utils.get_internal_suffix(i, j, k)
-                local name = "battery-roboport-mk-" .. suffix
-                local localised_name = tostring("Battery Roboport Mk." .. i .. j .. k)
+                local name = "energy-roboport-mk-" .. suffix
+                local localised_name = tostring("Energy Roboport Mk." .. i .. j .. k)
 
                 roboport_item.name = name
                 roboport_entity.name = name
@@ -86,8 +68,6 @@ local function add_all_roboports()
                 local bru = tonumber(string.sub(base_roboport_entity.energy_usage, 1, -3))
                 local bce = tonumber(string.sub(base_roboport_entity.charging_energy, 1, -3))
                 local bcsc = #base_roboport_entity.charging_offsets
-                local rsc = base_roboport_entity.robot_slots_count
-                local msc = base_roboport_entity.material_slots_count
 
                 -- effectivity upgrades
                 roboport_entity.energy_source = {
@@ -103,12 +83,6 @@ local function add_all_roboports()
                 -- productivity upgrade -- 4 is default, amount of bots that can charge at once
                 roboport_entity.charging_offsets = generate_charging_offsets(bcsc + bcsc * j)
 
-                local fdiv = math.floor((i+j+k) / 10)
-                if fdiv % 10 then
-                    roboport_entity.robot_slots_count = rsc + rsc * fdiv -- Kindly add robot slot's every 10 levels
-                    roboport_entity.material_slots_count = msc + msc * fdiv -- Kindly add  material slot's every 10 levels
-                end
-
                 if settings.startup["show-items"].value == true then
                     roboport_item.subgroup = "br-roboports"
                     data:extend({roboport_item})
@@ -119,55 +93,4 @@ local function add_all_roboports()
     end
 end
 
-local function add_storage_roboport()
-    local roboport_item = table.deepcopy(base_roboport_item)
-    local roboport_entity = table.deepcopy(base_roboport_entity)
-    local name = "storage-roboport"
-    local localised_name = tostring("Storage Roboport")
-
-    roboport_item.name = name
-    roboport_entity.name = name
-    roboport_entity.localised_name = localised_name
-    roboport_item.localised_name = localised_name
-    roboport_item.hidden = false
-
-    roboport_item.place_result = roboport_entity.name
-
-    roboport_entity.fast_replaceable_group = "roboport"
-    roboport_entity.minable = base_roboport_entity.minable
-    roboport_entity.minable.result = base_roboport_item.name
-
-    roboport_entity.energy_source = {
-        type = "electric",
-        usage_priority = "secondary-input",
-        input_flow_limit = "0W",
-        buffer_capacity = "0J",
-    }
-    roboport_entity.recharge_minimum = "0J"
-    roboport_entity.energy_usage = "0W"
-    roboport_entity.charging_energy = "0W"
-    roboport_entity.charging_station_count = 0
-    roboport_entity.robot_slots_count = 20
-    roboport_entity.material_slots_count = 0
-
-    ---@type data.RecipePrototype
-    local storage_roboport_recipe = {
-        type = "recipe",
-        name = "storage-roboport",
-        enabled = true,
-        ingredients = {
-            {"roboport", 1},
-            {"steel-plate", 100},
-        },
-        result = "storage-roboport",
-        category = "crafting",
-    }
-
-    data:extend({roboport_item})
-    data:extend({roboport_entity})
-    data:extend({storage_roboport_recipe})
-end
-
-data:extend({item_group, item_subgroup})
 add_all_roboports()
-add_storage_roboport()

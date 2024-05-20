@@ -2,10 +2,10 @@ require("__heroic_library__.utilities")
 
 ---@type number
 ---@diagnostic disable-next-line: assign-type-mismatch
-local research_limit = settings.startup["battery-roboport-energy-research-limit"].value
+local research_limit = settings.startup["energy-research-limit"].value
 ---@type number
 ---@diagnostic disable-next-line: assign-type-mismatch
-local research_mimimum = settings.startup["battery-roboport-energy-research-minimum"].value
+local research_mimimum = settings.startup["energy-research-minimum"].value
 local modules = data.raw["module"]
 
 local f = {}

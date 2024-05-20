@@ -1,7 +1,7 @@
 data:extend({
     {
         type = "int-setting",
-        name = "battery-roboport-energy-research-limit",
+        name = "energy-research-limit",
         setting_type = "startup",
         default_value = 9,
         maximum_value = 9
@@ -9,7 +9,7 @@ data:extend({
     },
     {
         type = "int-setting",
-        name = "battery-roboport-energy-research-minimum",
+        name = "energy-research-minimum",
         setting_type = "startup",
         default_value = 3,
         maximum_value = 9
@@ -17,41 +17,41 @@ data:extend({
     },
     {
         type = "double-setting",
-        name = "battery-roboport-input-flow-limit-modifier",
+        name = "input-flow-limit-modifier",
         setting_type = "startup",
         minimum_value = 0.1,
         default_value = 1,
     },
     {
         type = "double-setting",
-        name = "battery-roboport-buffer-capacity-modifier",
+        name = "buffer-capacity-modifier",
         setting_type = "startup",
         minimum_value = 0.1,
         default_value = 1,
     },
     {
         type = "double-setting",
-        name = "battery-roboport-recharge-minimum-modifier",
+        name = "recharge-minimum-modifier",
         setting_type = "startup",
         minimum_value = 0.1,
         default_value = 1,
     },
     {
         type = "double-setting",
-        name = "battery-roboport-energy-usage-modifier",
+        name = "energy-usage-modifier",
         setting_type = "startup",
         minimum_value = 0.1,
         default_value = 1,
     },
     {
         type = "double-setting",
-        name = "battery-roboport-charging-energy-modifier",
+        name = "charging-energy-modifier",
         setting_type = "startup",
         minimum_value = 0.1,
         default_value = 1,
     },{
         type = "int-setting",
-        name = "battery-roboport-upgrade-timer",
+        name = "upgrade-timer",
         setting_type = "startup",
         minimum_value = 1,
         default_value = 8
@@ -61,5 +61,37 @@ data:extend({
         name = "show-items",
         setting_type = "startup",
         default_value = true
+    },
+    {
+        type = "double-setting",
+        name = "construction-area-limit",
+        setting_type = "startup",
+        default_value = 3,
+        minimum_value = 1,
+        maximum_value = 9
+    },
+    {
+        type = "double-setting",
+        name = "logistic-area-limit",
+        setting_type = "startup",
+        default_value = 3,
+        minimum_value = 1,
+        maximum_value = 9
+    },
+    {
+        type = "double-setting",
+        name = "robot-storage-limit",
+        setting_type = "startup",
+        default_value = 3,
+        minimum_value = 1,
+        maximum_value = 9
+    },
+    {
+        type = "double-setting",
+        name = "material-storage-limit",
+        setting_type = "startup",
+        default_value = 3,
+        minimum_value = 1,
+        maximum_value = 9
     }
 })
