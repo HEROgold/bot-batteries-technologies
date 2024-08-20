@@ -181,8 +181,8 @@ f.add_module_upgrade_research = function()
               }
             },
             unit = {
-              count_formula = research_count .. "*(L)", -- TODO: make this a setting/editable
-              time = research_time, -- TODO: make this a setting/editable
+              count_formula = research_count .. "*(L)",
+              time = research_time,
               ingredients = f.get_module_research_ingredients(module_type, i)
             },
           }
