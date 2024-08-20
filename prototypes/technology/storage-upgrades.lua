@@ -31,10 +31,12 @@ f.get_research_prerequisites = function(upgrade_name, level)
 end
 
 f.get_tech_sprite = function (module_type, level)
-    return utilities.technology_sprite_add_item_icon(
-      "__base__/graphics/technology/robotics.png",
-      "__space-exploration-graphics__/graphics/icons/modules/"..module_type.."-"..level..".png"
-    )
+    return {
+      {
+        icon = "__base__/graphics/technology/robotics.png",
+        icon_size = 256, icon_mipmaps = 4
+      }
+    }
 end
 
 f.get_research_name = function(upgrade_name, level)
@@ -49,6 +51,23 @@ f.get_effect_description = function(upgrade_name)
   return "Upgrade the " .. upgrade_name .. " of a roboport"
 end
 
+f.get_research_ingredients = function (upgrade_type, level)
+  local prereq = f.get_research_prerequisites(upgrade_type, level)
+  local name = prereq[1]
+  local techno = table.deepcopy(data.raw["technology"][name])
+
+  if techno == nil then
+    -- return default set of ingredients
+    return {
+      {"automation-science-pack", 1},
+      {"logistic-science-pack", 1},
+      {"chemical-science-pack", 1},
+      {"utility-science-pack", 1},
+    }
+  end
+  return techno.unit.ingredients
+end
+
 f.get_suffix_by_level = function(i)
   local name = nil
   if i == 1 then
@@ -61,6 +80,8 @@ end
 
 local function add_researches()
   local upgrade_names = {"construction-area", "logistics-area", "robot-storage", "material-storage"}
+
+  table.insert(data.raw["technology"]["logistic-robotics"].effects, {type = "unlock-recipe", recipe = "logistical-roboport"})
 
   for _, upgrade_type in pairs(upgrade_names) do
     local limit = math.max(research_mimimum, research_limit) -- math.max(Limits[upgrade_type], research_mimimum)
@@ -87,7 +108,7 @@ local function add_researches()
             unit = {
               count_formula = research_count .. "*(L)",
               time = research_time,
-              ingredients = f.get_module_research_ingredients(upgrade_type, i)
+              ingredients = f.get_research_ingredients(upgrade_type, i)
             },
           }
         }

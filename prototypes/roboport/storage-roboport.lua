@@ -52,13 +52,14 @@ local function add_storage_roboport()
     local storage_roboport_recipe = {
         type = "recipe",
         name = "logistical-roboport",
-        enabled = true,
+        -- enabled = true,
         ingredients = {
             {"roboport", 1},
             {"steel-plate", 100},
         },
         result = logisitcal_roboport_entity.name,
         category = "crafting",
+        unlock_results = true,
     }
 
     data:extend({logisitcal_roboport_item})
