@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.0
-Date: Unknown
+Date: 2024-08-20
   Changes:
     - Renamed the storage-roboport to "Logistical Roboport"
     - Renamed the battery-roboport to "Energy Roboport"
