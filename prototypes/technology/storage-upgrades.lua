@@ -60,7 +60,7 @@ f.get_suffix_by_level = function(i)
 end
 
 local function add_researches()
-  local upgrade_names = {"construction-area", "logistic-area", "robot-storage", "material-storage"}
+  local upgrade_names = {"construction-area", "logistics-area", "robot-storage", "material-storage"}
 
   for _, upgrade_type in pairs(upgrade_names) do
     local limit = math.max(research_mimimum, research_limit) -- math.max(Limits[upgrade_type], research_mimimum)
