@@ -135,7 +135,7 @@ f.get_research_prerequisites = function(module_type, level)
   if level == 1 then
     prerequisites = {
       module_type .. "-module" .. f.get_suffix_by_level(level),
-      "robotics"
+      "construction-robotics"
     }
   elseif module_count < research_mimimum and level <= research_limit and level > module_count then
     prerequisites = {
