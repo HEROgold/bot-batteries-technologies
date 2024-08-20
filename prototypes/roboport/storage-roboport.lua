@@ -77,13 +77,13 @@ local function add_stacking_storage_roboport()
 
                     local suffix = utils.get_storage_suffix(c, l, r, m)
                     local name = "logistical-roboport-mk-" .. suffix
-                    -- local localised_name = tostring("Logistical Roboport Mk." .. c .. l .. r .. m)
+                    local localised_name = tostring("Logistical Roboport Mk." .. c .. l .. r .. m)
 
                     roboport_item.name = name
                     roboport_entity.name = name
-                    -- roboport_entity.localised_name = localised_name
+                    roboport_entity.localised_name = localised_name
                     roboport_item.place_result = roboport_entity.name
-                    -- roboport_item.localised_name = localised_name
+                    roboport_item.localised_name = localised_name
                     roboport_item.hidden = true
 
                     -- Level * base, + base
