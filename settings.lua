@@ -1,5 +1,5 @@
 ---@type table<LuaSettings>
-local roboport_settings = {
+local energy_roboport_settings = {
     {
         type = "double-setting",
         name = "input-flow-limit-modifier",
@@ -37,7 +37,7 @@ local roboport_settings = {
     },
 }
 ---@type table<LuaSettings>
-local storage_settings = {
+local logistical_roboport_settings = {
     {
         type = "int-setting",
         name = "construction-area-limit",
@@ -121,7 +121,7 @@ local mod_settings = {
     },
 }
 
-data:extend(roboport_settings)
-data:extend(storage_settings)
+data:extend(energy_roboport_settings)
+data:extend(logistical_roboport_settings)
 data:extend(research_settings)
 data:extend(mod_settings)
