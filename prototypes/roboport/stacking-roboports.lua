@@ -43,12 +43,12 @@ local function add_all_roboports()
 
                 local suffix = utils.get_internal_suffix(i, j, k)
                 local name = "energy-roboport-mk-" .. suffix
-                local localised_name = tostring("Energy Roboport Mk." .. i .. j .. k)
+                -- local localised_name = tostring("Energy Roboport Mk." .. i .. j .. k)
 
                 roboport_item.name = name
                 roboport_entity.name = name
-                roboport_entity.localised_name = localised_name
-                roboport_item.localised_name = localised_name
+                -- roboport_entity.localised_name = localised_name
+                -- roboport_item.localised_name = localised_name
                 roboport_item.hidden = true
 
                 roboport_item.place_result = roboport_entity.name
