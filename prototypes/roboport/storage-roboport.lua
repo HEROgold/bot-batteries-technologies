@@ -45,7 +45,7 @@ local function add_storage_roboport()
     -- Copy over some of the base roboport values (shouldn't be needed)
     logisitcal_roboport_entity.minable = base_roboport_entity.minable
     logisitcal_roboport_entity.construction_radius = base_roboport_entity.construction_radius
-    logisitcal_roboport_entity.logistic_radius = base_roboport_entity.logistics_radius
+    logisitcal_roboport_entity.logistics_radius = base_roboport_entity.logistics_radius
     logisitcal_roboport_entity.logistics_connection_distance = base_roboport_entity.logistics_connection_distance
 
     ---@type data.RecipePrototype
@@ -89,14 +89,14 @@ local function add_stacking_storage_roboport()
                     rb = logisitcal_roboport_entity.robot_slots_count
                     mb = logisitcal_roboport_entity.material_slots_count
                     cb = logisitcal_roboport_entity.construction_radius
-                    lb = logisitcal_roboport_entity.logistic_radius -- find out why these don't upgrade
-                    ldb = logisitcal_roboport_entity.logistics_connection_distance or lb -- find out why these don't upgrade
+                    lb = logisitcal_roboport_entity.logistics_radius
+                    ldb = logisitcal_roboport_entity.logistics_connection_distance or lb
 
                     roboport_entity.robot_slots_count = (rb * r) + rb
                     roboport_entity.material_slots_count = (mb * m) + mb
                     roboport_entity.construction_radius = (cb * c) + cb
-                    roboport_entity.logistic_radius = (lb * l) + lb -- find out why these don't upgrade
-                    roboport_entity.logistics_connection_distance = (ldb * l) + ldb -- find out why these don't upgrade
+                    roboport_entity.logistics_radius = (lb * l) + lb
+                    roboport_entity.logistics_connection_distance = (ldb * l) + ldb
 
                     if settings.startup["show-items"].value == true then
                         roboport_item.subgroup = "br-roboports"
