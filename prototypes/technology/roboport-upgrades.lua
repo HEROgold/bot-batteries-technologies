@@ -6,6 +6,12 @@ local research_limit = settings.startup["energy-research-limit"].value
 ---@type number
 ---@diagnostic disable-next-line: assign-type-mismatch
 local research_mimimum = settings.startup["energy-research-minimum"].value
+---@type number
+---@diagnostic disable-next-line: assign-type-mismatch
+local research_count = settings.startup["roboport-research-upgrade-cost"].value
+---@type number
+---@diagnostic disable-next-line: assign-type-mismatch
+local research_time = settings.startup["roboport-research-upgrade-time"].value
 local modules = data.raw["module"]
 
 local f = {}
@@ -175,8 +181,8 @@ f.add_module_upgrade_research = function()
               }
             },
             unit = {
-              count_formula = "500*(L)",
-              time = 60,
+              count_formula = research_count .. "*(L)", -- TODO: make this a setting/editable
+              time = research_time, -- TODO: make this a setting/editable
               ingredients = f.get_module_research_ingredients(module_type, i)
             },
           }

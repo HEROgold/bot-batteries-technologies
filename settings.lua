@@ -1,20 +1,5 @@
-data:extend({
-    {
-        type = "int-setting",
-        name = "energy-research-limit",
-        setting_type = "startup",
-        default_value = 9,
-        maximum_value = 9
-        --Maximum amount of research and roboport levels. > MASSIVELY impacts the game loading, as it becomes a*b*c amount. (a, b and c are all this setting)
-    },
-    {
-        type = "int-setting",
-        name = "energy-research-minimum",
-        setting_type = "startup",
-        default_value = 3,
-        maximum_value = 9
-        -- Minimum amount of researches required
-    },
+---@type table<LuaSettings>
+local roboport_settings = {
     {
         type = "double-setting",
         name = "input-flow-limit-modifier",
@@ -49,7 +34,79 @@ data:extend({
         setting_type = "startup",
         minimum_value = 0.1,
         default_value = 1,
-    },{
+    },
+}
+---@type table<LuaSettings>
+local storage_settings = {
+    {
+        type = "int-setting",
+        name = "construction-area-limit",
+        setting_type = "startup",
+        default_value = 3,
+        minimum_value = 1,
+        maximum_value = 9
+    },
+    {
+        type = "int-setting",
+        name = "logistic-area-limit",
+        setting_type = "startup",
+        default_value = 3,
+        minimum_value = 1,
+        maximum_value = 9
+    },
+    {
+        type = "int-setting",
+        name = "robot-storage-limit",
+        setting_type = "startup",
+        default_value = 3,
+        minimum_value = 1,
+        maximum_value = 9
+    },
+    {
+        type = "int-setting",
+        name = "material-storage-limit",
+        setting_type = "startup",
+        default_value = 3,
+        minimum_value = 1,
+        maximum_value = 9
+    },
+}
+---@type table<LuaSettings>
+local research_settings = {
+    {
+        type = "int-setting",
+        name = "energy-research-limit",
+        setting_type = "startup",
+        default_value = 9,
+        maximum_value = 9
+        --Maximum amount of research and roboport levels. > MASSIVELY impacts the game loading, as it becomes a*b*c amount. (a, b and c are all this setting)
+    },
+    {
+        type = "int-setting",
+        name = "energy-research-minimum",
+        setting_type = "startup",
+        default_value = 3,
+        maximum_value = 9
+        -- Minimum amount of researches required
+    },
+    {
+        type = "int-setting",
+        name = "roboport-research-upgrade-cost",
+        setting_type = "startup",
+        default_value = 500,
+        minimum_value = 1,
+    },
+    {
+        type = "int-setting",
+        name = "roboport-research-upgrade-time",
+        setting_type = "startup",
+        default_value = 60,
+        minimum_value = 1,
+    },
+}
+---@type table<LuaSettings>
+local mod_settings = {
+    {
         type = "int-setting",
         name = "upgrade-timer",
         setting_type = "startup",
@@ -62,36 +119,9 @@ data:extend({
         setting_type = "startup",
         default_value = true
     },
-    {
-        type = "double-setting",
-        name = "construction-area-limit",
-        setting_type = "startup",
-        default_value = 3,
-        minimum_value = 1,
-        maximum_value = 9
-    },
-    {
-        type = "double-setting",
-        name = "logistic-area-limit",
-        setting_type = "startup",
-        default_value = 3,
-        minimum_value = 1,
-        maximum_value = 9
-    },
-    {
-        type = "double-setting",
-        name = "robot-storage-limit",
-        setting_type = "startup",
-        default_value = 3,
-        minimum_value = 1,
-        maximum_value = 9
-    },
-    {
-        type = "double-setting",
-        name = "material-storage-limit",
-        setting_type = "startup",
-        default_value = 3,
-        minimum_value = 1,
-        maximum_value = 9
-    }
-})
+}
+
+data:extend(roboport_settings)
+data:extend(storage_settings)
+data:extend(research_settings)
+data:extend(mod_settings)
