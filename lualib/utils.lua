@@ -23,26 +23,27 @@ local material_storage_limit = material_storage_limit
 utils = {}
 
 
----comments
+
 ---@param effectivity_level integer
 ---@param productivity_level integer
 ---@param speed_level integer
 ---@return string
 utils.get_energy_suffix = function(effectivity_level, productivity_level, speed_level)
     -- e0p0s0 suffix for effectivity 0, productivity 0, speed 0
+    -- todo: set a hard limit, which should be the amount of roboports we generate. (shouldn't be needed.)
     effectivity_level = math.max(effectivity_level, 0)
     productivity_level = math.max(productivity_level, 0)
     speed_level = math.max(speed_level, 0)
     return tostring("e" .. effectivity_level .. "p" .. productivity_level .. "s" .. speed_level)
 end
 
----comments
 ---@param construction_area_level integer
 ---@param logistic_area_level integer
 ---@param robot_storage_level integer
 ---@param material_storage_level integer
 ---@return string
 utils.get_storage_suffix = function(construction_area_level, logistic_area_level, robot_storage_level, material_storage_level)
+    -- todo: set a hard limit, which should be the amount of roboports we generate. (shouldn't be needed.)
     construction_area_level = math.max(construction_area_level, 0)
     logistic_area_level = math.max(logistic_area_level, 0)
     robot_storage_level = math.max(robot_storage_level, 0)
