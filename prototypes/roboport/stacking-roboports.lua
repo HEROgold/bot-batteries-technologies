@@ -41,7 +41,7 @@ local function add_all_roboports()
                 local roboport_item = table.deepcopy(base_roboport_item)
                 local roboport_entity = table.deepcopy(base_roboport_entity)
 
-                local suffix = utils.get_internal_suffix(i, j, k)
+                local suffix = utils.get_energy_suffix(i, j, k)
                 local name = "energy-roboport-mk-" .. suffix
                 local localised_name = tostring("Energy Roboport Mk." .. i .. j .. k)
 

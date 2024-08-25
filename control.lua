@@ -126,10 +126,9 @@ end
 
 ---@param roboport LuaEntity
 local function update_energy_roboport_level(roboport)
-    
     local surface = roboport.surface
     local old_energy = roboport.energy
-    local suffix = utils.get_internal_suffix(
+    local suffix = utils.get_energy_suffix(
         global.EffectivityResearchLevel,
         global.ProductivityResearchLevel,
         global.SpeedResearchLevel
@@ -179,6 +178,7 @@ local function update_storage_roboport_level(roboport)
     roboport.destroy()
 end
 
+
 ---@param roboport LuaEntity
 local function update_ghost_level(roboport)
     if not validate_ghost(roboport) then
@@ -188,11 +188,17 @@ local function update_ghost_level(roboport)
     local to_create = {}
 
     if utilities.string_starts_with(roboport.ghost_name, storage_roboport_name) then
+        local suffix = utils.get_storage_suffix(
+            global.ConstructionAreaResearchLevel,
+            global.LogisticAreaResearchLevel,
+            global.RobotStorageResearchLevel,
+            global.MaterialStorageResearchLevel
+        )
         local to_create = {
             name = "entity-ghost",
             type = "entity-ghost",
-            ghost_name = "logistical-roboport-mk-c0l0r0m0",
-            ghost_type = "roboport",
+            ghost_name = storage_roboport_name .. suffix,
+            ghost_ype = "roboport",
             ghost_prototype = "roboport",
             position = roboport.position,
             force = roboport.force,
@@ -202,10 +208,15 @@ local function update_ghost_level(roboport)
             raise_built = false
         }
     else
+        local suffix = utils.get_energy_suffix(
+            global.EffectivityResearchLevel,
+            global.ProductivityResearchLevel,
+            global.SpeedResearchLevel
+        )
         local to_create = {
             name = "entity-ghost",
             type = "entity-ghost",
-            ghost_name = "roboport",
+            ghost_name = energy_roboport_name .. suffix,
             ghost_type = "roboport",
             ghost_prototype = "roboport",
             position = roboport.position,
@@ -256,6 +267,8 @@ end
 
 local function mark_all_roboports_for_update()
     for _, surface in pairs(game.surfaces) do
+        -- TODO: This should be optimized to only check roboports that are actually affected by the research.
+        -- Or seperate out energy and storage roboports, so we can only check the relevant ones.
         for _, roboport in pairs(surface.find_entities_filtered{type = "roboport"}) do
             global.roboports_to_update[roboport] = true
         end
@@ -264,6 +277,7 @@ end
 
 
 script.on_event(defines.events.on_research_finished,
+    ---@param event EventData.on_research_finished
     function (event)
         if utilities.string_starts_with(event.research.name, "roboport-effectivity") then
             global.EffectivityResearchLevel = global.EffectivityResearchLevel + 1
@@ -274,12 +288,25 @@ script.on_event(defines.events.on_research_finished,
         elseif utilities.string_starts_with(event.research.name, "roboport-speed") then
             global.SpeedResearchLevel = global.SpeedResearchLevel + 1
             mark_all_roboports_for_update()
+        elseif utilities.string_starts_with(event.research.name, "roboport-construction-area") then
+            global.ConstructionAreaResearchLevel = global.ConstructionAreaResearchLevel + 1
+            mark_all_roboports_for_update()
+        elseif utilities.string_starts_with(event.research.name, "roboport-logistics-area") then
+            global.LogisticAreaResearchLevel = global.LogisticAreaResearchLevel + 1
+            mark_all_roboports_for_update()
+        elseif utilities.string_starts_with(event.research.name, "roboport-material-storage") then
+            global.MaterialStorageResearchLevel = global.MaterialStorageResearchLevel + 1
+            mark_all_roboports_for_update()
+        elseif utilities.string_starts_with(event.research.name, "roboport-robot-storage") then
+            global.RobotStorageResearchLevel = global.RobotStorageResearchLevel + 1
+            mark_all_roboports_for_update()
         end
     end
 )
 
 
 script.on_event(defines.events.on_research_reversed,
+    ---@param event EventData.on_research_reversed
     function (event)
         if utilities.string_starts_with(event.research.name, "roboport-effectivity") then
             global.EffectivityResearchLevel = global.EffectivityResearchLevel - 1
@@ -289,6 +316,18 @@ script.on_event(defines.events.on_research_reversed,
             mark_all_roboports_for_update()
         elseif utilities.string_starts_with(event.research.name, "roboport-speed") then
             global.SpeedResearchLevel = global.SpeedResearchLevel - 1
+            mark_all_roboports_for_update()
+        elseif utilities.string_starts_with(event.research.name, "roboport-construction-area") then
+            global.ConstructionAreaResearchLevel = global.ConstructionAreaResearchLevel - 1
+            mark_all_roboports_for_update()
+        elseif utilities.string_starts_with(event.research.name, "roboport-logistics-area") then
+            global.LogisticAreaResearchLevel = global.LogisticAreaResearchLevel - 1
+            mark_all_roboports_for_update()
+        elseif utilities.string_starts_with(event.research.name, "roboport-material-storage") then
+            global.MaterialStorageResearchLevel = global.MaterialStorageResearchLevel - 1
+            mark_all_roboports_for_update()
+        elseif utilities.string_starts_with(event.research.name, "roboport-robot-storage") then
+            global.RobotStorageResearchLevel = global.RobotStorageResearchLevel - 1
             mark_all_roboports_for_update()
         end
     end
@@ -316,6 +355,7 @@ script.on_event(
         defines.events.script_raised_built,
         defines.events.script_raised_revive,
     },
+    ---@param event EventData.on_built_entity | EventData.on_robot_built_entity | EventData.on_post_entity_died | EventData.script_raised_built | EventData.script_raised_revive
 function (event)
     if event.ghost then
         on_built(event.ghost)
@@ -339,6 +379,7 @@ script.on_event(
         defines.events.on_entity_died,
         defines.events.script_raised_destroy,
     },
+    ---@param event EventData.on_player_mined_entity | EventData.on_robot_mined_entity | EventData.on_entity_died | EventData.script_raised_destroy
     function (event)
         if event.entity == nil or not event.entity.valid then
             return
@@ -356,6 +397,21 @@ script.on_nth_tick(
 )
 
 commands.add_command(
+    "br-show",
+    "Shows the current research levels",
+    function ()
+        game.print("-- Energy --")
+        game.print("Effectivity: " .. global.EffectivityResearchLevel)
+        game.print("Productivity: " .. global.ProductivityResearchLevel)
+        game.print("Speed: " .. global.SpeedResearchLevel)
+        game.print("-- Storage --")
+        game.print("Construction Area: " .. global.ConstructionAreaResearchLevel)
+        game.print("Logistics Area: " .. global.LogisticAreaResearchLevel)
+        game.print("Robot Storage: " .. global.RobotStorageResearchLevel)
+        game.print("Material Storage: " .. global.MaterialStorageResearchLevel)
+    end
+)
+commands.add_command(
     "br-uninstall",
     "Forces roboports to be vanilla, usefull for uninstalling this mod",
     function ()
@@ -364,7 +420,12 @@ commands.add_command(
                 if not roboport.valid then
                     goto continue
                 end
-                if not utilities.string_starts_with(roboport.name, energy_roboport_name) or roboport.name == "roboport" then
+
+                if (
+                    roboport.name == "roboport"
+                    or not utilities.string_starts_with(roboport.name, energy_roboport_name)
+                    or not utilities.string_starts_with(roboport.name, energy_roboport_name)
+                ) then
                     goto continue
                 end
 
@@ -387,6 +448,7 @@ commands.add_command(
 )
 
 script.on_event(defines.events.on_player_selected_area,
+    ---@param event EventData.on_player_selected_area
 function(event)
     if event.item ~= "roboport-updater" then
         return
