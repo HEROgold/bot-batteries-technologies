@@ -152,7 +152,6 @@ end
 
 ---@param roboport LuaEntity
 local function update_storage_roboport_level(roboport)
-    
     local surface = roboport.surface
     local old_energy = roboport.energy
     local storage_suffix = utils.get_storage_suffix(
@@ -241,6 +240,7 @@ local function update_roboport_level(roboport)
         return
     end
 
+    game.print("Updating roboport: " .. roboport.name)
     if utilities.string_starts_with(roboport.name, storage_roboport_name) then
         update_storage_roboport_level(roboport)
     else
