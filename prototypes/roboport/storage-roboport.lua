@@ -98,6 +98,8 @@ local function add_stacking_storage_roboport()
                     roboport_entity.construction_radius = (cb * c) + cb
                     roboport_entity.logistics_radius = (lb * l) + lb
                     roboport_entity.logistics_connection_distance = (ldb * l) + ldb
+                    roboport_entity.minable = logisitcal_roboport_entity.minable
+                    roboport_entity.minable.result = logisitcal_roboport_entity.name
 
                     if settings.startup["show-items"].value == true then
                         roboport_item.subgroup = "br-roboports"
