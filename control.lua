@@ -193,7 +193,7 @@ local function update_ghost_level(roboport)
             global.RobotStorageResearchLevel,
             global.MaterialStorageResearchLevel
         )
-        local to_create = {
+        to_create = {
             name = "entity-ghost",
             type = "entity-ghost",
             ghost_name = storage_roboport_name .. suffix,
@@ -212,7 +212,7 @@ local function update_ghost_level(roboport)
             global.ProductivityResearchLevel,
             global.SpeedResearchLevel
         )
-        local to_create = {
+        to_create = {
             name = "entity-ghost",
             type = "entity-ghost",
             ghost_name = energy_roboport_name .. suffix,
