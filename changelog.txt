@@ -4,6 +4,7 @@ Date: 2024-08-29
   Fixes:
     - Fixed a bug wehn destrucing a logistic it gave back the vanilla version. (losing you resources)
     - Fixed a bug when placing upgrade roboport ghosts causing a crash.
+    - Fixed a bug when a ghost would **not** be reverted to a vanilla roboport.
   Info:
     - When using any upgraded ghost, it upgrades/reverts to whatever research level you have.
       If you want to use editor to place a upgraded roboport, place the actual roboport, not a ghost.
