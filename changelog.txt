@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.3
-Date: 2024-08-29
+Date: 2024-09-03
   Fixes:
     - Fixed a bug wehn destrucing a logistic it gave back the vanilla version. (losing you resources)
     - Fixed a bug when placing upgrade roboport ghosts causing a crash.
