@@ -2,8 +2,10 @@ require("lualib.utils")
 require("__heroic_library__.utilities")
 
 local upgrade_timer = tonumber(settings.startup["upgrade-timer"].value)
-local energy_roboport_name = "energy-roboport-mk-"
-local storage_roboport_name = "logistical-roboport-mk-"
+local roboport_name = "roboport"
+local energy_roboport_name = "energy-".. roboport_name .. "-mk-"
+local storage_roboport_base_name = "logistical-roboport"
+local storage_roboport_name = storage_roboport_base_name .. "-mk-"
 
 script.on_init(
     function ()
@@ -196,7 +198,7 @@ local function update_ghost_level(roboport)
         to_create = {
             name = "entity-ghost",
             type = "entity-ghost",
-            ghost_name = storage_roboport_name .. suffix,
+            ghost_name = storage_roboport_base_name,
             ghost_ype = "roboport",
             ghost_prototype = "roboport",
             position = roboport.position,
@@ -215,7 +217,7 @@ local function update_ghost_level(roboport)
         to_create = {
             name = "entity-ghost",
             type = "entity-ghost",
-            ghost_name = energy_roboport_name .. suffix,
+            ghost_name = roboport_name,
             ghost_type = "roboport",
             ghost_prototype = "roboport",
             position = roboport.position,
