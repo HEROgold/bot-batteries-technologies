@@ -242,7 +242,7 @@ local function update_roboport_level(roboport)
         return
     end
 
-    game.print("Updating roboport: " .. roboport.name)
+    -- game.print("Updating roboport: " .. roboport.name)
     if utilities.string_starts_with(roboport.name, storage_roboport_name) then
         update_storage_roboport_level(roboport)
     else
