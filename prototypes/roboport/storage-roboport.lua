@@ -23,45 +23,37 @@ local robot_storage_limit = math.max(robot_storage_limit, research_mimimum)
 local material_storage_limit = math.max(material_storage_limit, research_mimimum)
 local construction_area_limit = math.max(construction_area_limit, research_mimimum)
 local logistic_area_limit = math.max(logistic_area_limit, research_mimimum)
+local logisitcal_roboport_entity = table.deepcopy(base_roboport_entity)
+local logisitcal_roboport_item = table.deepcopy(base_roboport_item)
 
+local localised_name = "Logistical Roboport"
+
+logisitcal_roboport_item.name = "logistical-roboport"
+logisitcal_roboport_entity.name = "logistical-roboport"
+
+logisitcal_roboport_item.place_result = logisitcal_roboport_entity.name
+logisitcal_roboport_item.localised_name = localised_name
+logisitcal_roboport_item.hidden = false
+
+logisitcal_roboport_entity.localised_name = localised_name
+logisitcal_roboport_entity.minable.result = logisitcal_roboport_item.name
+logisitcal_roboport_entity.robot_slots_count = 10
+logisitcal_roboport_entity.material_slots_count = 10
+
+---@type data.RecipePrototype
+local storage_roboport_recipe = {
+    type = "recipe",
+    name = "logistical-roboport",
+    -- enabled = true,
+    ingredients = {
+        {"roboport", 1},
+        {"steel-plate", 100},
+    },
+    result = logisitcal_roboport_entity.name,
+    category = "crafting",
+    unlock_results = true,
+}
 local function add_storage_roboport()
-    logisitcal_roboport_entity = table.deepcopy(base_roboport_entity)
-    logisitcal_roboport_item = table.deepcopy(base_roboport_item)
-
-    local localised_name = "Logistical Roboport"
-
-    logisitcal_roboport_item.name = "logistical-roboport"
-    logisitcal_roboport_entity.name = "logistical-roboport"
-
-    logisitcal_roboport_item.place_result = logisitcal_roboport_entity.name
-    logisitcal_roboport_item.localised_name = localised_name
-    logisitcal_roboport_item.hidden = false
-
-    logisitcal_roboport_entity.localised_name = localised_name
-    logisitcal_roboport_entity.minable.result = logisitcal_roboport_item.name
-    logisitcal_roboport_entity.robot_slots_count = 10
-    logisitcal_roboport_entity.material_slots_count = 10
-
-    -- Copy over some of the base roboport values (shouldn't be needed)
-    logisitcal_roboport_entity.minable = base_roboport_entity.minable
-    logisitcal_roboport_entity.construction_radius = base_roboport_entity.construction_radius
-    logisitcal_roboport_entity.logistics_radius = base_roboport_entity.logistics_radius
-    logisitcal_roboport_entity.logistics_connection_distance = base_roboport_entity.logistics_connection_distance
-
-    ---@type data.RecipePrototype
-    local storage_roboport_recipe = {
-        type = "recipe",
-        name = "logistical-roboport",
-        -- enabled = true,
-        ingredients = {
-            {"roboport", 1},
-            {"steel-plate", 100},
-        },
-        result = logisitcal_roboport_entity.name,
-        category = "crafting",
-        unlock_results = true,
-    }
-
     data:extend({logisitcal_roboport_item})
     data:extend({storage_roboport_recipe})
     data:extend({logisitcal_roboport_entity})
@@ -98,8 +90,8 @@ local function add_stacking_storage_roboport()
                     roboport_entity.construction_radius = (cb * c) + cb
                     roboport_entity.logistics_radius = (lb * l) + lb
                     roboport_entity.logistics_connection_distance = (ldb * l) + ldb
-                    roboport_entity.minable = logisitcal_roboport_entity.minable
-                    roboport_entity.minable.result = logisitcal_roboport_entity.name
+                    -- roboport_entity.minable = logisitcal_roboport_entity.minable
+                    -- roboport_entity.minable.result = logisitcal_roboport_entity.name
 
                     if settings.startup["show-items"].value == true then
                         roboport_item.subgroup = "br-roboports"
