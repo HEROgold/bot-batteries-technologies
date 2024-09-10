@@ -23,20 +23,20 @@ local module_names = {
 
 
 
-f.get_research_name = function(module_type, level)
-  return "roboport-" .. module_type .. f.get_suffix_by_level(level)
+local function get_research_name(module_type, level)
+  return "roboport-" .. module_type .. get_suffix_by_level(level)
 end
 
-f.get_research_localized_name = function(module_type, level)
+local get_research_localized_name = function(module_type, level)
   return "roboport " .. module_type .. " upgrade " .. level
 end
 
-f.get_effect_description = function(module_type)
+local get_effect_description = function(module_type)
   return "Upgrade the " .. module_type .. " of a roboport"
 end
 
 ---@return number, number, number 
-f.highest_module_number_by_name = function()
+local function highest_module_number_by_name()
   local effectivity = 0
   local productivity = 0
   local speed = 0
@@ -73,8 +73,8 @@ f.highest_module_number_by_name = function()
     return effectivity, productivity, speed
 end
 
-f.get_highest_module_number = function ()
-  local effectivity, productivity, speed = f.highest_module_number_by_name()
+local function get_highest_module_number()
+  local effectivity, productivity, speed = highest_module_number_by_name()
   
   -- the following mods don't can't be found using highest_module_number_by_name()
   -- we set the limits manually
@@ -88,8 +88,8 @@ f.get_highest_module_number = function ()
   return effectivity, productivity, speed
 end
 
-f.get_module_research_ingredients = function (module_type, level)
-  local prereq = f.get_research_prerequisites(module_type, level)
+local function get_module_research_ingredients(module_type, level)
+  local prereq = get_research_prerequisites(module_type, level)
   local name = prereq[1]
   local techno = table.deepcopy(data.raw["technology"][name])
 
@@ -106,7 +106,7 @@ f.get_module_research_ingredients = function (module_type, level)
 end
 
 
-f.get_suffix_by_level = function(i)
+local function get_suffix_by_level(i)
   local module_name = nil
   if i == 1 then
     module_name = ""
@@ -117,7 +117,7 @@ f.get_suffix_by_level = function(i)
 end
 
 
-local effectivity, productivity, speed = f.get_highest_module_number()
+local effectivity, productivity, speed = get_highest_module_number()
 
 -- Respect the setting a user has provided
 local effectivity_limit = math.min(research_limit, effectivity)
@@ -132,35 +132,35 @@ Limits["speed"] = speed_limit
 local module_count = effectivity -- modules usually are paired, so should be fine like this.
 
 -- the module technology is the 1st prerequisite
-f.get_research_prerequisites = function(module_type, level)
+local function get_research_prerequisites(module_type, level)
   local prerequisites = nil
 
   if level == 1 then
     prerequisites = {
-      module_type .. "-module" .. f.get_suffix_by_level(level),
+      module_type .. "-module" .. get_suffix_by_level(level),
       "construction-robotics"
     }
   elseif module_count < research_mimimum and level <= research_limit and level > module_count then
     prerequisites = {
-      f.get_research_name(module_type, level-1)
+      get_research_name(module_type, level-1)
     }
   else
     prerequisites = {
-      module_type .. "-module" .. f.get_suffix_by_level(level),
-      f.get_research_name(module_type, level-1)
+      module_type .. "-module" .. get_suffix_by_level(level),
+      get_research_name(module_type, level-1)
     }
   end
   return prerequisites
 end
 
-f.get_tech_sprite = function (module_type, level)
+local get_tech_sprite = function (module_type, level)
     return utilities.technology_sprite_add_item_icon(
       "__base__/graphics/technology/robotics.png",
       "__space-exploration-graphics__/graphics/icons/modules/"..module_type.."-"..level..".png"
     )
 end
 
-f.add_module_upgrade_research = function()
+local function add_module_upgrade_research()
   for _, module_type in pairs(module_names) do
     local limit = math.max(Limits[module_type], research_mimimum)
 
@@ -169,24 +169,24 @@ f.add_module_upgrade_research = function()
         {
           {
             type = "technology",
-            name = f.get_research_name(module_type, i),
-            localised_name = f.get_research_localized_name(module_type, i),
+            name = get_research_name(module_type, i),
+            localised_name = get_research_localized_name(module_type, i),
             icon_size = 256,
             icon_mipmaps = 4,
-            icons = f.get_tech_sprite(module_type, i),
+            icons = get_tech_sprite(module_type, i),
             upgrade = true,
             order = "c-k-f-a",
-            prerequisites = f.get_research_prerequisites(module_type, i),
+            prerequisites = get_research_prerequisites(module_type, i),
             effects = {
               {
                 type = "nothing",
-                effect_description = f.get_effect_description(module_type),
+                effect_description = get_effect_description(module_type),
               }
             },
             unit = {
               count_formula = research_count .. "*(L)",
               time = research_time,
-              ingredients = f.get_module_research_ingredients(module_type, i)
+              ingredients = get_module_research_ingredients(module_type, i)
             },
           }
         }
@@ -196,4 +196,4 @@ f.add_module_upgrade_research = function()
 end
 
 
-f.add_module_upgrade_research()
+add_module_upgrade_research()
