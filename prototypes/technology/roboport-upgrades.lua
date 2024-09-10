@@ -81,6 +81,9 @@ f.get_highest_module_number = function ()
   if mods["space-exploration"] then
     effectivity, productivity, speed = 9, 9, 9
   end
+  if mods["Module-Rebalance"] then
+    effectivity, productivity, speed = 7, 7, 7
+  end
 
   return effectivity, productivity, speed
 end
