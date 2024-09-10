@@ -22,6 +22,16 @@ local module_names = {
 }
 
 
+local function get_suffix_by_level(i)
+  local module_name = nil
+  if i == 1 then
+    module_name = ""
+  else
+    module_name = "-" .. i
+  end
+  return module_name
+end
+
 
 local function get_research_name(module_type, level)
   return "roboport-" .. module_type .. get_suffix_by_level(level)
@@ -88,33 +98,6 @@ local function get_highest_module_number()
   return effectivity, productivity, speed
 end
 
-local function get_module_research_ingredients(module_type, level)
-  local prereq = get_research_prerequisites(module_type, level)
-  local name = prereq[1]
-  local techno = table.deepcopy(data.raw["technology"][name])
-
-  if techno == nil then
-    -- return default set of ingredients
-    return {
-      {"automation-science-pack", 1},
-      {"logistic-science-pack", 1},
-      {"chemical-science-pack", 1},
-      {"utility-science-pack", 1},
-    }
-  end
-  return techno.unit.ingredients
-end
-
-
-local function get_suffix_by_level(i)
-  local module_name = nil
-  if i == 1 then
-    module_name = ""
-  else
-    module_name = "-" .. i
-  end
-  return module_name
-end
 
 
 local effectivity, productivity, speed = get_highest_module_number()
@@ -158,6 +141,23 @@ local get_tech_sprite = function (module_type, level)
       "__base__/graphics/technology/robotics.png",
       "__space-exploration-graphics__/graphics/icons/modules/"..module_type.."-"..level..".png"
     )
+end
+
+local function get_module_research_ingredients(module_type, level)
+  local prereq = get_research_prerequisites(module_type, level)
+  local name = prereq[1]
+  local techno = table.deepcopy(data.raw["technology"][name])
+
+  if techno == nil then
+    -- return default set of ingredients
+    return {
+      {"automation-science-pack", 1},
+      {"logistic-science-pack", 1},
+      {"chemical-science-pack", 1},
+      {"utility-science-pack", 1},
+    }
+  end
+  return techno.unit.ingredients
 end
 
 local function add_module_upgrade_research()
