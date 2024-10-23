@@ -137,10 +137,17 @@ local function get_research_prerequisites(module_type, level)
 end
 
 local get_tech_sprite = function (module_type, level)
+  if mods["space-exploration-graphics"] then
     return utilities.technology_sprite_add_item_icon(
       "__base__/graphics/technology/robotics.png",
       "__space-exploration-graphics__/graphics/icons/modules/"..module_type.."-"..level..".png"
     )
+  else
+    return utilities.technology_sprite_add_item_icon(
+      "__base__/graphics/technology/robotics.png",
+      "__base__/graphics/icons/"..module_type.."-3.png"
+    )
+  end
 end
 
 local function get_module_research_ingredients(module_type, level)
