@@ -147,7 +147,8 @@ local function update_energy_roboport_level(roboport)
         fast_replace = true,
         spill = false,
         create_build_effect_smoke = false,
-        raise_built = false
+        raise_built = false,
+        quality = roboport.quality
     }
 
     created_rport.energy = old_energy
@@ -211,7 +212,8 @@ local function update_ghost_level(roboport)
             fast_replace = true,
             spill = false,
             create_build_effect_smoke = false,
-            raise_built = false
+            raise_built = false,
+            quality = roboport.quality
         }
     elseif utilities.string_starts_with(roboport.ghost_name, energy_roboport_name_base) then
         local suffix = utils.get_energy_suffix(
@@ -230,7 +232,8 @@ local function update_ghost_level(roboport)
             fast_replace = true,
             spill = false,
             create_build_effect_smoke = false,
-            raise_built = false
+            raise_built = false,
+            quality = roboport.quality
         }
     end
 
