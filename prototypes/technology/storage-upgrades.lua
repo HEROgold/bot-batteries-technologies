@@ -13,6 +13,24 @@ local research_limit = settings.startup["energy-research-limit"].value
 ---@diagnostic disable-next-line: assign-type-mismatch
 local research_mimimum = settings.startup["energy-research-minimum"].value
 
+---@type number
+---@diagnostic disable-next-line: assign-type-mismatch
+local robot_storage_limit = tonumber(settings.startup["robot-storage-limit"].value)
+---@type number
+---@diagnostic disable-next-line: assign-type-mismatch
+local material_storage_limit = tonumber(settings.startup["material-storage-limit"].value)
+---@type number
+---@diagnostic disable-next-line: assign-type-mismatch
+local construction_area_limit = tonumber(settings.startup["construction-area-limit"].value)
+---@type number
+---@diagnostic disable-next-line: assign-type-mismatch
+local logistic_area_limit = tonumber(settings.startup["logistic-area-limit"].value)
+
+local robot_storage_limit = math.max(robot_storage_limit, research_mimimum)
+local material_storage_limit = math.max(material_storage_limit, research_mimimum)
+local construction_area_limit = math.max(construction_area_limit, research_mimimum)
+local logistic_area_limit = math.max(logistic_area_limit, research_mimimum)
+
 local f = {}
 
 f.get_research_prerequisites = function(upgrade_name, level)
@@ -78,13 +96,32 @@ f.get_suffix_by_level = function(i)
   return name
 end
 
+construction_area = "construction-area"
+logistics_area = "logistics-area"
+robot_storage = "robot-storage"
+material_storage = "material-storage"
+
+f.get_research_limit = function(upgrade_type)
+  local limit = 999999
+  if upgrade_type == robot_storage then
+    limit = robot_storage_limit
+  elseif upgrade_type == material_storage then
+    limit = material_storage_limit
+  elseif upgrade_type == construction_area then
+    limit = construction_area_limit
+  elseif upgrade_type == logistics_area then
+    limit = logistic_area_limit
+  end
+  return math.max(research_mimimum, math.min(limit, research_limit))
+end
+
 local function add_researches()
-  local upgrade_names = {"construction-area", "logistics-area", "robot-storage", "material-storage"}
+  local upgrade_names = {construction_area, logistics_area, robot_storage, material_storage}
 
   table.insert(data.raw["technology"]["logistic-robotics"].effects, {type = "unlock-recipe", recipe = "logistical-roboport"})
 
   for _, upgrade_type in pairs(upgrade_names) do
-    local limit = math.max(research_mimimum, research_limit)
+    limit = f.get_research_limit(upgrade_type)
 
     for i=1, limit do
       data:extend(
