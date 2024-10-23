@@ -1,6 +1,16 @@
 
 ---@type data.SelectionToolPrototype
 local item = {
+    select = {
+        border_color = { r = 0.72, g = 0.45, b = 0.2, a = 1 },
+        cursor_box_type = "entity",
+        mode = { "buildable-type", "same-force", "entity-ghost" },
+    },
+    alt_select = {
+        border_color = { r = 0.72, g = 0.22, b = 0.1, a = 1 },
+        cursor_box_type = "entity",
+        mode = { "buildable-type", "same-force", "entity-ghost" },
+    },
     type = "selection-tool",
     name = "roboport-updater",
     subgroup = "tool",
@@ -15,6 +25,7 @@ local item = {
     flags = { "only-in-cursor", "spawnable" },
     stack_size = 1,
     stackable = false,
+    -- TODO: remove code below.
     selection_color = { r = 0.72, g = 0.45, b = 0.2, a = 1 },
     alt_selection_color = { r = 0.72, g = 0.22, b = 0.1, a = 1 },
     selection_mode = { "buildable-type", "same-force", "entity-ghost" },
@@ -31,16 +42,17 @@ local shortcut = {
     action = "spawn-item",
     item_to_spawn = "roboport-updater",
     order = "m[roboport-updater]",
-    --style = "yellow",
-    icon = {
-        filename = "__base__/graphics/icons/repair-pack.png",
-        flags = {
-            "icon"
-        },
-        priority = "extra-high-no-scale",
-        scale = 1,
-        size = 32
-    },
+    small_icon = "__base__/graphics/icons/repair-pack.png",
+    icon = "__base__/graphics/icons/repair-pack.png",
+    -- icon = {
+    --     filename = "__base__/graphics/icons/repair-pack.png",
+    --     flags = {
+    --         "icon"
+    --     },
+    --     priority = "extra-high-no-scale",
+    --     scale = 1,
+    --     size = 32
+    -- },
 }
 
 data:extend { item, shortcut }

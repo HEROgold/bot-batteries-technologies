@@ -16,7 +16,7 @@ local modules = data.raw["module"]
 
 local f = {}
 local module_names = {
-  "effectivity",
+  "efficiency",
   "productivity",
   "speed"
 }
@@ -47,7 +47,7 @@ end
 
 ---@return number, number, number 
 local function highest_module_number_by_name()
-  local effectivity = 0
+  local efficiency = 0
   local productivity = 0
   local speed = 0
 
@@ -64,9 +64,9 @@ local function highest_module_number_by_name()
     
       local number = math.max(n, 1)
     
-      if utilities.string_starts_with(k, "effectivity-module") then
-        if number > effectivity then
-          effectivity = number
+      if utilities.string_starts_with(k, "efficiency-module") then
+        if number > efficiency then
+          efficiency = number
         end
       end
       if utilities.string_starts_with(k, "productivity-module") then
@@ -80,39 +80,39 @@ local function highest_module_number_by_name()
         end
       end
     end
-    return effectivity, productivity, speed
+    return efficiency, productivity, speed
 end
 
 local function get_highest_module_number()
-  local effectivity, productivity, speed = highest_module_number_by_name()
+  local efficiency, productivity, speed = highest_module_number_by_name()
   
   -- the following mods don't can't be found using highest_module_number_by_name()
   -- we set the limits manually
   if mods["space-exploration"] then
-    effectivity, productivity, speed = 9, 9, 9
+    efficiency, productivity, speed = 9, 9, 9
   end
   if mods["Module-Rebalance"] then
-    effectivity, productivity, speed = 7, 7, 7
+    efficiency, productivity, speed = 7, 7, 7
   end
 
-  return effectivity, productivity, speed
+  return efficiency, productivity, speed
 end
 
 
 
-local effectivity, productivity, speed = get_highest_module_number()
+local efficiency, productivity, speed = get_highest_module_number()
 
 -- Respect the setting a user has provided
-local effectivity_limit = math.min(research_limit, effectivity)
+local efficiency_limit = math.min(research_limit, efficiency)
 local productivity_limit = math.min(research_limit, productivity)
 local speed_limit = math.min(research_limit, speed)
 
 Limits = {}
-Limits["effectivity"] = effectivity_limit
+Limits["efficiency"] = efficiency_limit
 Limits["productivity"] = productivity_limit
 Limits["speed"] = speed_limit
 
-local module_count = effectivity -- modules usually are paired, so should be fine like this.
+local module_count = efficiency -- modules usually are paired, so should be fine like this.
 
 -- the module technology is the 1st prerequisite
 local function get_research_prerequisites(module_type, level)
@@ -137,17 +137,17 @@ local function get_research_prerequisites(module_type, level)
 end
 
 local get_tech_sprite = function (module_type, level)
-  if mods["space-exploration-graphics"] then
+  -- if mods["space-exploration-graphics"] then
+  --   return utilities.technology_sprite_add_item_icon(
+  --     "__base__/graphics/technology/robotics.png",
+  --     "__space-exploration-graphics__/graphics/icons/modules/"..module_type.."-module-"..level..".png" -- Needs testing
+  --   )
+  -- else
     return utilities.technology_sprite_add_item_icon(
       "__base__/graphics/technology/robotics.png",
-      "__space-exploration-graphics__/graphics/icons/modules/"..module_type.."-"..level..".png"
+      "__base__/graphics/icons/"..module_type.."-module-3.png"
     )
-  else
-    return utilities.technology_sprite_add_item_icon(
-      "__base__/graphics/technology/robotics.png",
-      "__base__/graphics/icons/"..module_type.."-3.png"
-    )
-  end
+  -- end
 end
 
 local function get_module_research_ingredients(module_type, level)

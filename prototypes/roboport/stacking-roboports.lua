@@ -29,7 +29,7 @@ function generate_charging_offsets(n)
 end
 
 
-local effectivity_limit = math.max(Limits["effectivity"], research_mimimum)
+local efficiency_limit = math.max(Limits["efficiency"], research_mimimum)
 local productivity_limit = math.max(Limits["productivity"], research_mimimum)
 local speed_limit = math.max(Limits["speed"], research_mimimum)
 
@@ -56,11 +56,13 @@ local energy_roboport_recipe = {
     type = "recipe",
     name = energy_name,
     -- enabled = true,
+    ---@type data.IngredientPrototype[]
     ingredients = {
-        {"roboport", 1},
-        {"steel-plate", 100},
+        {type = "item", name ="roboport", amount = 1},
+        {type = "item", name ="steel-plate", amount = 100},
     },
-    result = energy_roboport_entity.name,
+    ---@type data.ItemProductPrototype[]
+    results = {{type = "item", name = energy_roboport_item.name, amount = 1},},
     category = "crafting",
     unlock_results = true,
 }
@@ -71,7 +73,7 @@ local function add_energy_roboport()
 end
 
 local function add_all_roboports()
-    for i=0, effectivity_limit do
+    for i=0, efficiency_limit do
         for j=0, productivity_limit do
             for k=0, speed_limit do
                 local roboport_item = table.deepcopy(energy_roboport_item)
@@ -105,7 +107,7 @@ local function add_all_roboports()
                 local bce = tonumber(string.sub(energy_roboport_entity.charging_energy, 1, -3))
                 local bcsc = #energy_roboport_entity.charging_offsets
 
-                -- effectivity upgrades
+                -- efficiency upgrades
                 roboport_entity.energy_source = {
                     type = "electric",
                     usage_priority = "secondary-input",

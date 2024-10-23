@@ -45,11 +45,13 @@ local storage_roboport_recipe = {
     type = "recipe",
     name = "logistical-roboport",
     -- enabled = true,
+    ---@type data.IngredientPrototype[]
     ingredients = {
-        {"roboport", 1},
-        {"steel-plate", 100},
+        {type = "item", name ="roboport", amount = 1},
+        {type = "item", name ="steel-plate", amount = 100},
     },
-    result = logisitcal_roboport_entity.name,
+    ---@type data.ItemProductPrototype[]
+    results = {{type = "item", name = logisitcal_roboport_entity.name, amount = 1},},
     category = "crafting",
     unlock_results = true,
 }
