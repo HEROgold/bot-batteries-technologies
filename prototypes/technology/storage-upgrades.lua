@@ -84,7 +84,7 @@ local function add_researches()
   table.insert(data.raw["technology"]["logistic-robotics"].effects, {type = "unlock-recipe", recipe = "logistical-roboport"})
 
   for _, upgrade_type in pairs(upgrade_names) do
-    local limit = math.max(research_mimimum, research_limit) -- math.max(Limits[upgrade_type], research_mimimum)
+    local limit = math.max(research_mimimum, research_limit)
 
     for i=1, limit do
       data:extend(
