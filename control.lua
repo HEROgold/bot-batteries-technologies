@@ -3,9 +3,10 @@ require("__heroic_library__.utilities")
 
 local upgrade_timer = tonumber(settings.startup["upgrade-timer"].value)
 local roboport_name = "roboport"
-local energy_roboport_name = "energy-".. roboport_name .. "-mk-"
-local storage_roboport_base_name = "logistical-roboport"
-local storage_roboport_name = storage_roboport_base_name .. "-mk-"
+local energy_roboport_name_base = "energy-roboport"
+local energy_roboport_name_leveled = energy_roboport_name_base .. "-mk-"
+local storage_roboport_name_base = "logistical-roboport"
+local storage_roboport_name_leved = storage_roboport_name_base .. "-mk-"
 
 script.on_init(
     function ()
@@ -76,7 +77,7 @@ local function validate_roboport(roboport)
     if roboport_name == "roboport" then
         -- The entity is from vanilla Factorio
         return true
-    elseif utilities.string_starts_with(roboport_name, energy_roboport_name) then
+    elseif utilities.string_starts_with(roboport_name, energy_roboport_name_leveled) then
         local level = energy_levels_from_name(roboport_name)
         -- Check for correct levels, to avoid replacing already correct roboports.
         if (
@@ -86,7 +87,7 @@ local function validate_roboport(roboport)
         ) then
             return true
         end
-    elseif utilities.string_starts_with(roboport_name, storage_roboport_name) then 
+    elseif utilities.string_starts_with(roboport_name, storage_roboport_name_leved) then 
         local levels = storage_levels_from_name(roboport_name)
         if (
             levels[1] < global.ConstructionAreaResearchLevel
@@ -96,8 +97,11 @@ local function validate_roboport(roboport)
         ) then
             return true
         end
+    elseif utilities.string_starts_with(roboport_name, energy_roboport_name_base) then
+        return true
+    elseif utilities.string_starts_with(roboport_name, storage_roboport_name_base) then
+        return true
     else
-        -- Entity is from another mod
         return false
     end
 end
@@ -111,8 +115,8 @@ local function validate_ghost(ghost)
     end
     if (
         not ghost.valid
-        or not utilities.string_starts_with(ghost.ghost_name, energy_roboport_name)
-        and not utilities.string_starts_with(ghost.ghost_name, storage_roboport_name)
+        or not utilities.string_starts_with(ghost.ghost_name, energy_roboport_name_leveled)
+        and not utilities.string_starts_with(ghost.ghost_name, storage_roboport_name_leved)
     ) then
         global.ghosts_to_update[ghost] = nil
         return false
@@ -137,7 +141,7 @@ local function update_energy_roboport_level(roboport)
     )
 
     local created_rport = surface.create_entity{
-        name = energy_roboport_name .. suffix,
+        name = energy_roboport_name_leveled .. suffix,
         position = roboport.position,
         force = roboport.force,
         fast_replace = true,
@@ -164,7 +168,7 @@ local function update_storage_roboport_level(roboport)
     )
 
     local created_rport = surface.create_entity{
-        name = storage_roboport_name .. storage_suffix,
+        name = storage_roboport_name_leved .. storage_suffix,
         position = roboport.position,
         force = roboport.force,
         fast_replace = true,
@@ -188,7 +192,7 @@ local function update_ghost_level(roboport)
 
     local to_create = {}
 
-    if utilities.string_starts_with(roboport.ghost_name, storage_roboport_name) then
+    if utilities.string_starts_with(roboport.ghost_name, storage_roboport_name_leved) then
         local suffix = utils.get_storage_suffix(
             global.ConstructionAreaResearchLevel,
             global.LogisticAreaResearchLevel,
@@ -198,7 +202,7 @@ local function update_ghost_level(roboport)
         to_create = {
             name = "entity-ghost",
             type = "entity-ghost",
-            ghost_name = storage_roboport_base_name,
+            ghost_name = storage_roboport_name_base,
             ghost_ype = "roboport",
             ghost_prototype = "roboport",
             position = roboport.position,
@@ -208,7 +212,7 @@ local function update_ghost_level(roboport)
             create_build_effect_smoke = false,
             raise_built = false
         }
-    else
+    elseif utilities.string_starts_with(roboport.ghost_name, energy_roboport_name_base) then
         local suffix = utils.get_energy_suffix(
             global.EffectivityResearchLevel,
             global.ProductivityResearchLevel,
@@ -217,7 +221,7 @@ local function update_ghost_level(roboport)
         to_create = {
             name = "entity-ghost",
             type = "entity-ghost",
-            ghost_name = roboport_name,
+            ghost_name = energy_roboport_name_base,
             ghost_type = "roboport",
             ghost_prototype = "roboport",
             position = roboport.position,
@@ -243,9 +247,9 @@ local function update_roboport_level(roboport)
     end
 
     -- game.print("Updating roboport: " .. roboport.name)
-    if utilities.string_starts_with(roboport.name, storage_roboport_name) then
+    if utilities.string_starts_with(roboport.name, storage_roboport_name_base) then
         update_storage_roboport_level(roboport)
-    else
+    elseif utilities.string_starts_with(roboport.name, energy_roboport_name_base) then
         update_energy_roboport_level(roboport)
     end
 end
@@ -424,8 +428,8 @@ commands.add_command(
 
                 if (
                     roboport.name == "roboport"
-                    or not utilities.string_starts_with(roboport.name, energy_roboport_name)
-                    or not utilities.string_starts_with(roboport.name, energy_roboport_name)
+                    or not utilities.string_starts_with(roboport.name, energy_roboport_name_base)
+                    or not utilities.string_starts_with(roboport.name, energy_roboport_name_base)
                 ) then
                     goto continue
                 end

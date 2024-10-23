@@ -10,7 +10,6 @@ local buffer_capacity_modifier = tonumber(settings.startup["buffer-capacity-modi
 local recharge_minimum_modifier = tonumber(settings.startup["recharge-minimum-modifier"].value)
 local energy_usage_modifier = tonumber(settings.startup["energy-usage-modifier"].value)
 local charging_energy_modifier = tonumber(settings.startup["charging-energy-modifier"].value)
-local f = {}
 
 function generate_charging_offsets(n)
     local offsets = {}
@@ -34,15 +33,52 @@ local effectivity_limit = math.max(Limits["effectivity"], research_mimimum)
 local productivity_limit = math.max(Limits["productivity"], research_mimimum)
 local speed_limit = math.max(Limits["speed"], research_mimimum)
 
+local energy_roboport_entity = table.deepcopy(base_roboport_entity)
+local energy_roboport_item = table.deepcopy(base_roboport_item)
+
+local localised_name = "Energy Roboport"
+
+energy_name = "energy-roboport"
+energy_roboport_item.name = energy_name
+energy_roboport_entity.name = energy_name
+
+energy_roboport_item.place_result = energy_roboport_entity.name
+energy_roboport_item.localised_name = localised_name
+energy_roboport_item.hidden = false
+
+energy_roboport_entity.localised_name = localised_name
+energy_roboport_entity.minable.result = energy_roboport_item.name
+energy_roboport_entity.robot_slots_count = 10
+energy_roboport_entity.material_slots_count = 10
+
+---@type data.RecipePrototype
+local energy_roboport_recipe = {
+    type = "recipe",
+    name = energy_name,
+    -- enabled = true,
+    ingredients = {
+        {"roboport", 1},
+        {"steel-plate", 100},
+    },
+    result = energy_roboport_entity.name,
+    category = "crafting",
+    unlock_results = true,
+}
+local function add_energy_roboport()
+    data:extend({energy_roboport_item})
+    data:extend({energy_roboport_recipe})
+    data:extend({energy_roboport_entity})
+end
+
 local function add_all_roboports()
     for i=0, effectivity_limit do
         for j=0, productivity_limit do
             for k=0, speed_limit do
-                local roboport_item = table.deepcopy(base_roboport_item)
-                local roboport_entity = table.deepcopy(base_roboport_entity)
+                local roboport_item = table.deepcopy(energy_roboport_item)
+                local roboport_entity = table.deepcopy(energy_roboport_entity)
 
                 local suffix = utils.get_energy_suffix(i, j, k)
-                local name = "energy-roboport-mk-" .. suffix
+                local name = energy_name .. "-mk-" .. suffix
                 local localised_name = tostring("Energy Roboport Mk." .. i .. j .. k)
 
                 roboport_item.name = name
@@ -54,20 +90,20 @@ local function add_all_roboports()
                 roboport_item.place_result = roboport_entity.name
 
                 roboport_entity.fast_replaceable_group = "roboport"
-                roboport_entity.minable = base_roboport_entity.minable
-                roboport_entity.minable.result = base_roboport_item.name
+                roboport_entity.minable = energy_roboport_entity.minable
+                roboport_entity.minable.result = energy_roboport_item.name
 
                 -- shorter var names, all changes follow the same logic. linear upgrade
                 -- base + base * research_count * modifier.
                 -- This makes sure we always get 200%, 300%, 400% etc from base 100%
 
                 -- string.sub(x, 1, -3) to remove mw, kw, etc.
-                local bifl = tonumber(string.sub(base_roboport_entity.energy_source["input_flow_limit"], 1, -3))
-                local bfc = tonumber(string.sub(base_roboport_entity.energy_source["buffer_capacity"], 1, -3))
-                local brm = tonumber(string.sub(base_roboport_entity.recharge_minimum, 1, -3))
-                local bru = tonumber(string.sub(base_roboport_entity.energy_usage, 1, -3))
-                local bce = tonumber(string.sub(base_roboport_entity.charging_energy, 1, -3))
-                local bcsc = #base_roboport_entity.charging_offsets
+                local bifl = tonumber(string.sub(energy_roboport_entity.energy_source["input_flow_limit"], 1, -3))
+                local bfc = tonumber(string.sub(energy_roboport_entity.energy_source["buffer_capacity"], 1, -3))
+                local brm = tonumber(string.sub(energy_roboport_entity.recharge_minimum, 1, -3))
+                local bru = tonumber(string.sub(energy_roboport_entity.energy_usage, 1, -3))
+                local bce = tonumber(string.sub(energy_roboport_entity.charging_energy, 1, -3))
+                local bcsc = #energy_roboport_entity.charging_offsets
 
                 -- effectivity upgrades
                 roboport_entity.energy_source = {
@@ -93,4 +129,5 @@ local function add_all_roboports()
     end
 end
 
+add_energy_roboport()
 add_all_roboports()
