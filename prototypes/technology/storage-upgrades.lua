@@ -118,4 +118,3 @@ local function add_researches()
 end
 
 add_researches()
--- TODO: lock logistical-roboport behind research of logisitcal-robotics
