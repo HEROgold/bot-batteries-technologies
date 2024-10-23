@@ -174,7 +174,8 @@ local function update_storage_roboport_level(roboport)
         fast_replace = true,
         spill = false,
         create_build_effect_smoke = false,
-        raise_built = false
+        raise_built = false,
+        quality = roboport.quality,
     }
 
     created_rport.energy = old_energy
