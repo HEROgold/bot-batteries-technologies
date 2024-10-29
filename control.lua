@@ -1,12 +1,8 @@
 require("lualib.utils")
 require("__heroic_library__.utilities")
+require("strings")
 
 local upgrade_timer = tonumber(settings.startup["upgrade-timer"].value)
-local roboport_name = "roboport"
-local energy_roboport_name_base = "energy-roboport"
-local energy_roboport_name_leveled = energy_roboport_name_base .. "-mk-"
-local storage_roboport_name_base = "logistical-roboport"
-local storage_roboport_name_leved = storage_roboport_name_base .. "-mk-"
 
 script.on_init(
     function ()
@@ -74,10 +70,10 @@ local function validate_roboport(roboport)
     end
 
     local roboport_name = roboport.name
-    if roboport_name == "roboport" then
+    if roboport_name == Roboport then
         -- The entity is from vanilla Factorio
         return true
-    elseif utilities.string_starts_with(roboport_name, energy_roboport_name_leveled) then
+    elseif utilities.string_starts_with(roboport_name, RoboportEnergyLeveled) then
         local level = energy_levels_from_name(roboport_name)
         -- Check for correct levels, to avoid replacing already correct roboports.
         if (
@@ -87,7 +83,7 @@ local function validate_roboport(roboport)
         ) then
             return true
         end
-    elseif utilities.string_starts_with(roboport_name, storage_roboport_name_leved) then 
+    elseif utilities.string_starts_with(roboport_name, RoboportLogisticalLeveled) then 
         local levels = storage_levels_from_name(roboport_name)
         if (
             levels[1] < storage.ConstructionAreaResearchLevel
@@ -97,9 +93,9 @@ local function validate_roboport(roboport)
         ) then
             return true
         end
-    elseif utilities.string_starts_with(roboport_name, energy_roboport_name_base) then
+    elseif utilities.string_starts_with(roboport_name, RoboportEnergy) then
         return true
-    elseif utilities.string_starts_with(roboport_name, storage_roboport_name_base) then
+    elseif utilities.string_starts_with(roboport_name, RoboportLogistical) then
         return true
     else
         return false
@@ -115,8 +111,8 @@ local function validate_ghost(ghost)
     end
     if (
         not ghost.valid
-        or not utilities.string_starts_with(ghost.ghost_name, energy_roboport_name_leveled)
-        and not utilities.string_starts_with(ghost.ghost_name, storage_roboport_name_leved)
+        or not utilities.string_starts_with(ghost.ghost_name, RoboportEnergyLeveled)
+        and not utilities.string_starts_with(ghost.ghost_name, RoboportLogisticalLeveled)
     ) then
         storage.ghosts_to_update[ghost] = nil
         return false
@@ -126,7 +122,7 @@ end
 
 ---@param entity LuaEntity
 local function is_ghost_entity(entity)
-    return entity.name == "entity-ghost" or entity.type == "entity-ghost"
+    return entity.name == EntityGhost or entity.type == EntityGhost
 end
 
 
@@ -141,7 +137,7 @@ local function update_energy_roboport_level(roboport)
     )
 
     local created_rport = surface.create_entity{
-        name = energy_roboport_name_leveled .. suffix,
+        name = RoboportEnergyLeveled .. suffix,
         position = roboport.position,
         force = roboport.force,
         fast_replace = true,
@@ -169,7 +165,7 @@ local function update_storage_roboport_level(roboport)
     )
 
     local created_rport = surface.create_entity{
-        name = storage_roboport_name_leved .. storage_suffix,
+        name = RoboportLogisticalLeveled .. storage_suffix,
         position = roboport.position,
         force = roboport.force,
         fast_replace = true,
@@ -194,7 +190,7 @@ local function update_ghost_level(roboport)
 
     local to_create = {}
 
-    if utilities.string_starts_with(roboport.ghost_name, storage_roboport_name_leved) then
+    if utilities.string_starts_with(roboport.ghost_name, RoboportLogisticalLeveled) then
         local suffix = utils.get_storage_suffix(
             storage.ConstructionAreaResearchLevel,
             storage.LogisticAreaResearchLevel,
@@ -202,11 +198,11 @@ local function update_ghost_level(roboport)
             storage.MaterialStorageResearchLevel
         )
         to_create = {
-            name = "entity-ghost",
-            type = "entity-ghost",
-            ghost_name = storage_roboport_name_base,
-            ghost_ype = "roboport",
-            ghost_prototype = "roboport",
+            name = EntityGhost,
+            type = EntityGhost,
+            ghost_name = RoboportLogistical,
+            ghost_ype = Roboport,
+            ghost_prototype = Roboport,
             position = roboport.position,
             force = roboport.force,
             fast_replace = true,
@@ -215,18 +211,18 @@ local function update_ghost_level(roboport)
             raise_built = false,
             quality = roboport.quality
         }
-    elseif utilities.string_starts_with(roboport.ghost_name, energy_roboport_name_base) then
+    elseif utilities.string_starts_with(roboport.ghost_name, RoboportEnergy) then
         local suffix = utils.get_energy_suffix(
             storage.EfficiencyResearchLevel,
             storage.ProductivityResearchLevel,
             storage.SpeedResearchLevel
         )
         to_create = {
-            name = "entity-ghost",
-            type = "entity-ghost",
-            ghost_name = energy_roboport_name_base,
-            ghost_type = "roboport",
-            ghost_prototype = "roboport",
+            name = EntityGhost,
+            type = EntityGhost,
+            ghost_name = RoboportEnergy,
+            ghost_type = Roboport,
+            ghost_prototype = Roboport,
             position = roboport.position,
             force = roboport.force,
             fast_replace = true,
@@ -251,9 +247,9 @@ local function update_roboport_level(roboport)
     end
 
     -- game.print("Updating roboport: " .. roboport.name)
-    if utilities.string_starts_with(roboport.name, storage_roboport_name_base) then
+    if utilities.string_starts_with(roboport.name, RoboportLogistical) then
         update_storage_roboport_level(roboport)
-    elseif utilities.string_starts_with(roboport.name, energy_roboport_name_base) then
+    elseif utilities.string_starts_with(roboport.name, RoboportEnergy) then
         update_energy_roboport_level(roboport)
     end
 end
@@ -279,7 +275,7 @@ local function mark_all_roboports_for_update()
     for _, surface in pairs(game.surfaces) do
         -- TODO: This should be optimized to only check roboports that are actually affected by the research.
         -- Or seperate out energy and storage roboports, so we can only check the relevant ones.
-        for _, roboport in pairs(surface.find_entities_filtered{type = "roboport"}) do
+        for _, roboport in pairs(surface.find_entities_filtered{type = Roboport}) do
             storage.roboports_to_update[roboport] = true
         end
     end
@@ -289,28 +285,24 @@ end
 script.on_event(defines.events.on_research_finished,
     ---@param event EventData.on_research_finished
     function (event)
-        if utilities.string_starts_with(event.research.name, "roboport-efficiency") then
+        if utilities.string_starts_with(event.research.name, RoboportEfficiency) then
             storage.EfficiencyResearchLevel = storage.EfficiencyResearchLevel + 1
-            mark_all_roboports_for_update()
-        elseif utilities.string_starts_with(event.research.name, "roboport-productivity") then
+        elseif utilities.string_starts_with(event.research.name, RoboportProductivity) then
             storage.ProductivityResearchLevel = storage.ProductivityResearchLevel + 1
-            mark_all_roboports_for_update()
-        elseif utilities.string_starts_with(event.research.name, "roboport-speed") then
+        elseif utilities.string_starts_with(event.research.name, RoboportSpeed) then
             storage.SpeedResearchLevel = storage.SpeedResearchLevel + 1
-            mark_all_roboports_for_update()
-        elseif utilities.string_starts_with(event.research.name, "roboport-construction-area") then
+        elseif utilities.string_starts_with(event.research.name, RoboportConstructionArea) then
             storage.ConstructionAreaResearchLevel = storage.ConstructionAreaResearchLevel + 1
-            mark_all_roboports_for_update()
-        elseif utilities.string_starts_with(event.research.name, "roboport-logistics-area") then
+        elseif utilities.string_starts_with(event.research.name, RoboportLogisticsArea) then
             storage.LogisticAreaResearchLevel = storage.LogisticAreaResearchLevel + 1
-            mark_all_roboports_for_update()
-        elseif utilities.string_starts_with(event.research.name, "roboport-material-storage") then
+        elseif utilities.string_starts_with(event.research.name, RoboportMaterialStorage) then
             storage.MaterialStorageResearchLevel = storage.MaterialStorageResearchLevel + 1
-            mark_all_roboports_for_update()
-        elseif utilities.string_starts_with(event.research.name, "roboport-robot-storage") then
+        elseif utilities.string_starts_with(event.research.name, RoboportRobotStorage) then
             storage.RobotStorageResearchLevel = storage.RobotStorageResearchLevel + 1
-            mark_all_roboports_for_update()
+        else
+            return
         end
+        mark_all_roboports_for_update()
     end
 )
 
@@ -318,25 +310,25 @@ script.on_event(defines.events.on_research_finished,
 script.on_event(defines.events.on_research_reversed,
     ---@param event EventData.on_research_reversed
     function (event)
-        if utilities.string_starts_with(event.research.name, "roboport-efficiency") then
+        if utilities.string_starts_with(event.research.name, RoboportEfficiency) then
             storage.EfficiencyResearchLevel = storage.EfficiencyResearchLevel - 1
             mark_all_roboports_for_update()
-        elseif utilities.string_starts_with(event.research.name, "roboport-productivity") then
+        elseif utilities.string_starts_with(event.research.name, RoboportProductivity) then
             storage.ProductivityResearchLevel = storage.ProductivityResearchLevel - 1
             mark_all_roboports_for_update()
-        elseif utilities.string_starts_with(event.research.name, "roboport-speed") then
+        elseif utilities.string_starts_with(event.research.name, RoboportSpeed) then
             storage.SpeedResearchLevel = storage.SpeedResearchLevel - 1
             mark_all_roboports_for_update()
-        elseif utilities.string_starts_with(event.research.name, "roboport-construction-area") then
+        elseif utilities.string_starts_with(event.research.name, RoboportConstructionArea) then
             storage.ConstructionAreaResearchLevel = storage.ConstructionAreaResearchLevel - 1
             mark_all_roboports_for_update()
-        elseif utilities.string_starts_with(event.research.name, "roboport-logistics-area") then
+        elseif utilities.string_starts_with(event.research.name, RoboportLogisticsArea) then
             storage.LogisticAreaResearchLevel = storage.LogisticAreaResearchLevel - 1
             mark_all_roboports_for_update()
-        elseif utilities.string_starts_with(event.research.name, "roboport-material-storage") then
+        elseif utilities.string_starts_with(event.research.name, RoboportMaterialStorage) then
             storage.MaterialStorageResearchLevel = storage.MaterialStorageResearchLevel - 1
             mark_all_roboports_for_update()
-        elseif utilities.string_starts_with(event.research.name, "roboport-robot-storage") then
+        elseif utilities.string_starts_with(event.research.name, RoboportRobotStorage) then
             storage.RobotStorageResearchLevel = storage.RobotStorageResearchLevel - 1
             mark_all_roboports_for_update()
         end
@@ -346,10 +338,10 @@ script.on_event(defines.events.on_research_reversed,
 
 ---@param entity LuaEntity
 local function on_built(entity)
-    if entity.name == "entity-ghost" or entity.type == "entity-ghost" then
+    if entity.name == EntityGhost or entity.type == EntityGhost then
         validate_ghost(entity)
         update_ghost_level(entity)
-    elseif entity.type == "roboport" then
+    elseif entity.type == Roboport then
         validate_roboport(entity)
         update_roboport_level(entity)
     end
@@ -425,22 +417,22 @@ commands.add_command(
     "Forces roboports to be vanilla, usefull for uninstalling this mod",
     function ()
         for _, surface in pairs(game.surfaces) do
-            for _, roboport in pairs(surface.find_entities_filtered{type = "roboport"}) do
+            for _, roboport in pairs(surface.find_entities_filtered{type = Roboport}) do
                 if not roboport.valid then
                     goto continue
                 end
 
                 if (
-                    roboport.name == "roboport"
-                    or not utilities.string_starts_with(roboport.name, energy_roboport_name_base)
-                    or not utilities.string_starts_with(roboport.name, energy_roboport_name_base)
+                    roboport.name == Roboport
+                    or not utilities.string_starts_with(roboport.name, RoboportEnergy)
+                    or not utilities.string_starts_with(roboport.name, RoboportEnergy)
                 ) then
                     goto continue
                 end
 
                 local old_energy = roboport.energy
                 local created_rport = surface.create_entity{
-                    name = "roboport",
+                    name = Roboport,
                     position = roboport.position,
                     force = roboport.force,
                     fast_replace = true,
@@ -459,7 +451,7 @@ commands.add_command(
 script.on_event(defines.events.on_player_selected_area,
     ---@param event EventData.on_player_selected_area
 function(event)
-    if event.item ~= "roboport-updater" then
+    if event.item ~= RoboportUpdater then
         return
     end
 
