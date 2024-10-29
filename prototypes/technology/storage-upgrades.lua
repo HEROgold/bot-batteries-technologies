@@ -66,7 +66,7 @@ f.get_research_localized_name = function(upgrade_name, level)
 end
 
 f.get_effect_description = function(upgrade_name)
-  return "Upgrade the " .. upgrade_name .. " of a roboport"
+  return "Upgrade the " .. upgrade_name .. " of a logistical roboport"
 end
 
 f.get_research_ingredients = function (upgrade_type, level)

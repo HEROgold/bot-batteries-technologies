@@ -42,7 +42,7 @@ local get_research_localized_name = function(module_type, level)
 end
 
 local get_effect_description = function(module_type)
-  return "Upgrade the " .. module_type .. " of a roboport"
+  return "Upgrade the " .. module_type .. " of a energy roboport"
 end
 
 ---@return number, number, number 
