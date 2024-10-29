@@ -21,9 +21,12 @@ Storage = "storage"
 Robot = "robot"
 Material = "material"
 Mark = "mk"
+Science = "science"
+Pack = "pack"
 
 
 -- Combined
+SciencePack = combine{Science, Pack}
 RoboportResearch = combine{Roboport, Research}
 RoboportResearchUpgrade = combine{RoboportResearch, Upgrade}
 RoboportMaterialStorage = combine{Roboport, Material, Storage}
