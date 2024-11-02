@@ -412,6 +412,8 @@ commands.add_command(
         game.print("Material Storage: " .. storage.MaterialStorageResearchLevel)
     end
 )
+
+
 commands.add_command(
     "br-uninstall",
     "Forces roboports to be vanilla, usefull for uninstalling this mod",
@@ -445,6 +447,17 @@ commands.add_command(
                 ::continue::
             end
         end
+    end
+)
+
+
+commands.add_command(
+    "br-uninstall",
+    "Forces roboports to be vanilla, usefull for uninstalling this mod",
+    function ()
+        -- Reset all research levels
+        -- Reset related technologies
+        -- Reset all related roboports
     end
 )
 
