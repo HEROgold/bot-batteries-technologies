@@ -1,25 +1,27 @@
+require("vars.strings")
+
 ---@diagnostic disable: assign-type-mismatch
 ---@type number
-upgrade_timer = settings.startup["upgrade-timer"].value
+upgrade_timer = settings.startup[UpgradeTimer].value
 ---@type number
-construction_area_limit = settings.startup["construction-area-limit"].value
+construction_area_limit = settings.startup[ConstructionAreaLimit].value
 ---@type number
-logistic_area_limit = settings.startup["logistic-area-limit"].value
+logistic_area_limit = settings.startup[LogisticAreaLimit].value
 ---@type number
-robot_storage_limit = settings.startup["robot-storage-limit"].value
+robot_storage_limit = settings.startup[RobotStorageLimit].value
 ---@type number
-material_storage_limit = settings.startup["material-storage-limit"].value
+material_storage_limit = settings.startup[MaterialStorageLimit].value
 ---@type number
-energy_research_limit = settings.startup["energy-research-limit"].value
+energy_research_limit = settings.startup[EnergyResearchLimit].value
 ---@type number
-energy_research_minimum = settings.startup["energy-research-minimum"].value
+research_minimum = settings.startup[EnergyResearchMinimum].value
 ---@type number
-input_flow_limit_modifier = settings.startup["input-flow-limit-modifier"].value
+input_flow_limit_modifier = settings.startup[InputFlowLimitModifier].value
 ---@type number
-buffer_capacity_modifier = settings.startup["buffer-capacity-modifier"].value
+buffer_capacity_modifier = settings.startup[BufferCapacityModifier].value
 ---@type number
-recharge_minimum_modifier = settings.startup["recharge-minimum-modifier"].value
+recharge_minimum_modifier = settings.startup[RechargeMinimumModifier].value
 ---@type number
-energy_usage_modifier = settings.startup["energy-usage-modifier"].value
+energy_usage_modifier = settings.startup[EnergyUsageModifier].value
 ---@type number
-charging_energy_modifier = settings.startup["charging-energy-modifier"].value
+charging_energy_modifier = settings.startup[ChargingEnergyModifier].value

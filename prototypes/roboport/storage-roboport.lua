@@ -3,26 +3,10 @@ require("lualib.utils")
 local base_roboport_entity = data.raw["roboport"]["roboport"]
 local base_roboport_item = data.raw["item"]["roboport"]
 
----@type number
----@diagnostic disable-next-line: assign-type-mismatch
-local research_mimimum = settings.startup["energy-research-minimum"].value
----@type number
----@diagnostic disable-next-line: assign-type-mismatch
-local robot_storage_limit = tonumber(settings.startup["robot-storage-limit"].value)
----@type number
----@diagnostic disable-next-line: assign-type-mismatch
-local material_storage_limit = tonumber(settings.startup["material-storage-limit"].value)
----@type number
----@diagnostic disable-next-line: assign-type-mismatch
-local construction_area_limit = tonumber(settings.startup["construction-area-limit"].value)
----@type number
----@diagnostic disable-next-line: assign-type-mismatch
-local logistic_area_limit = tonumber(settings.startup["logistic-area-limit"].value)
-
-local robot_storage_limit = math.max(robot_storage_limit, research_mimimum)
-local material_storage_limit = math.max(material_storage_limit, research_mimimum)
-local construction_area_limit = math.max(construction_area_limit, research_mimimum)
-local logistic_area_limit = math.max(logistic_area_limit, research_mimimum)
+local robot_storage_limit = math.max(robot_storage_limit, research_minimum)
+local material_storage_limit = math.max(material_storage_limit, research_minimum)
+local construction_area_limit = math.max(construction_area_limit, research_minimum)
+local logistic_area_limit = math.max(logistic_area_limit, research_minimum)
 local logisitcal_roboport_entity = table.deepcopy(base_roboport_entity)
 local logisitcal_roboport_item = table.deepcopy(base_roboport_item)
 

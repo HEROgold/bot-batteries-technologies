@@ -1,15 +1,8 @@
 require("lualib.utils")
+require("vars.settings")
 
 local base_roboport_entity = data.raw["roboport"]["roboport"]
 local base_roboport_item = data.raw["item"]["roboport"]
----@type number
----@diagnostic disable-next-line: assign-type-mismatch
-local research_mimimum = settings.startup["energy-research-minimum"].value
-local input_flow_limit_modifier = tonumber(settings.startup["input-flow-limit-modifier"].value)
-local buffer_capacity_modifier = tonumber(settings.startup["buffer-capacity-modifier"].value)
-local recharge_minimum_modifier = tonumber(settings.startup["recharge-minimum-modifier"].value)
-local energy_usage_modifier = tonumber(settings.startup["energy-usage-modifier"].value)
-local charging_energy_modifier = tonumber(settings.startup["charging-energy-modifier"].value)
 
 function generate_charging_offsets(n)
     local offsets = {}
@@ -29,9 +22,9 @@ function generate_charging_offsets(n)
 end
 
 
-local efficiency_limit = math.max(Limits["efficiency"], research_mimimum)
-local productivity_limit = math.max(Limits["productivity"], research_mimimum)
-local speed_limit = math.max(Limits["speed"], research_mimimum)
+local efficiency_limit = math.max(Limits["efficiency"], research_minimum)
+local productivity_limit = math.max(Limits["productivity"], research_minimum)
+local speed_limit = math.max(Limits["speed"], research_minimum)
 
 local energy_roboport_entity = table.deepcopy(base_roboport_entity)
 local energy_roboport_item = table.deepcopy(base_roboport_item)
