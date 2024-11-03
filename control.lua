@@ -285,19 +285,19 @@ script.on_event(defines.events.on_research_finished,
     ---@param event EventData.on_research_finished
     function (event)
         if utilities.string_starts_with(event.research.name, RoboportEfficiency) then
-            storage.EfficiencyResearchLevel = storage.EfficiencyResearchLevel + 1
+            storage.EfficiencyResearchLevel = utils.get_valid_bounds(storage.EfficiencyResearchLevel + 1, 0, energy_research_limit)
         elseif utilities.string_starts_with(event.research.name, RoboportProductivity) then
-            storage.ProductivityResearchLevel = storage.ProductivityResearchLevel + 1
+            storage.ProductivityResearchLevel = utils.get_valid_bounds(storage.ProductivityResearchLevel + 1, 0, energy_research_limit)
         elseif utilities.string_starts_with(event.research.name, RoboportSpeed) then
-            storage.SpeedResearchLevel = storage.SpeedResearchLevel + 1
+            storage.SpeedResearchLevel = utils.get_valid_bounds(storage.SpeedResearchLevel + 1, 0, energy_research_limit)
         elseif utilities.string_starts_with(event.research.name, RoboportConstructionArea) then
-            storage.ConstructionAreaResearchLevel = storage.ConstructionAreaResearchLevel + 1
+            storage.ConstructionAreaResearchLevel = utils.get_valid_bounds(storage.ConstructionAreaResearchLevel + 1, 0, construction_area_limit)
         elseif utilities.string_starts_with(event.research.name, RoboportLogisticsArea) then
-            storage.LogisticAreaResearchLevel = storage.LogisticAreaResearchLevel + 1
+            storage.LogisticAreaResearchLevel = utils.get_valid_bounds(storage.LogisticAreaResearchLevel + 1, 0, logistic_area_limit)
         elseif utilities.string_starts_with(event.research.name, RoboportMaterialStorage) then
-            storage.MaterialStorageResearchLevel = storage.MaterialStorageResearchLevel + 1
+            storage.MaterialStorageResearchLevel = utils.get_valid_bounds(storage.MaterialStorageResearchLevel + 1, 0, material_storage_limit)
         elseif utilities.string_starts_with(event.research.name, RoboportRobotStorage) then
-            storage.RobotStorageResearchLevel = storage.RobotStorageResearchLevel + 1
+            storage.RobotStorageResearchLevel = utils.get_valid_bounds(storage.RobotStorageResearchLevel + 1, 0, robot_storage_limit)
         else
             return
         end
@@ -310,25 +310,25 @@ script.on_event(defines.events.on_research_reversed,
     ---@param event EventData.on_research_reversed
     function (event)
         if utilities.string_starts_with(event.research.name, RoboportEfficiency) then
-            storage.EfficiencyResearchLevel = storage.EfficiencyResearchLevel - 1
+            storage.EfficiencyResearchLevel = utils.get_valid_bounds(storage.EfficiencyResearchLevel - 1, 0, energy_research_limit)
             mark_all_roboports_for_update()
         elseif utilities.string_starts_with(event.research.name, RoboportProductivity) then
-            storage.ProductivityResearchLevel = storage.ProductivityResearchLevel - 1
+            storage.ProductivityResearchLevel = utils.get_valid_bounds(storage.ProductivityResearchLevel - 1, 0, energy_research_limit)
             mark_all_roboports_for_update()
         elseif utilities.string_starts_with(event.research.name, RoboportSpeed) then
-            storage.SpeedResearchLevel = storage.SpeedResearchLevel - 1
+            storage.SpeedResearchLevel = utils.get_valid_bounds(storage.SpeedResearchLevel - 1, 0, energy_research_limit)
             mark_all_roboports_for_update()
         elseif utilities.string_starts_with(event.research.name, RoboportConstructionArea) then
-            storage.ConstructionAreaResearchLevel = storage.ConstructionAreaResearchLevel - 1
+            storage.ConstructionAreaResearchLevel = utils.get_valid_bounds(storage.ConstructionAreaResearchLevel - 1, 0, construction_area_limit)
             mark_all_roboports_for_update()
         elseif utilities.string_starts_with(event.research.name, RoboportLogisticsArea) then
-            storage.LogisticAreaResearchLevel = storage.LogisticAreaResearchLevel - 1
+            storage.LogisticAreaResearchLevel = utils.get_valid_bounds(storage.LogisticAreaResearchLevel - 1, 0, logistic_area_limit)
             mark_all_roboports_for_update()
         elseif utilities.string_starts_with(event.research.name, RoboportMaterialStorage) then
-            storage.MaterialStorageResearchLevel = storage.MaterialStorageResearchLevel - 1
+            storage.MaterialStorageResearchLevel = utils.get_valid_bounds(storage.MaterialStorageResearchLevel - 1, 0, material_storage_limit)
             mark_all_roboports_for_update()
         elseif utilities.string_starts_with(event.research.name, RoboportRobotStorage) then
-            storage.RobotStorageResearchLevel = storage.RobotStorageResearchLevel - 1
+            storage.RobotStorageResearchLevel = utils.get_valid_bounds(storage.RobotStorageResearchLevel - 1, 0, robot_storage_limit)
             mark_all_roboports_for_update()
         end
     end
