@@ -9,17 +9,21 @@ script.on_init(
     end
 )
 
+local function initialize_storage_var(var_name, default_value)
+    if storage[var_name] == nil then
+        storage[var_name] = default_value
+    end
+end
 
 function Setup_Vars()
-    if storage.EfficiencyResearchLevel == nil then
-        storage.EfficiencyResearchLevel = 0
-    end
-    if storage.ProductivityResearchLevel == nil then
-        storage.ProductivityResearchLevel = 0
-    end
-    if storage.SpeedResearchLevel == nil then
-        storage.SpeedResearchLevel = 0
-    end
+    initialize_storage_var("EfficiencyResearchLevel", 0)
+    initialize_storage_var("ProductivityResearchLevel", 0)
+    initialize_storage_var("SpeedResearchLevel", 0)
+    initialize_storage_var("ConstructionAreaResearchLevel", 0)
+    initialize_storage_var("LogisticAreaResearchLevel", 0)
+    initialize_storage_var("RobotStorageResearchLevel", 0)
+    initialize_storage_var("MaterialStorageResearchLevel", 0)
+
     if storage.roboports_to_update == nil then
         ---@type table<LuaEntity, boolean>
         storage.roboports_to_update = {}
@@ -27,18 +31,6 @@ function Setup_Vars()
     if storage.ghosts_to_update == nil then
         ---@type table<LuaEntity, boolean>
         storage.ghosts_to_update = {}
-    end
-    if storage.ConstructionAreaResearchLevel == nil then
-        storage.ConstructionAreaResearchLevel = 0
-    end
-    if storage.LogisticAreaResearchLevel == nil then
-        storage.LogisticAreaResearchLevel = 0
-    end
-    if storage.RobotStorageResearchLevel == nil then
-        storage.RobotStorageResearchLevel = 0
-    end
-    if storage.MaterialStorageResearchLevel == nil then
-        storage.MaterialStorageResearchLevel = 0
     end
 end
 
