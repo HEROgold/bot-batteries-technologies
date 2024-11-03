@@ -1,8 +1,7 @@
 require("lualib.utils")
 require("__heroic_library__.utilities")
-require("strings")
-
-local upgrade_timer = tonumber(settings.startup["upgrade-timer"].value)
+require("vars.strings")
+require("vars.settings")
 
 script.on_init(
     function ()
