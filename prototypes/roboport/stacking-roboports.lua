@@ -37,7 +37,7 @@ energy_roboport_entity.name = energy_name
 
 energy_roboport_item.place_result = energy_roboport_entity.name
 energy_roboport_item.localised_name = localised_name
-energy_roboport_item.hidden = false
+-- energy_roboport_item.hidden = false
 
 energy_roboport_entity.localised_name = localised_name
 energy_roboport_entity.minable.result = energy_roboport_item.name

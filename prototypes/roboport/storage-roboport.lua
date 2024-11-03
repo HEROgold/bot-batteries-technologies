@@ -17,7 +17,7 @@ logisitcal_roboport_entity.name = "logistical-roboport"
 
 logisitcal_roboport_item.place_result = logisitcal_roboport_entity.name
 logisitcal_roboport_item.localised_name = localised_name
-logisitcal_roboport_item.hidden = false
+-- logisitcal_roboport_item.hidden = false
 
 logisitcal_roboport_entity.localised_name = localised_name
 logisitcal_roboport_entity.minable.result = logisitcal_roboport_item.name
