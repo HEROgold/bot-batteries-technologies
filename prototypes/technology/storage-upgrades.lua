@@ -6,9 +6,12 @@ local material_storage_limit = math.max(material_storage_limit, research_minimum
 local construction_area_limit = math.max(construction_area_limit, research_minimum)
 local logistic_area_limit = math.max(logistic_area_limit, research_minimum)
 
-local f = {}
 
-f.get_research_prerequisites = function(upgrade_name, level)
+local function get_research_name(upgrade_name, level)
+  return upgrade_name .. utils.get_level_suffix(level)
+end
+
+local function get_research_prerequisites(upgrade_name, level)
   local prerequisites = nil
 
   if level == 1 then
@@ -17,13 +20,13 @@ f.get_research_prerequisites = function(upgrade_name, level)
     }
   else
     prerequisites = {
-      f.get_research_name(upgrade_name, level-1)
+      get_research_name(upgrade_name, level-1)
     }
   end
   return prerequisites
 end
 
-f.get_tech_sprite = function (module_type, level)
+local function get_tech_sprite(module_type, level)
     return {
       {
         icon = "__base__/graphics/technology/robotics.png",
@@ -32,20 +35,16 @@ f.get_tech_sprite = function (module_type, level)
     }
 end
 
-f.get_research_name = function(upgrade_name, level)
-  return "roboport-" .. upgrade_name .. f.get_suffix_by_level(level)
-end
-
-f.get_research_localized_name = function(upgrade_name, level)
+local function get_research_localized_name(upgrade_name, level)
   return "roboport " .. upgrade_name .. " upgrade " .. level
 end
 
-f.get_effect_description = function(upgrade_name)
+local function get_effect_description(upgrade_name)
   return "Upgrade the " .. upgrade_name .. " of a logistical roboport"
 end
 
-f.get_research_ingredients = function (upgrade_type, level)
-  local prereq = f.get_research_prerequisites(upgrade_type, level)
+local function get_research_ingredients(upgrade_type, level)
+  local prereq = get_research_prerequisites(upgrade_type, level)
   local name = prereq[1]
   local techno = table.deepcopy(data.raw["technology"][name])
 
@@ -61,66 +60,52 @@ f.get_research_ingredients = function (upgrade_type, level)
   return techno.unit.ingredients
 end
 
-f.get_suffix_by_level = function(i)
-  local name = nil
-  if i == 1 then
-    name = ""
-  else
-    name = "-" .. i
-  end
-  return name
-end
 
-construction_area = "construction-area"
-logistics_area = "logistics-area"
-robot_storage = "robot-storage"
-material_storage = "material-storage"
-
-f.get_research_limit = function(upgrade_type)
+local function get_research_limit (upgrade_type)
   local limit = 999999
-  if upgrade_type == robot_storage then
+  if upgrade_type == RoboportRobotStorage then
     limit = robot_storage_limit
-  elseif upgrade_type == material_storage then
+  elseif upgrade_type == RoboportMaterialStorage then
     limit = material_storage_limit
-  elseif upgrade_type == construction_area then
+  elseif upgrade_type == RoboportConstructionArea then
     limit = construction_area_limit
-  elseif upgrade_type == logistics_area then
+  elseif upgrade_type == RoboportLogisticsArea then
     limit = logistic_area_limit
   end
   return math.max(research_minimum, math.min(limit, energy_research_limit))
 end
 
 local function add_researches()
-  local upgrade_names = {construction_area, logistics_area, robot_storage, material_storage}
+  local upgrade_names = {RoboportConstructionArea, RoboportLogisticsArea, RoboportRobotStorage, RoboportMaterialStorage}
 
   table.insert(data.raw["technology"]["logistic-robotics"].effects, {type = "unlock-recipe", recipe = "logistical-roboport"})
 
   for _, upgrade_type in pairs(upgrade_names) do
-    limit = f.get_research_limit(upgrade_type)
+    limit = get_research_limit(upgrade_type)
 
     for i=1, limit do
       data:extend(
         {
           {
             type = "technology",
-            name = f.get_research_name(upgrade_type, i),
-            localised_name = f.get_research_localized_name(upgrade_type, i),
+            name = get_research_name(upgrade_type, i),
+            localised_name = get_research_localized_name(upgrade_type, i),
             icon_size = 256,
             icon_mipmaps = 4,
-            icons = f.get_tech_sprite(upgrade_type, i),
+            icons = get_tech_sprite(upgrade_type, i),
             upgrade = true,
             order = "c-k-f-a",
-            prerequisites = f.get_research_prerequisites(upgrade_type, i),
+            prerequisites = get_research_prerequisites(upgrade_type, i),
             effects = {
               {
                 type = "nothing",
-                effect_description = f.get_effect_description(upgrade_type),
+                effect_description = get_effect_description(upgrade_type),
               }
             },
             unit = {
               count_formula = research_upgrade_cost .. "*(L)",
               time = research_upgrade_time,
-              ingredients = f.get_research_ingredients(upgrade_type, i)
+              ingredients = get_research_ingredients(upgrade_type, i)
             },
           }
         }

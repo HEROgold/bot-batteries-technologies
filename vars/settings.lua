@@ -14,7 +14,7 @@ material_storage_limit = settings.startup[MaterialStorageLimit].value
 ---@type number
 energy_research_limit = settings.startup[EnergyResearchLimit].value
 ---@type number
-research_minimum = settings.startup[EnergyResearchMinimum].value
+research_minimum = settings.startup[ResearchMinimum].value
 ---@type number
 input_flow_limit_modifier = settings.startup[InputFlowLimitModifier].value
 ---@type number

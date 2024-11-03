@@ -3,7 +3,6 @@ require("vars.settings")
 
 local modules = data.raw["module"]
 
-local f = {}
 local module_names = {
   "efficiency",
   "productivity",
@@ -11,19 +10,8 @@ local module_names = {
 }
 
 
-local function get_suffix_by_level(i)
-  local module_name = nil
-  if i == 1 then
-    module_name = ""
-  else
-    module_name = "-" .. i
-  end
-  return module_name
-end
-
-
 local function get_research_name(module_type, level)
-  return "roboport-" .. module_type .. get_suffix_by_level(level)
+  return "roboport-" .. module_type .. utils.get_level_suffix(level)
 end
 
 local get_research_localized_name = function(module_type, level)
@@ -109,7 +97,7 @@ local function get_research_prerequisites(module_type, level)
 
   if level == 1 then
     prerequisites = {
-      module_type .. "-module" .. get_suffix_by_level(level),
+      module_type .. "-module" .. utils.get_level_suffix(level),
       "construction-robotics"
     }
   elseif module_count < research_minimum and level <= energy_research_limit and level > module_count then
@@ -118,7 +106,7 @@ local function get_research_prerequisites(module_type, level)
     }
   else
     prerequisites = {
-      module_type .. "-module" .. get_suffix_by_level(level),
+      module_type .. "-module" .. utils.get_level_suffix(level),
       get_research_name(module_type, level-1)
     }
   end

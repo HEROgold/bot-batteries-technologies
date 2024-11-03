@@ -43,3 +43,10 @@ utils.get_valid_bounds = function(check, minimum, limit)
     end
     return check
 end
+
+utils.get_level_suffix = function(level)
+    if level == 1 then
+        return ""
+    end
+    return "-" .. level
+end

@@ -85,7 +85,7 @@ local research_settings = {
     },
     {
         type = "int-setting",
-        name = EnergyResearchMinimum,
+        name = ResearchMinimum,
         setting_type = "startup",
         default_value = 3,
         maximum_value = 9

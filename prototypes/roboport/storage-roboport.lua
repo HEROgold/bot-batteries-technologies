@@ -79,7 +79,7 @@ local function add_stacking_storage_roboport()
                     -- roboport_entity.minable = logisitcal_roboport_entity.minable
                     -- roboport_entity.minable.result = logisitcal_roboport_entity.name
 
-                    if settings.startup["show-items"].value == true then
+                    if settings.startup[ShowItems].value == true then
                         roboport_item.subgroup = "br-roboports"
                         data:extend({roboport_item})
                     end

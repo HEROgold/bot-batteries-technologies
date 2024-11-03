@@ -114,7 +114,7 @@ local function add_all_roboports()
                 -- productivity upgrade -- 4 is default, amount of bots that can charge at once
                 roboport_entity.charging_offsets = generate_charging_offsets(bcsc + bcsc * j)
 
-                if settings.startup["show-items"].value == true then
+                if settings.startup[ShowItems].value == true then
                     roboport_item.subgroup = "br-roboports"
                     data:extend({roboport_item})
                 end
