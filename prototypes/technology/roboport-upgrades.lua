@@ -1,17 +1,6 @@
 require("__heroic_library__.utilities")
+require("vars.settings")
 
----@type number
----@diagnostic disable-next-line: assign-type-mismatch
-local research_limit = settings.startup["energy-research-limit"].value
----@type number
----@diagnostic disable-next-line: assign-type-mismatch
-local research_mimimum = settings.startup["energy-research-minimum"].value
----@type number
----@diagnostic disable-next-line: assign-type-mismatch
-local research_count = settings.startup["roboport-research-upgrade-cost"].value
----@type number
----@diagnostic disable-next-line: assign-type-mismatch
-local research_time = settings.startup["roboport-research-upgrade-time"].value
 local modules = data.raw["module"]
 
 local f = {}
@@ -103,9 +92,9 @@ end
 local efficiency, productivity, speed = get_highest_module_number()
 
 -- Respect the setting a user has provided
-local efficiency_limit = math.min(research_limit, efficiency)
-local productivity_limit = math.min(research_limit, productivity)
-local speed_limit = math.min(research_limit, speed)
+local efficiency_limit = math.min(energy_research_limit, efficiency)
+local productivity_limit = math.min(energy_research_limit, productivity)
+local speed_limit = math.min(energy_research_limit, speed)
 
 Limits = {}
 Limits["efficiency"] = efficiency_limit
@@ -123,7 +112,7 @@ local function get_research_prerequisites(module_type, level)
       module_type .. "-module" .. get_suffix_by_level(level),
       "construction-robotics"
     }
-  elseif module_count < research_mimimum and level <= research_limit and level > module_count then
+  elseif module_count < research_minimum and level <= energy_research_limit and level > module_count then
     prerequisites = {
       get_research_name(module_type, level-1)
     }
@@ -169,7 +158,7 @@ end
 
 local function add_module_upgrade_research()
   for _, module_type in pairs(module_names) do
-    local limit = math.max(Limits[module_type], research_mimimum)
+    local limit = math.max(Limits[module_type], research_minimum)
 
     for i=1, limit do
       data:extend(
@@ -191,8 +180,8 @@ local function add_module_upgrade_research()
               }
             },
             unit = {
-              count_formula = research_count .. "*(L)",
-              time = research_time,
+              count_formula = research_upgrade_cost .. "*(L)",
+              time = research_upgrade_time,
               ingredients = get_module_research_ingredients(module_type, i)
             },
           }

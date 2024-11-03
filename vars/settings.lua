@@ -25,3 +25,7 @@ recharge_minimum_modifier = settings.startup[RechargeMinimumModifier].value
 energy_usage_modifier = settings.startup[EnergyUsageModifier].value
 ---@type number
 charging_energy_modifier = settings.startup[ChargingEnergyModifier].value
+---@type number
+research_upgrade_cost = settings.startup[RoboportResearchUpgradeCost].value
+---@type number
+research_upgrade_time = settings.startup[RoboportResearchUpgradeTime].value

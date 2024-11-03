@@ -23,12 +23,12 @@ Material = "material"
 Mark = "mk"
 Science = "science"
 Pack = "pack"
+Level = "level"
 
 
 -- Combined
 SciencePack = combine{Science, Pack}
-RoboportResearch = combine{Roboport, Research}
-RoboportResearchUpgrade = combine{RoboportResearch, Upgrade}
+ResearchUpgrade = combine{Research, Upgrade}
 RoboportMaterialStorage = combine{Roboport, Material, Storage}
 RoboportRobotStorage = combine{Roboport, Robot, Storage}
 RoboportEnergy = combine{Roboport, Energy}
@@ -47,15 +47,24 @@ RoboportLogistical = Roboport .. "-logistical"
 RobotStorageLimit = combine{Robot, Storage, Limit}
 EnergyResearchMinimum =  combine{Energy, Research, Minimum}
 EnergyResearchLimit = combine{Energy, Research, Limit}
-InputFlowLimitModifier ="input-flow-" .. {Limit, Modifier}
+InputFlowLimitModifier ="input-flow-" .. combine{Limit, Modifier}
 BufferCapacityModifier ="buffer-capacity-" .. Modifier
-RechargeMinimumModifier ="recharge-" .. {Minimum, Modifier}
+RechargeMinimumModifier ="recharge-" .. combine{Minimum, Modifier}
 EnergyUsageModifier = Energy .. "-usage-" .. Modifier
 ChargingEnergyModifier ="charging-energy-" .. Modifier
 ConstructionAreaLimit ="construction-area-" .. Limit
 LogisticAreaLimit ="logistic-area-" .. Limit
 MaterialStorageLimit ="material-storage-" .. Limit
-RoboportResearchUpgradeCost = RoboportResearchUpgrade .. "cost"
-RoboportResearchUpgradetime = RoboportResearchUpgrade .. "time"
+RoboportResearchUpgradeCost = ResearchUpgrade .. "-cost"
+RoboportResearchUpgradeTime = ResearchUpgrade .. "-time"
 UpgradeTimer = Upgrade .. "-timer"
 ShowItems = "show-items"
+
+-- Research
+EfficiencyResearchLevel = combine{RoboportEfficiency, Research, Level}
+ProductivityResearchLevel = combine{RoboportProductivity, Research, Level}
+SpeedResearchLevel = combine{RoboportSpeed, Research, Level}
+ConstructionAreaResearchLevel = combine{RoboportConstructionArea, Research, Level}
+LogisticAreaResearchLevel = combine{RoboportLogisticsArea, Research, Level}
+RobotStorageResearchLevel = combine{RoboportRobotStorage, Research, Level}
+MaterialStorageResearchLevel = combine{RoboportMaterialStorage, Research, Level}

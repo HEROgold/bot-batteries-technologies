@@ -1,35 +1,10 @@
 require("__heroic_library__.utilities")
+require("vars.settings")
 
----@type number
----@diagnostic disable-next-line: assign-type-mismatch
-local research_count = settings.startup["roboport-research-upgrade-cost"].value
----@type number
----@diagnostic disable-next-line: assign-type-mismatch
-local research_time = settings.startup["roboport-research-upgrade-time"].value
----@type number
----@diagnostic disable-next-line: assign-type-mismatch
-local research_limit = settings.startup["energy-research-limit"].value
----@type number
----@diagnostic disable-next-line: assign-type-mismatch
-local research_mimimum = settings.startup["energy-research-minimum"].value
-
----@type number
----@diagnostic disable-next-line: assign-type-mismatch
-local robot_storage_limit = tonumber(settings.startup["robot-storage-limit"].value)
----@type number
----@diagnostic disable-next-line: assign-type-mismatch
-local material_storage_limit = tonumber(settings.startup["material-storage-limit"].value)
----@type number
----@diagnostic disable-next-line: assign-type-mismatch
-local construction_area_limit = tonumber(settings.startup["construction-area-limit"].value)
----@type number
----@diagnostic disable-next-line: assign-type-mismatch
-local logistic_area_limit = tonumber(settings.startup["logistic-area-limit"].value)
-
-local robot_storage_limit = math.max(robot_storage_limit, research_mimimum)
-local material_storage_limit = math.max(material_storage_limit, research_mimimum)
-local construction_area_limit = math.max(construction_area_limit, research_mimimum)
-local logistic_area_limit = math.max(logistic_area_limit, research_mimimum)
+local robot_storage_limit = math.max(robot_storage_limit, research_minimum)
+local material_storage_limit = math.max(material_storage_limit, research_minimum)
+local construction_area_limit = math.max(construction_area_limit, research_minimum)
+local logistic_area_limit = math.max(logistic_area_limit, research_minimum)
 
 local f = {}
 
@@ -112,7 +87,7 @@ f.get_research_limit = function(upgrade_type)
   elseif upgrade_type == logistics_area then
     limit = logistic_area_limit
   end
-  return math.max(research_mimimum, math.min(limit, research_limit))
+  return math.max(research_minimum, math.min(limit, energy_research_limit))
 end
 
 local function add_researches()
@@ -143,8 +118,8 @@ local function add_researches()
               }
             },
             unit = {
-              count_formula = research_count .. "*(L)",
-              time = research_time,
+              count_formula = research_upgrade_cost .. "*(L)",
+              time = research_upgrade_time,
               ingredients = f.get_research_ingredients(upgrade_type, i)
             },
           }
