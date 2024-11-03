@@ -2,6 +2,7 @@ require("lualib.utils")
 require("__heroic_library__.utilities")
 require("vars.strings")
 require("vars.settings")
+require("commands")
 
 script.on_init(
     function ()
