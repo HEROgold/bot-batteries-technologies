@@ -31,7 +31,7 @@ local energy_roboport_item = table.deepcopy(base_roboport_item)
 
 local localised_name = "Energy Roboport"
 
-energy_name = "energy-roboport"
+energy_name = RoboportEnergy
 energy_roboport_item.name = energy_name
 energy_roboport_entity.name = energy_name
 
