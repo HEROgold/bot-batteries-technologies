@@ -1,3 +1,4 @@
+require("vars.strings")
 
 ---@type data.SelectionToolPrototype
 local item = {
@@ -12,7 +13,7 @@ local item = {
         mode = { "buildable-type", "same-force", "entity-ghost" },
     },
     type = "selection-tool",
-    name = "roboport-updater",
+    name = RoboportUpdater,
     subgroup = "tool",
     order = "z[roboport-updater]",
     show_in_library = true,
@@ -40,7 +41,7 @@ local shortcut = {
     name = "shortcut-roboport-updater-item",
     localised_name = "roboport updater",
     action = "spawn-item",
-    item_to_spawn = "roboport-updater",
+    item_to_spawn = RoboportUpdater,
     order = "m[roboport-updater]",
     small_icon = "__base__/graphics/icons/repair-pack.png",
     icon = "__base__/graphics/icons/repair-pack.png",
