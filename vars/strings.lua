@@ -4,7 +4,7 @@ require("vars.words")
 ---Used to combine strings within '.. "-" ..' to avoid typos
 ---@param names string[]
 ---@return string
-local function combine(names)
+function combine(names)
     local new = ""
     for i, name in pairs(names) do
         if i == 1 then
@@ -21,9 +21,7 @@ SciencePack = combine{Science, Pack}
 ResearchUpgrade = combine{Research, Upgrade}
 RoboportMaterialStorage = combine{Roboport, Material, Storage}
 RoboportRobotStorage = combine{Roboport, Robot, Storage}
-RoboportEnergy = combine{Roboport, Energy}
-RoboportEnergyLeveled = combine{RoboportEnergy, Mark}
-RoboportLogisticalLeveled = combine{RoboportLogistical, Mark}
+RoboportEnergy = combine{Energy, Roboport}
 EntityGhost = combine{Entity, Ghost}
 RoboportEfficiency = combine{Roboport, Efficiency}
 RoboportProductivity = combine{Roboport, Productivity}
@@ -31,7 +29,9 @@ RoboportSpeed = combine{Roboport, Speed}
 RoboportConstructionArea = combine{Roboport, Construction, Area}
 RoboportLogisticsArea = combine{Roboport, Logistic, Area}
 RoboportUpdater = combine{Roboport, Updater}
-RoboportLogistical = combine{Roboport, Logistical}
+RoboportLogistical = combine{Logistical, Roboport}
+RoboportLogisticalLeveled = combine{RoboportLogistical, Mark}
+RoboportEnergyLeveled = combine{RoboportEnergy, Mark}
 
 -- Settings
 RobotStorageLimit = combine{Robot, Storage, Limit}

@@ -78,7 +78,7 @@ end
 local function add_researches()
   local upgrade_names = {RoboportConstructionArea, RoboportLogisticsArea, RoboportRobotStorage, RoboportMaterialStorage}
 
-  table.insert(data.raw["technology"]["logistic-robotics"].effects, {type = "unlock-recipe", recipe = "logistical-roboport"})
+  table.insert(data.raw["technology"]["logistic-robotics"].effects, {type = "unlock-recipe", recipe = RoboportLogistical})
 
   for _, upgrade_type in pairs(upgrade_names) do
     limit = get_research_limit(upgrade_type)

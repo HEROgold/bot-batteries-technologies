@@ -145,7 +145,7 @@ local function get_module_research_ingredients(module_type, level)
 end
 
 local function add_module_upgrade_research()
-  table.insert(data.raw["technology"]["construction-robotics"].effects, {type = "unlock-recipe", recipe = "energy-roboport"})
+  table.insert(data.raw["technology"]["construction-robotics"].effects, {type = "unlock-recipe", recipe = RoboportEnergy})
 
   for _, module_type in pairs(module_names) do
     local limit = math.max(Limits[module_type], research_minimum)
