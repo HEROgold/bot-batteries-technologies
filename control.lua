@@ -129,7 +129,7 @@ local function update_energy_roboport_level(roboport)
     )
 
     local created_rport = surface.create_entity{
-        name = RoboportEnergyLeveled .. suffix,
+        name = combine{RoboportEnergyLeveled, suffix},
         position = roboport.position,
         force = roboport.force,
         fast_replace = true,
@@ -157,7 +157,7 @@ local function update_storage_roboport_level(roboport)
     )
 
     local created_rport = surface.create_entity{
-        name = RoboportLogisticalLeveled .. storage_suffix,
+        name = combine{RoboportLogisticalLeveled, storage_suffix},
         position = roboport.position,
         force = roboport.force,
         fast_replace = true,
@@ -183,12 +183,6 @@ local function update_ghost_level(roboport)
     local to_create = {}
 
     if utilities.string_starts_with(roboport.ghost_name, RoboportLogisticalLeveled) then
-        local suffix = utils.get_storage_suffix(
-            storage.ConstructionAreaResearchLevel,
-            storage.LogisticAreaResearchLevel,
-            storage.RobotStorageResearchLevel,
-            storage.MaterialStorageResearchLevel
-        )
         to_create = {
             name = EntityGhost,
             type = EntityGhost,
@@ -204,11 +198,6 @@ local function update_ghost_level(roboport)
             quality = roboport.quality
         }
     elseif utilities.string_starts_with(roboport.ghost_name, RoboportEnergy) then
-        local suffix = utils.get_energy_suffix(
-            storage.EfficiencyResearchLevel,
-            storage.ProductivityResearchLevel,
-            storage.SpeedResearchLevel
-        )
         to_create = {
             name = EntityGhost,
             type = EntityGhost,
