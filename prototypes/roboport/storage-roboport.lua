@@ -1,4 +1,6 @@
 require("lualib.utils")
+require("vars.settings")
+require("vars.strings")
 
 local base_roboport_entity = data.raw["roboport"]["roboport"]
 local base_roboport_item = data.raw["item"]["roboport"]
@@ -12,8 +14,8 @@ local logisitcal_roboport_item = table.deepcopy(base_roboport_item)
 
 local localised_name = "Logistical Roboport"
 
-logisitcal_roboport_item.name = "logistical-roboport"
-logisitcal_roboport_entity.name = "logistical-roboport"
+logisitcal_roboport_item.name = RoboportLogistical
+logisitcal_roboport_entity.name = RoboportLogistical
 
 logisitcal_roboport_item.place_result = logisitcal_roboport_entity.name
 logisitcal_roboport_item.localised_name = localised_name
@@ -27,7 +29,7 @@ logisitcal_roboport_entity.material_slots_count = 10
 ---@type data.RecipePrototype
 local storage_roboport_recipe = {
     type = "recipe",
-    name = "logistical-roboport",
+    name = RoboportLogistical,
     -- enabled = true,
     ---@type data.IngredientPrototype[]
     ingredients = {

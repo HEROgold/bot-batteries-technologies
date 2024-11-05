@@ -1,5 +1,6 @@
 require("lualib.utils")
 require("vars.settings")
+require("vars.strings")
 
 local base_roboport_entity = data.raw["roboport"]["roboport"]
 local base_roboport_item = data.raw["item"]["roboport"]
