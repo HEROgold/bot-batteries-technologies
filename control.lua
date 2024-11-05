@@ -1,6 +1,7 @@
 require("lualib.utils")
 require("__heroic_library__.utilities")
-require("vars.strings")
+require("__heroic_library__.vars.words")
+require("__heroic_library__.vars.strings")
 require("vars.settings")
 require("commands")
 

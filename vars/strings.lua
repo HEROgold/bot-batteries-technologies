@@ -1,5 +1,5 @@
 require("__heroic_library__.vars.words")
-require("__heroic_library__.vars.settings")
+require("__heroic_library__.vars.strings")
 
 -- Combined
 SciencePack = combine{Science, Pack}
