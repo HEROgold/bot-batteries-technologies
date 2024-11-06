@@ -72,7 +72,7 @@ function reset()
             if utilities.string_starts_with(roboport.name, RoboportEnergy) then
                 local old_energy = roboport.energy
                 local created_rport = surface.create_entity {
-                    name = RoboportEnergy .. utils.get_energy_suffix(0, 0, 0),
+                    name = RoboportEnergy,
                     position = roboport.position,
                     force = roboport.force,
                     fast_replace = true,
@@ -85,7 +85,7 @@ function reset()
             elseif utilities.string_starts_with(roboport.name, RoboportLogistical) then
                 local old_energy = roboport.energy
                 local created_rport = surface.create_entity {
-                    name = RoboportLogistical .. utils.get_storage_suffix(0, 0, 0, 0),
+                    name = RoboportLogistical,
                     position = roboport.position,
                     force = roboport.force,
                     fast_replace = true,
