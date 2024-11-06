@@ -29,3 +29,9 @@ charging_energy_modifier = settings.startup[ChargingEnergyModifier].value
 research_upgrade_cost = settings.startup[RoboportResearchUpgradeCost].value
 ---@type number
 research_upgrade_time = settings.startup[RoboportResearchUpgradeTime].value
+---@type number
+robot_cargo_research_limit = settings.startup[RobotCargoLimit].value
+---@type number
+robot_speed_research_limit = settings.startup[RobotSpeedLimit].value
+---@type number
+robot_energy_research_limit = settings.startup[RobotEnergyLimit].value

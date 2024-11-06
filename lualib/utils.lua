@@ -30,6 +30,20 @@ utils.get_storage_suffix = function(construction_area_level, logistic_area_level
     return tostring("c" .. construction_area_level .. "l" .. logistic_area_level .. "r" .. robot_storage_level .. "m" .. material_storage_level)
 end
 
+
+---@param cargo_level integer
+---@param speed_level integer
+---@param energy_level integer
+---@return string
+utils.get_robot_suffix = function(cargo_level, speed_level, energy_level)
+    -- c0s0e0 suffix for cargo 0, speed 0, energy 0
+    cargo_level = utils.get_valid_bounds(cargo_level, 0, robot_cargo_research_limit)
+    speed_level = utils.get_valid_bounds(speed_level, 0, robot_speed_research_limit)
+    energy_level = utils.get_valid_bounds(energy_level, 0, robot_energy_research_limit)
+    return tostring("c" .. cargo_level .. "s" .. speed_level .. "e" .. energy_level)
+end
+
+
 ---@param check number
 ---@param minimum number
 ---@param limit number

@@ -1,5 +1,6 @@
 require("__heroic_library__.vars.words")
 require("__heroic_library__.vars.strings")
+require("vars.words")
 
 -- Combined
 SciencePack = combine{Science, Pack}
@@ -17,6 +18,15 @@ RoboportUpdater = combine{Roboport, Updater}
 RoboportLogistical = combine{Logistical, Roboport}
 RoboportLogisticalLeveled = combine{RoboportLogistical, Mark}
 RoboportEnergyLeveled = combine{RoboportEnergy, Mark}
+ArchitectRobot = combine{Architect, Robot}
+HaulerRobot = combine{Hauler, Robot}
+ConstructionRobot = combine{Construction, Robot}
+LogisticRobot = combine{Logistic, Robot}
+FlyingRobotFrame = combine{Flying, Robot, Frame}
+RobotCargoLimit = combine{Robot, Cargo, Limit}
+RobotSpeedLimit = combine{Robot, Speed, Limit}
+RobotEnergyLimit = combine{Robot, Energy, Limit}
+RobotResearchMinimum = combine{Robot, Research, Minimum}
 
 -- Settings
 RobotStorageLimit = combine{Robot, Storage, Limit}

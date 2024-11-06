@@ -1,0 +1,7 @@
+Architect = "architect"
+Hauler = "hauler"
+Construction = "construction"
+Robot = "robot"
+Flying = "flying"
+Frame = "frame"
+Cargo = "cargo"

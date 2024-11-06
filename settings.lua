@@ -122,8 +122,44 @@ local mod_settings = {
         default_value = true
     },
 }
+---@type table<LuaSettings>
+local robot_settings = {
+    {
+        type = "int-setting",
+        name = RobotResearchMinimum,
+        setting_type = "startup",
+        default_value = 3,
+        minimum_value = 1,
+        maximum_value = 9
+    },
+    {
+        type = "int-setting",
+        name = RobotCargoLimit,
+        setting_type = "startup",
+        default_value = 3,
+        minimum_value = 1,
+        maximum_value = 9
+    },
+    {
+        type = "int-setting",
+        name = RobotSpeedLimit,
+        setting_type = "startup",
+        default_value = 3,
+        minimum_value = 1,
+        maximum_value = 9
+    },
+    {
+        type = "int-setting",
+        name = RobotEnergyLimit,
+        setting_type = "startup",
+        default_value = 3,
+        minimum_value = 1,
+        maximum_value = 9
+    },
+}
 
 data:extend(energy_roboport_settings)
 data:extend(logistical_roboport_settings)
 data:extend(research_settings)
 data:extend(mod_settings)
+data:extend(robot_settings)
