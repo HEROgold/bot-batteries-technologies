@@ -129,10 +129,17 @@ end
 
 local function get_module_research_ingredients(module_type, level)
   local prereq = get_research_prerequisites(module_type, level)
-  local name = prereq[1]
-  local techno = table.deepcopy(data.raw["technology"][name])
+  local technologies = {}
 
-  if techno == nil then
+  for i, name in ipairs(prereq) do
+    local techno = table.deepcopy(data.raw["technology"][name])
+    if name == nil then
+      prereq[i] = "construction-robotics"
+    end
+    table.insert(technologies, techno)
+  end
+
+  if technologies == nil then
     -- return default set of ingredients
     return {
       {"automation-science-pack", 1},
@@ -141,7 +148,20 @@ local function get_module_research_ingredients(module_type, level)
       {"utility-science-pack", 1},
     }
   end
-  return techno.unit.ingredients
+  local result = {}
+  for _, techno in pairs(technologies) do
+    if techno.unit.ingredients == nil then
+      table.insert(result,{
+        {"automation-science-pack", 1},
+        {"logistic-science-pack", 1},
+        {"chemical-science-pack", 1},
+        {"utility-science-pack", 1},
+      })
+    else
+      result = result + techno.unit.ingredients
+    end
+  end
+  return result
 end
 
 local function add_module_upgrade_research()
