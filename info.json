@@ -1,12 +1,13 @@
 {
   "name": "bot-batteries-technologies",
-  "version": "3.0.4",
+  "version": "3.0.5",
   "title": "Roboport Technology",
   "author": "HEROgold",
   "factorio_version": "2.0",
   "dependencies": [
     "base >= 2.0",
     "heroic_library >= 1.0.2",
+    "? space-age",
     "? space-exploration",
     "? modules-t4",
     "? bobmodules",
