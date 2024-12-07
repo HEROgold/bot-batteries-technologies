@@ -1,4 +1,6 @@
 require("__heroic_library__.utilities")
+require("__heroic_library__.table")
+require("__heroic_library__.technology")
 require("vars.settings")
 
 local modules = data.raw["module"]
@@ -92,6 +94,7 @@ Limits["speed"] = speed_limit
 local module_count = efficiency -- modules usually are paired, so should be fine like this.
 
 -- the module technology is the 1st prerequisite
+---@return table<TechnologyID>
 local function get_research_prerequisites(module_type, level)
   local prerequisites = nil
 
@@ -115,12 +118,12 @@ end
 
 local get_tech_sprite = function (module_type, level)
   -- if mods["space-exploration-graphics"] then
-  --   return utilities.technology_sprite_add_item_icon(
+  --   return utilities.sprite_add_icon(
   --     "__base__/graphics/technology/robotics.png",
   --     "__space-exploration-graphics__/graphics/icons/modules/"..module_type.."-module-"..level..".png" -- Needs testing
   --   )
   -- else
-    return utilities.technology_sprite_add_item_icon(
+    return utilities.sprite_add_icon(
       "__base__/graphics/technology/robotics.png",
       "__base__/graphics/icons/"..module_type.."-module-3.png"
     )
@@ -128,44 +131,22 @@ local get_tech_sprite = function (module_type, level)
 end
 
 local function get_module_research_ingredients(module_type, level)
-  local prereq = get_research_prerequisites(module_type, level)
-  local technologies = {}
-
-  for i, name in ipairs(prereq) do
-    local techno = table.deepcopy(data.raw["technology"][name])
-    if name == nil then
-      prereq[i] = "construction-robotics"
-    end
-    table.insert(technologies, techno)
-  end
-
-  if technologies == nil then
-    -- return default set of ingredients
-    return {
+  local researchPrerequisites = get_research_prerequisites(module_type, level)
+  return technology.combined_prerequisites(
+    researchPrerequisites,
+    {
       {"automation-science-pack", 1},
       {"logistic-science-pack", 1},
       {"chemical-science-pack", 1},
       {"utility-science-pack", 1},
-    }
-  end
-  local result = {}
-  for _, techno in pairs(technologies) do
-    if techno.unit.ingredients == nil then
-      table.insert(result,{
-        {"automation-science-pack", 1},
-        {"logistic-science-pack", 1},
-        {"chemical-science-pack", 1},
-        {"utility-science-pack", 1},
-      })
-    else
-      result = result + techno.unit.ingredients
-    end
-  end
-  return result
+  })
 end
 
 local function add_module_upgrade_research()
-  table.insert(data.raw["technology"]["construction-robotics"].effects, {type = "unlock-recipe", recipe = RoboportEnergy})
+  table.insert(
+    data.raw["technology"]["construction-robotics"].effects,
+    {type = "unlock-recipe", recipe = RoboportEnergy}
+  )
 
   for _, module_type in pairs(module_names) do
     local limit = math.max(Limits[module_type], research_minimum)

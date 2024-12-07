@@ -1,4 +1,5 @@
 require("__heroic_library__.utilities")
+require("__heroic_library__.table")
 require("vars.settings")
 
 local robot_storage_limit = math.max(robot_storage_limit, research_minimum)
@@ -11,6 +12,7 @@ local function get_research_name(upgrade_name, level)
   return upgrade_name .. utils.get_level_suffix(level)
 end
 
+---@return table<TechnologyID>
 local function get_research_prerequisites(upgrade_name, level)
   local prerequisites = nil
 
@@ -44,42 +46,17 @@ local function get_effect_description(upgrade_name)
 end
 
 local function get_research_ingredients(upgrade_type, level)
-  local prereq = get_research_prerequisites(upgrade_type, level)
-  local technologies = {}
-
-  for i, name in ipairs(prereq) do
-    local techno = table.deepcopy(data.raw["technology"][name])
-    if name == nil then
-      prereq[i] = "logistic-robotics"
-    end
-    table.insert(technologies, techno)
-  end
-
-  if technologies == nil then
-    -- return default set of ingredients
-    return {
+  local researchPrerequisites = get_research_prerequisites(upgrade_type, level)
+  return technology.combined_prerequisites(
+    researchPrerequisites,
+    {
       {"automation-science-pack", 1},
       {"logistic-science-pack", 1},
       {"chemical-science-pack", 1},
       {"utility-science-pack", 1},
-    }
-  end
-  local result = {}
-  for _, techno in pairs(technologies) do
-    if techno.unit.ingredients == nil then
-      table.insert(result,{
-        {"automation-science-pack", 1},
-        {"logistic-science-pack", 1},
-        {"chemical-science-pack", 1},
-        {"utility-science-pack", 1},
-      })
-    else
-      result = result + techno.unit.ingredients
-    end
-  end
-  return result
+      {"utility-science-pack", 1},
+    })
 end
-
 
 local function get_research_limit (upgrade_type)
   local limit = 999999
