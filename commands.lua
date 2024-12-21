@@ -106,6 +106,7 @@ commands.add_command(
     "br-show",
     "Shows the current research levels",
     function()
+        -- TODO: print maximum research levels
         game.print("-- Energy --")
         game.print("efficiency: " .. storage.EfficiencyResearchLevel)
         game.print("Productivity: " .. storage.ProductivityResearchLevel)

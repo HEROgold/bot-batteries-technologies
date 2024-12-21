@@ -31,7 +31,10 @@ RobotResearchMinimum = combine{Robot, Research, Minimum}
 -- Settings
 RobotStorageLimit = combine{Robot, Storage, Limit}
 ResearchMinimum =  combine{Research, Minimum}
-EnergyResearchLimit = combine{Energy, Research, Limit}
+ResearchMaximum = combine{Research, Maximum}
+EnergyEfficiencyLimit = combine{Energy, Efficiency, Limit}
+EnergyProductivityLimit = combine{Energy, Productivity, Limit}
+EnergySpeedLimit = combine{Energy, Speed, Limit}
 InputFlowLimitModifier = combine{Input, Flow, Limit, Modifier}
 BufferCapacityModifier = combine{Buffer, Capacity, Modifier}
 RechargeMinimumModifier = combine{Recharge, Minimum, Modifier}

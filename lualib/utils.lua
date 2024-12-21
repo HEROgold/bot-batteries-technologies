@@ -3,17 +3,17 @@ require("vars.settings")
 utils = {}
 
 
----@param effectivity_level integer
+---@param efficiency_level integer
 ---@param productivity_level integer
 ---@param speed_level integer
 ---@return string
-utils.get_energy_suffix = function(effectivity_level, productivity_level, speed_level)
+utils.get_energy_suffix = function(efficiency_level, productivity_level, speed_level)
     -- e0p0s0 suffix for effectivity 0, productivity 0, speed 0
     -- todo: set a hard limit, which should be the amount of roboports we generate. (shouldn't be needed.)
-    effectivity_level = utils.get_valid_bounds(effectivity_level, 0, energy_research_limit)
-    productivity_level = utils.get_valid_bounds(productivity_level, 0, energy_research_limit)
-    speed_level = utils.get_valid_bounds(speed_level, 0, energy_research_limit)
-    return tostring("e" .. effectivity_level .. "p" .. productivity_level .. "s" .. speed_level)
+    efficiency_level = utils.get_valid_bounds(efficiency_level, 0, energy_efficiency_limit)
+    productivity_level = utils.get_valid_bounds(productivity_level, 0, energy_productivity_limit)
+    speed_level = utils.get_valid_bounds(speed_level, 0, energy_speed_limit)
+    return tostring("e" .. efficiency_level .. "p" .. productivity_level .. "s" .. speed_level)
 end
 
 ---@param construction_area_level integer

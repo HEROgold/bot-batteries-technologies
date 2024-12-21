@@ -12,9 +12,15 @@ robot_storage_limit = settings.startup[RobotStorageLimit].value
 ---@type number
 material_storage_limit = settings.startup[MaterialStorageLimit].value
 ---@type number
-energy_research_limit = settings.startup[EnergyResearchLimit].value
+energy_speed_limit = settings.startup[EnergySpeedLimit].value
+---@type number
+energy_productivity_limit = settings.startup[EnergyProductivityLimit].value
+---@type number
+energy_efficiency_limit = settings.startup[EnergyEfficiencyLimit].value
 ---@type number
 research_minimum = settings.startup[ResearchMinimum].value
+---@type number
+research_maximum = settings.startup[ResearchMaximum].value
 ---@type number
 input_flow_limit_modifier = settings.startup[InputFlowLimitModifier].value
 ---@type number

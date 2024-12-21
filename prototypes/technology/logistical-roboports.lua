@@ -69,7 +69,7 @@ local function get_research_limit (upgrade_type)
   elseif upgrade_type == RoboportLogisticsArea then
     limit = logistic_area_limit
   end
-  return math.max(research_minimum, math.min(limit, energy_research_limit))
+  return math.max(research_minimum, math.min(limit, research_maximum))
 end
 
 local function add_researches()

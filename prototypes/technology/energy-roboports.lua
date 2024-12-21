@@ -82,9 +82,9 @@ end
 local efficiency, productivity, speed = get_highest_module_number()
 
 -- Respect the setting a user has provided
-local efficiency_limit = math.min(energy_research_limit, efficiency)
-local productivity_limit = math.min(energy_research_limit, productivity)
-local speed_limit = math.min(energy_research_limit, speed)
+local efficiency_limit = math.min(energy_efficiency_limit, efficiency)
+local productivity_limit = math.min(energy_productivity_limit, productivity)
+local speed_limit = math.min(energy_speed_limit, speed)
 
 Limits = {}
 Limits["efficiency"] = efficiency_limit
@@ -103,7 +103,7 @@ local function get_research_prerequisites(module_type, level)
       module_type .. "-module" .. utils.get_level_suffix(level),
       "construction-robotics"
     }
-  elseif module_count < research_minimum and level <= energy_research_limit and level > module_count then
+  elseif module_count < research_minimum and level > module_count then
     prerequisites = {
       get_research_name(module_type, level-1)
     }

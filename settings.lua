@@ -37,6 +37,25 @@ local energy_roboport_settings = {
         minimum_value = 0.1,
         default_value = 1,
     },
+    {
+        type = "int-setting",
+        name = EnergySpeedLimit,
+        setting_type = "startup",
+        default_value = 9,
+        maximum_value = 90
+    },{
+        type = "int-setting",
+        name = EnergyProductivityLimit,
+        setting_type = "startup",
+        default_value = 9,
+        maximum_value = 90
+    },{
+        type = "int-setting",
+        name = EnergyEfficiencyLimit,
+        setting_type = "startup",
+        default_value = 9,
+        maximum_value = 90
+    },
 }
 ---@type table<LuaSettings>
 local logistical_roboport_settings = {
@@ -46,7 +65,7 @@ local logistical_roboport_settings = {
         setting_type = "startup",
         default_value = 3,
         minimum_value = 1,
-        maximum_value = 9
+        maximum_value = 90
     },
     {
         type = "int-setting",
@@ -54,7 +73,7 @@ local logistical_roboport_settings = {
         setting_type = "startup",
         default_value = 3,
         minimum_value = 1,
-        maximum_value = 9
+        maximum_value = 90
     },
     {
         type = "int-setting",
@@ -62,7 +81,7 @@ local logistical_roboport_settings = {
         setting_type = "startup",
         default_value = 3,
         minimum_value = 1,
-        maximum_value = 9
+        maximum_value = 90
     },
     {
         type = "int-setting",
@@ -70,26 +89,26 @@ local logistical_roboport_settings = {
         setting_type = "startup",
         default_value = 3,
         minimum_value = 1,
-        maximum_value = 9
+        maximum_value = 90
     },
 }
 ---@type table<LuaSettings>
 local research_settings = {
     {
         type = "int-setting",
-        name = EnergyResearchLimit,
-        setting_type = "startup",
-        default_value = 9,
-        maximum_value = 9
-        --Maximum amount of research and roboport levels. > MASSIVELY impacts the game loading, as it becomes a*b*c amount. (a, b and c are all this setting)
-    },
-    {
-        type = "int-setting",
         name = ResearchMinimum,
         setting_type = "startup",
         default_value = 3,
-        maximum_value = 9
+        maximum_value = 90
         -- Minimum amount of researches required
+    },
+    {
+        type = "int-setting",
+        name = ResearchMaximum,
+        setting_type = "startup",
+        default_value = 9,
+        maximum_value = 90
+        -- Maximum amount of all researches required. The specific limits have to be <= to this setting..
     },
     {
         type = "int-setting",
