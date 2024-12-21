@@ -2,6 +2,7 @@ require("lualib.utils")
 require("__heroic_library__.utilities")
 require("__heroic_library__.vars.words")
 require("__heroic_library__.vars.strings")
+require("__heroic_library__.entities")
 require("vars.settings")
 require("vars.strings")
 require("commands")
@@ -82,12 +83,6 @@ local function validate_ghost(ghost)
         return false
     end
     return true
-end
-
----@param entity LuaEntity
-local function is_ghost_entity(entity)
-    -- TODO: move to library
-    return entity.name == EntityGhost or entity.type == EntityGhost
 end
 
 ---@param roboport LuaEntity

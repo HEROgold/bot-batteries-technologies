@@ -8,8 +8,6 @@ utils = {}
 ---@param speed_level integer
 ---@return string
 utils.get_energy_suffix = function(efficiency_level, productivity_level, speed_level)
-    -- e0p0s0 suffix for effectivity 0, productivity 0, speed 0
-    -- todo: set a hard limit, which should be the amount of roboports we generate. (shouldn't be needed.)
     efficiency_level = utils.get_valid_bounds(efficiency_level, 0, energy_efficiency_limit)
     productivity_level = utils.get_valid_bounds(productivity_level, 0, energy_productivity_limit)
     speed_level = utils.get_valid_bounds(speed_level, 0, energy_speed_limit)
@@ -22,7 +20,6 @@ end
 ---@param material_storage_level integer
 ---@return string
 utils.get_storage_suffix = function(construction_area_level, logistic_area_level, robot_storage_level, material_storage_level)
-    -- todo: set a hard limit, which should be the amount of roboports we generate. (shouldn't be needed.)
     construction_area_level = utils.get_valid_bounds(construction_area_level, 0, construction_area_limit)
     logistic_area_level = utils.get_valid_bounds(logistic_area_level, 0, logistic_area_limit)
     robot_storage_level = utils.get_valid_bounds(robot_storage_level, 0, robot_storage_limit)

@@ -1,6 +1,7 @@
 require("lualib.utils")
 require("vars.strings")
 require("control.tech")
+require("__heroic_library__.technologies")
 
 function uninstall()
     for _, surface in pairs(game.surfaces) do
@@ -32,15 +33,6 @@ function uninstall()
             ::continue::
         end
     end
-end
-
--- TODO: Move to library
----@param tech LuaTechnology
-function recursive_unresearch_technology(tech)
-    for _, i in pairs(tech.successors) do
-        recursive_unresearch_technology(i)
-    end
-    tech.researched = false
 end
 
 function reset()
@@ -111,16 +103,15 @@ commands.add_command(
         local energy_levels = get_energy_levels(force)
         local logistical_levels = get_logistical_levels(force)
 
-        -- TODO: print maximum research levels
         game.print("-- Energy --")
-        game.print("Efficiency: " .. energy_levels[1])
-        game.print("Productivity: " .. energy_levels[2])
-        game.print("Speed: " .. energy_levels[3])
+        game.print("Efficiency: " .. energy_levels[1] .. "/" .. research_minimum)
+        game.print("Productivity: " .. energy_levels[2] .. "/" .. research_minimum)
+        game.print("Speed: " .. energy_levels[3] .. "/" .. research_minimum)
         game.print("-- Storage --")
-        game.print("Construction Area: " .. logistical_levels[1])
-        game.print("Logistics Area: " .. logistical_levels[2])
-        game.print("Robot Storage: " .. logistical_levels[3])
-        game.print("Material Storage: " .. logistical_levels[4])
+        game.print("Construction Area: " .. logistical_levels[1] .. "/" .. research_minimum)
+        game.print("Logistics Area: " .. logistical_levels[2] .. "/" .. research_minimum)
+        game.print("Robot Storage: " .. logistical_levels[3] .. "/" .. research_minimum)
+        game.print("Material Storage: " .. logistical_levels[4] .. "/" .. research_minimum)
     end
 )
 
