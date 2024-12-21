@@ -11,7 +11,7 @@ function get_logistical_levels(force)
         RoboportMaterialStorage
     } do
         for level = 1, research_minimum, 1 do
-            levels[i] = technology.get_tech_level(force, name, level)
+            levels[i] = get_tech_level(force, name, level)
         end
     end
     return levels
@@ -27,7 +27,7 @@ function get_energy_levels(force)
         RoboportSpeed
     } do
         for level = 1, research_minimum, 1 do
-            local tech_level = technology.get_tech_level(force, name, level)
+            local tech_level = get_tech_level(force, name, level)
             if levels[i] < tech_level then
                 levels[i] = tech_level
             end
