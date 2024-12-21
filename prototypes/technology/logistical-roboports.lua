@@ -47,7 +47,7 @@ end
 
 local function get_research_ingredients(upgrade_type, level)
   local researchPrerequisites = get_research_prerequisites(upgrade_type, level)
-  return technology.combined_prerequisites(
+  return combined_prerequisites(
     researchPrerequisites,
     {
       {"automation-science-pack", 1},
