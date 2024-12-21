@@ -3,56 +3,23 @@ require("__heroic_library__.utilities")
 require("__heroic_library__.vars.words")
 require("__heroic_library__.vars.strings")
 require("vars.settings")
+require("vars.strings")
 require("commands")
+require("control.tech")
+require("control.helpers")
 
 script.on_init(
-    function ()
-        Setup_Vars()
+    function (event)
+        InitializeStorage()
     end
 )
 
-local function initialize_storage_var(var_name, default_value)
-    if storage[var_name] == nil then
-        storage[var_name] = default_value
-    end
+function InitializeStorage()
+    storage.roboports_to_update = {}
+    storage.ghosts_to_update = {}
 end
 
-function Setup_Vars()
-    initialize_storage_var("EfficiencyResearchLevel", 0)
-    initialize_storage_var("ProductivityResearchLevel", 0)
-    initialize_storage_var("SpeedResearchLevel", 0)
-    initialize_storage_var("ConstructionAreaResearchLevel", 0)
-    initialize_storage_var("LogisticAreaResearchLevel", 0)
-    initialize_storage_var("RobotStorageResearchLevel", 0)
-    initialize_storage_var("MaterialStorageResearchLevel", 0)
-
-    if storage.roboports_to_update == nil then
-        ---@type table<LuaEntity, boolean>
-        storage.roboports_to_update = {}
-    end
-    if storage.ghosts_to_update == nil then
-        ---@type table<LuaEntity, boolean>
-        storage.ghosts_to_update = {}
-    end
-end
-
-
-local function energy_levels_from_name(to_check)
-    local eff = string.sub(to_check, -5, -5)
-    local prod = string.sub(to_check, -3, -3)
-    local speed = string.sub(to_check, -1, -1)
-    return {tonumber(eff), tonumber(prod), tonumber(speed)}
-end
-
-local function storage_levels_from_name(to_check)
-    local c = string.sub(to_check, -7, -7)
-    local l = string.sub(to_check, -5, -5)
-    local r = string.sub(to_check, -3, -3)
-    local m = string.sub(to_check, -1, -1)
-    return {tonumber(c), tonumber(l), tonumber(r), tonumber(m)}
-end
-
-
+---@param roboport LuaEntity
 local function validate_roboport(roboport)
     if roboport == nil then
         return
@@ -67,22 +34,26 @@ local function validate_roboport(roboport)
         -- The entity is from vanilla Factorio
         return true
     elseif utilities.string_starts_with(roboport_name, RoboportEnergyLeveled) then
-        local level = energy_levels_from_name(roboport_name)
+        local port_levels = energy_levels_from_name(roboport_name)
+        ---@diagnostic disable-next-line: param-type-mismatch
+        local tech_levels = get_energy_levels(roboport.force)
         -- Check for correct levels, to avoid replacing already correct roboports.
         if (
-            level[1] < storage.EfficiencyResearchLevel
-            or level[2] < storage.ProductivityResearchLevel
-            or level[3] < storage.SpeedResearchLevel
+            port_levels[1] < tech_levels[1]
+            or port_levels[2] < tech_levels[2]
+            or port_levels[3] < tech_levels[3]
         ) then
             return true
         end
     elseif utilities.string_starts_with(roboport_name, RoboportLogisticalLeveled) then 
-        local levels = storage_levels_from_name(roboport_name)
+        local port_levels = storage_levels_from_name(roboport_name)
+        ---@diagnostic disable-next-line: param-type-mismatch
+        local tech_levels = get_logistical_levels(roboport.force)
         if (
-            levels[1] < storage.ConstructionAreaResearchLevel
-            or levels[2] < storage.LogisticAreaResearchLevel
-            or levels[3] < storage.RobotStorageResearchLevel
-            or levels[4] < storage.MaterialStorageResearchLevel
+            port_levels[1] < tech_levels[1]
+            or port_levels[2] < tech_levels[2]
+            or port_levels[3] < tech_levels[3]
+            or port_levels[4] < tech_levels[4]
         ) then
             return true
         end
@@ -115,18 +86,18 @@ end
 
 ---@param entity LuaEntity
 local function is_ghost_entity(entity)
+    -- TODO: move to library
     return entity.name == EntityGhost or entity.type == EntityGhost
 end
-
 
 ---@param roboport LuaEntity
 local function update_energy_roboport_level(roboport)
     local surface = roboport.surface
     local old_energy = roboport.energy
+    local force = roboport.force
     local suffix = utils.get_energy_suffix(
-        storage.EfficiencyResearchLevel,
-        storage.ProductivityResearchLevel,
-        storage.SpeedResearchLevel
+        ---@diagnostic disable-next-line: param-type-mismatch
+        table.unpack(get_energy_levels(force))
     )
 
     local created_rport = surface.create_entity{
@@ -150,11 +121,10 @@ end
 local function update_storage_roboport_level(roboport)
     local surface = roboport.surface
     local old_energy = roboport.energy
+    local force = roboport.force
     local storage_suffix = utils.get_storage_suffix(
-        storage.ConstructionAreaResearchLevel,
-        storage.LogisticAreaResearchLevel,
-        storage.RobotStorageResearchLevel,
-        storage.MaterialStorageResearchLevel
+        ---@diagnostic disable-next-line: param-type-mismatch
+        table.unpack(get_logistical_levels(force))
     )
 
     local created_rport = surface.create_entity{
@@ -228,7 +198,6 @@ local function update_roboport_level(roboport)
         return
     end
 
-    -- game.print("Updating roboport: " .. roboport.name)
     if utilities.string_starts_with(roboport.name, RoboportLogistical) then
         update_storage_roboport_level(roboport)
     elseif utilities.string_starts_with(roboport.name, RoboportEnergy) then
@@ -252,12 +221,13 @@ local function tick_update_ghost_level()
     end
 end
 
-
-local function mark_all_roboports_for_update()
+---@param force LuaForce
+local function mark_all_roboports_for_update(force)
     for _, surface in pairs(game.surfaces) do
-        -- TODO: This should be optimized to only check roboports that are actually affected by the research.
-        -- Or seperate out energy and storage roboports, so we can only check the relevant ones.
-        for _, roboport in pairs(surface.find_entities_filtered{type = Roboport}) do
+        for _, roboport in pairs(surface.find_entities_filtered{
+            type = Roboport,
+            force = force
+        }) do
             storage.roboports_to_update[roboport] = true
         end
     end
@@ -267,24 +237,7 @@ end
 script.on_event(defines.events.on_research_finished,
     ---@param event EventData.on_research_finished
     function (event)
-        if utilities.string_starts_with(event.research.name, RoboportEfficiency) then
-            storage.EfficiencyResearchLevel = utils.get_valid_bounds(storage.EfficiencyResearchLevel + 1, 0, energy_efficiency_limit)
-        elseif utilities.string_starts_with(event.research.name, RoboportProductivity) then
-            storage.ProductivityResearchLevel = utils.get_valid_bounds(storage.ProductivityResearchLevel + 1, 0, energy_productivity_limit)
-        elseif utilities.string_starts_with(event.research.name, RoboportSpeed) then
-            storage.SpeedResearchLevel = utils.get_valid_bounds(storage.SpeedResearchLevel + 1, 0, energy_speed_limit)
-        elseif utilities.string_starts_with(event.research.name, RoboportConstructionArea) then
-            storage.ConstructionAreaResearchLevel = utils.get_valid_bounds(storage.ConstructionAreaResearchLevel + 1, 0, construction_area_limit)
-        elseif utilities.string_starts_with(event.research.name, RoboportLogisticsArea) then
-            storage.LogisticAreaResearchLevel = utils.get_valid_bounds(storage.LogisticAreaResearchLevel + 1, 0, logistic_area_limit)
-        elseif utilities.string_starts_with(event.research.name, RoboportMaterialStorage) then
-            storage.MaterialStorageResearchLevel = utils.get_valid_bounds(storage.MaterialStorageResearchLevel + 1, 0, material_storage_limit)
-        elseif utilities.string_starts_with(event.research.name, RoboportRobotStorage) then
-            storage.RobotStorageResearchLevel = utils.get_valid_bounds(storage.RobotStorageResearchLevel + 1, 0, robot_storage_limit)
-        else
-            return
-        end
-        mark_all_roboports_for_update()
+        mark_all_roboports_for_update(event.research.force)
     end
 )
 
@@ -292,28 +245,7 @@ script.on_event(defines.events.on_research_finished,
 script.on_event(defines.events.on_research_reversed,
     ---@param event EventData.on_research_reversed
     function (event)
-        if utilities.string_starts_with(event.research.name, RoboportEfficiency) then
-            storage.EfficiencyResearchLevel = utils.get_valid_bounds(storage.EfficiencyResearchLevel - 1, 0, energy_efficiency_limit)
-            mark_all_roboports_for_update()
-        elseif utilities.string_starts_with(event.research.name, RoboportProductivity) then
-            storage.ProductivityResearchLevel = utils.get_valid_bounds(storage.ProductivityResearchLevel - 1, 0, energy_productivity_limit)
-            mark_all_roboports_for_update()
-        elseif utilities.string_starts_with(event.research.name, RoboportSpeed) then
-            storage.SpeedResearchLevel = utils.get_valid_bounds(storage.SpeedResearchLevel - 1, 0, energy_speed_limit)
-            mark_all_roboports_for_update()
-        elseif utilities.string_starts_with(event.research.name, RoboportConstructionArea) then
-            storage.ConstructionAreaResearchLevel = utils.get_valid_bounds(storage.ConstructionAreaResearchLevel - 1, 0, construction_area_limit)
-            mark_all_roboports_for_update()
-        elseif utilities.string_starts_with(event.research.name, RoboportLogisticsArea) then
-            storage.LogisticAreaResearchLevel = utils.get_valid_bounds(storage.LogisticAreaResearchLevel - 1, 0, logistic_area_limit)
-            mark_all_roboports_for_update()
-        elseif utilities.string_starts_with(event.research.name, RoboportMaterialStorage) then
-            storage.MaterialStorageResearchLevel = utils.get_valid_bounds(storage.MaterialStorageResearchLevel - 1, 0, material_storage_limit)
-            mark_all_roboports_for_update()
-        elseif utilities.string_starts_with(event.research.name, RoboportRobotStorage) then
-            storage.RobotStorageResearchLevel = utils.get_valid_bounds(storage.RobotStorageResearchLevel - 1, 0, robot_storage_limit)
-            mark_all_roboports_for_update()
-        end
+        mark_all_roboports_for_update(event.research.force)
     end
 )
 

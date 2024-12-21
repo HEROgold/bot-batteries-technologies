@@ -65,7 +65,7 @@ end
 local function get_highest_module_number()
   local efficiency, productivity, speed = highest_module_number_by_name()
   
-  -- the following mods don't can't be found using highest_module_number_by_name()
+  -- the following mods can't be found using highest_module_number_by_name()
   -- we set the limits manually
   if mods["space-exploration"] then
     efficiency, productivity, speed = 9, 9, 9
@@ -97,10 +97,11 @@ local module_count = efficiency -- modules usually are paired, so should be fine
 ---@return table<TechnologyID>
 local function get_research_prerequisites(module_type, level)
   local prerequisites = nil
+  local module = module_type .. "-module" .. utils.get_level_suffix(level)
 
   if level == 1 then
     prerequisites = {
-      module_type .. "-module" .. utils.get_level_suffix(level),
+      module,
       "construction-robotics"
     }
   elseif module_count < research_minimum and level > module_count then
@@ -109,7 +110,7 @@ local function get_research_prerequisites(module_type, level)
     }
   else
     prerequisites = {
-      module_type .. "-module" .. utils.get_level_suffix(level),
+      module,
       get_research_name(module_type, level-1)
     }
   end

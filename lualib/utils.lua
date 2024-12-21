@@ -49,6 +49,7 @@ end
 ---@param limit number
 ---@return number
 utils.get_valid_bounds = function(check, minimum, limit)
+    -- TODO: move to library
     if check < minimum then
         return minimum
     end

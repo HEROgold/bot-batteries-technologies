@@ -1,5 +1,6 @@
 require("lualib.utils")
 require("vars.strings")
+require("control.tech")
 
 function uninstall()
     for _, surface in pairs(game.surfaces) do
@@ -105,19 +106,24 @@ end
 commands.add_command(
     "br-show",
     "Shows the current research levels",
-    function()
+    function(command)
+        local force = game.forces[game.players[command.player_index].force.name]
+        local energy_levels = get_energy_levels(force)
+        local logistical_levels = get_logistical_levels(force)
+
         -- TODO: print maximum research levels
         game.print("-- Energy --")
-        game.print("efficiency: " .. storage.EfficiencyResearchLevel)
-        game.print("Productivity: " .. storage.ProductivityResearchLevel)
-        game.print("Speed: " .. storage.SpeedResearchLevel)
+        game.print("Efficiency: " .. energy_levels[1])
+        game.print("Productivity: " .. energy_levels[2])
+        game.print("Speed: " .. energy_levels[3])
         game.print("-- Storage --")
-        game.print("Construction Area: " .. storage.ConstructionAreaResearchLevel)
-        game.print("Logistics Area: " .. storage.LogisticAreaResearchLevel)
-        game.print("Robot Storage: " .. storage.RobotStorageResearchLevel)
-        game.print("Material Storage: " .. storage.MaterialStorageResearchLevel)
+        game.print("Construction Area: " .. logistical_levels[1])
+        game.print("Logistics Area: " .. logistical_levels[2])
+        game.print("Robot Storage: " .. logistical_levels[3])
+        game.print("Material Storage: " .. logistical_levels[4])
     end
 )
+
 commands.add_command(
     "br-uninstall",
     "Forces roboports to be vanilla, usefull for uninstalling this mod",

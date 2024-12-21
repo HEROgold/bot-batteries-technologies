@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.1.0
+Date: 2024-12-21
+  Added:
+    - Support for multiple forces at once is now properly handled.
+  Fixes:
+    - Multiple force support fixes bugs where there are multiple forces upgrading all roboports, instead of their own.
+---------------------------------------------------------------------------------------------------
 Version: 3.0.4
 Date: 2024-11-09
   Fixes:

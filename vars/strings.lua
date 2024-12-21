@@ -28,6 +28,16 @@ RobotSpeedLimit = combine{Robot, Speed, Limit}
 RobotEnergyLimit = combine{Robot, Energy, Limit}
 RobotResearchMinimum = combine{Robot, Research, Minimum}
 
+EfficiencyResearchLevel = combine{Efficiency, Research, Level}
+ProductivityResearchLevel = combine{Productivity, Research, Level}
+SpeedResearchLevel = combine{Speed, Research, Level}
+ConstructionAreaResearchLevel = combine{Construction, Area, Research, Level}
+LogisticAreaResearchLevel = combine{Logistic, Area, Research, Level}
+RobotStorageResearchLevel = combine{Robot, Storage, Research, Level}
+MaterialStorageResearchLevel = combine{Material, Storage, Research, Level}
+roboports_to_update = combine{Roboport, Updater}
+ghosts_to_update = combine{Entity, Ghost, Updater}
+
 -- Settings
 RobotStorageLimit = combine{Robot, Storage, Limit}
 ResearchMinimum =  combine{Research, Minimum}
