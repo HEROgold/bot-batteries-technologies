@@ -1,7 +1,7 @@
 require("lualib.utils")
 require("vars.strings")
 require("control.tech")
-require("__heroic_library__.technologies")
+require("__heroic_library__.technology")
 
 function uninstall()
     for _, surface in pairs(game.surfaces) do
