@@ -133,7 +133,7 @@ end
 
 local function get_module_research_ingredients(module_type, level)
   local researchPrerequisites = get_research_prerequisites(module_type, level)
-  return combined_prerequisites(
+  return combined_ingredients(
     researchPrerequisites,
     {
       {"automation-science-pack", 1},

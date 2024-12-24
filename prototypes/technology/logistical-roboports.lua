@@ -13,8 +13,34 @@ local function get_research_name(upgrade_name, level)
 end
 
 ---@return table<TechnologyID>
+local function get_planet_prerequisites(upgrade_name, level)
+  ---@type table<TechnologyID>
+  local prerequisites = {}
+
+  if upgrade_name == RoboportConstructionArea then
+    table.insert(prerequisites, MetallurgicSciencePack)
+  elseif upgrade_name == RoboportLogisticsArea then
+    table.insert(prerequisites, ElectromagneticSciencePack)
+  elseif upgrade_name == RoboportRobotStorage then
+    table.insert(prerequisites, AgriculturalSciencePack)
+  elseif upgrade_name == RoboportMaterialStorage then
+    table.insert(prerequisites, AgriculturalSciencePack)
+  end
+
+  if level >= 2 then
+    table.insert(prerequisites, CryogenicSciencePack)
+  end
+
+  if level >= 3 then
+    table.insert(prerequisites, PromethiumSciencePack)
+  end
+  return prerequisites
+end
+
+---@return table<TechnologyID>
 local function get_research_prerequisites(upgrade_name, level)
-  local prerequisites = nil
+  ---@type table<TechnologyID>
+  local prerequisites = {}
 
   if level == 1 then
     prerequisites = {
@@ -25,10 +51,13 @@ local function get_research_prerequisites(upgrade_name, level)
       get_research_name(upgrade_name, level-1)
     }
   end
+  if mods["space-age"] then
+    table.extend(prerequisites, get_planet_prerequisites(upgrade_name, level))
+  end
   return prerequisites
 end
 
-local function get_tech_sprite(module_type, level)
+local function get_tech_sprite(type, level)
     return {
       {
         icon = "__base__/graphics/technology/robotics.png",
@@ -45,17 +74,46 @@ local function get_effect_description(upgrade_name)
   return "Upgrade the " .. upgrade_name .. " of a logistical roboport"
 end
 
+---@param upgrade_type data.TechnologyPrototype
+---@param level number
+---@param ingredients data.IngredientPrototype
+local function add_SA_ingredients(upgrade_type, level, ingredients)
+  if mods["space-age"] then
+    if upgrade_type == RoboportConstructionArea then
+      table.insert(ingredients, {MetallurgicSciencePack, 1})
+    elseif upgrade_type == RoboportLogisticsArea then
+      table.insert(ingredients, {ElectromagneticSciencePack, 1})
+    elseif upgrade_type == RoboportRobotStorage then
+      table.insert(ingredients, {AgriculturalSciencePack, 1})
+    elseif upgrade_type == RoboportMaterialStorage then
+      table.insert(ingredients, {AgriculturalSciencePack, 1})
+    end
+
+    if level >= 2 then
+      table.insert(ingredients, {CryogenicSciencePack, 1})
+    end
+
+    if level >= 3 then
+      table.insert(ingredients, {PromethiumSciencePack, 1})
+    end
+  end
+end
+
 local function get_research_ingredients(upgrade_type, level)
   local researchPrerequisites = get_research_prerequisites(upgrade_type, level)
-  return combined_prerequisites(
-    researchPrerequisites,
-    {
-      {"automation-science-pack", 1},
-      {"logistic-science-pack", 1},
-      {"chemical-science-pack", 1},
-      {"utility-science-pack", 1},
-      {"utility-science-pack", 1},
-    })
+  local ingredients = combined_ingredients(
+      researchPrerequisites,
+      {
+        {"automation-science-pack", 1},
+        {"logistic-science-pack", 1},
+        {"chemical-science-pack", 1},
+        {"production-science-pack", 1},
+        {"utility-science-pack", 1},
+      }
+  )
+
+  add_SA_ingredients(upgrade_type, level, ingredients)
+  return table.unique_kv(ingredients)
 end
 
 local function get_research_limit (upgrade_type)
@@ -78,6 +136,7 @@ local function add_researches()
   table.insert(data.raw["technology"]["logistic-robotics"].effects, {type = "unlock-recipe", recipe = RoboportLogistical})
 
   for _, upgrade_type in pairs(upgrade_names) do
+  -- TODO: Place certain upgrades behind certain planets for SA
     limit = get_research_limit(upgrade_type)
 
     for i=1, limit do

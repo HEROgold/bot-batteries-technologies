@@ -38,6 +38,12 @@ MaterialStorageResearchLevel = combine{Material, Storage, Research, Level}
 roboports_to_update = combine{Roboport, Updater}
 ghosts_to_update = combine{Entity, Ghost, Updater}
 
+MetallurgicSciencePack = combine{Metallurgic, SciencePack}
+ElectromagneticSciencePack = combine{Electromagnetic, SciencePack}
+AgriculturalSciencePack = combine{Agricultural, SciencePack}
+CryogenicSciencePack = combine{Cryogenic, SciencePack}
+PromethiumSciencePack = combine{Promethium, SciencePack}
+
 -- Settings
 RobotStorageLimit = combine{Robot, Storage, Limit}
 ResearchMinimum =  combine{Research, Minimum}
