@@ -203,6 +203,9 @@ end
 
 local function tick_update_roboport_level()
     local roboport, needs_upgrade = next(storage.roboports_to_update)
+    if roboport == nil then
+        return
+    end
     if needs_upgrade then
         update_roboport_level(roboport)
     end
