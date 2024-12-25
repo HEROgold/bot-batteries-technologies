@@ -214,6 +214,9 @@ end
 
 local function tick_update_ghost_level()
     local roboport, needs_downgrade = next(storage.ghosts_to_update)
+    if roboport == nil then
+        return
+    end
     if needs_downgrade then
         update_ghost_level(roboport)
     end
