@@ -144,3 +144,12 @@ commands.add_command(
         end
     end
 )
+
+commands.add_command(
+    "br-clean",
+    "Resets all internally tracked ports",
+    function()
+        storage.roboports_to_update = {}
+        storage.ghosts_to_update = {}
+    end
+)
