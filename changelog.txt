@@ -1,4 +1,11 @@
 ---------------------------------------------------------------------------------------------------
+Version: 3.1.1
+Date: 2024-12-25
+  Added:
+    - Command to clean internally tracked roboports. '/br-clean'
+  Fixes:
+    - Fixed that upgrading roboports didn't reset the internal tracking.
+---------------------------------------------------------------------------------------------------
 Version: 3.1.0
 Date: 2024-12-21
   Added:
