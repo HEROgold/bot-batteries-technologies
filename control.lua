@@ -197,6 +197,8 @@ local function update_roboport_level(roboport)
         update_storage_roboport_level(roboport)
     elseif utilities.string_starts_with(roboport.name, RoboportEnergy) then
         update_energy_roboport_level(roboport)
+    else
+        storage.roboports_to_update[roboport] = nil
     end
 end
 
