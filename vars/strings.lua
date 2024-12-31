@@ -37,6 +37,9 @@ RobotStorageResearchLevel = combine{Robot, Storage, Research, Level}
 MaterialStorageResearchLevel = combine{Material, Storage, Research, Level}
 roboports_to_update = combine{Roboport, Updater}
 ghosts_to_update = combine{Entity, Ghost, Updater}
+RobotCargoResearch = combine{Robot, Cargo, Research}
+RobotSpeedResearch = combine{Robot, Speed, Research}
+RobotEnergyResearch = combine{Robot, Energy, Research}
 
 MetallurgicSciencePack = combine{Metallurgic, SciencePack}
 ElectromagneticSciencePack = combine{Electromagnetic, SciencePack}
