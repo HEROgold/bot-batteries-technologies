@@ -1,3 +1,6 @@
+require("vars.words")
+require("vars.strings")
+require("vars.settings")
 
 local function get_research_localized_name(upgrade_name, level)
   return "architect " .. upgrade_name .. " upgrade " .. level
@@ -17,13 +20,11 @@ local function get_planet_prerequisites(upgrade_name, level)
   ---@type table<TechnologyID>
   local prerequisites = {}
 
-  if upgrade_name == RoboportConstructionArea then
+  if upgrade_name == RobotSpeedResearch then
     table.insert(prerequisites, MetallurgicSciencePack)
-  elseif upgrade_name == RoboportLogisticsArea then
+  elseif upgrade_name == RobotEnergyResearch then
     table.insert(prerequisites, ElectromagneticSciencePack)
-  elseif upgrade_name == RoboportRobotStorage then
-    table.insert(prerequisites, AgriculturalSciencePack)
-  elseif upgrade_name == RoboportMaterialStorage then
+  elseif upgrade_name == RobotCargoResearch then
     table.insert(prerequisites, AgriculturalSciencePack)
   end
 
@@ -72,13 +73,11 @@ end
 ---@param ingredients data.IngredientPrototype
 local function add_SA_ingredients(upgrade_type, level, ingredients)
   if mods["space-age"] then
-    if upgrade_type == RoboportConstructionArea then
+    if upgrade_type == RobotSpeedResearch then
       table.insert(ingredients, { MetallurgicSciencePack, 1 })
-    elseif upgrade_type == RoboportLogisticsArea then
+    elseif upgrade_type == RobotEnergyResearch then
       table.insert(ingredients, { ElectromagneticSciencePack, 1 })
-    elseif upgrade_type == RoboportRobotStorage then
-      table.insert(ingredients, { AgriculturalSciencePack, 1 })
-    elseif upgrade_type == RoboportMaterialStorage then
+    elseif upgrade_type == RobotCargoResearch then
       table.insert(ingredients, { AgriculturalSciencePack, 1 })
     end
 

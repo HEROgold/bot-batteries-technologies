@@ -1,15 +1,13 @@
-# Roboport Technologies
+# Robot Upgrades
 
-Mod page can be found [here](https://mods.factorio.com/mod/bot-batteries-technologies)!
+Mod page can be found [here](https://mods.factorio.com/mod/heroic-robot-upgrades)!
 
 ## Content
 
-Ths mod adds upgrades to roboports, similar to the module's found in the game.
-
-Has support for Space-Exploration and Module-T4 mods.
+Ths mod adds upgrades to robots
 
 ## Commands
 
-### /br-uninstall
+### /ru-uninstall
 
-Removes any of this mod's roboports, and reverts them to vanilla.
+Removes any of this mod's robots, and reverts them to vanilla.

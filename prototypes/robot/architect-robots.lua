@@ -1,17 +1,17 @@
 require("__heroic_library__.utilities")
-require("lualib.utils")
+require("vars.strings")
 require("vars.settings")
 
-local base_entity = data.raw[ConstructionRobot]
+local base_entity = data.raw[ConstructionRobot][ConstructionRobot]
 local base_robot_item = data.raw["item"][ConstructionRobot]
 
----@type data.ConstructionRobotPrototype
 local robot_entity = table.deepcopy(base_entity)
 local robot_item = table.deepcopy(base_robot_item)
 
 local localised_name = "Architect Robot"
 
 robot_name = ArchitectRobot
+robot_entity.name = robot_name
 robot_item.name = robot_name
 
 robot_item.place_result = robot_entity.name
@@ -66,13 +66,15 @@ local function add_all_robots()
                 robot_entity.minable = robot_entity.minable
                 robot_entity.minable.result = robot_item.name
 
-                -- TODO: add the upgrades for each robot
                 robot_entity.max_payload_size = base_entity.max_payload_size + c
                 robot_entity.speed = base_entity.speed + s
-                robot_entity.max_energy = base_entity.max_energy + e
+
+                local energy = tonumber(string.match(robot_entity.max_energy, "%d+"))
+                local suffix = string.match(robot_entity.max_energy, "%a+")
+                robot_entity.max_energy = energy + e .. suffix
 
                 if settings.startup[ShowItems].value == true then
-                    robot_item.subgroup = "br-roboports"
+                    robot_item.subgroup = ItemSubGroupRobot
                     data:extend({robot_item})
                 end
                 data:extend({robot_entity})
