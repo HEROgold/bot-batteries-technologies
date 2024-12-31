@@ -25,7 +25,7 @@ robot_entity.minable.result = robot_item.name
 local robot_recipe = {
     type = "recipe",
     name = robot_name,
-    -- enabled = true,
+    enabled = false,
     ---@type data.IngredientPrototype[]
     ingredients = {
         {type = "item", name = ConstructionRobot, amount = 1},
