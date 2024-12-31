@@ -124,7 +124,6 @@ end
 local function add_researches()
   local upgrade_names = { RobotCargoResearch, RobotSpeedResearch, RobotEnergyResearch }
 
-  -- TODO: Use architect and hauler here.
   for _, robot in pairs({Architect, Hauler}) do end
   for _, upgrade_type in pairs(upgrade_names) do
     limit = get_research_limit(upgrade_type)
