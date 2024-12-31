@@ -1,7 +1,9 @@
 require("__heroic_library__.utilities")
+require("helpers.suffix")
 require("vars.strings")
 require("vars.settings")
 
+---@type data.ConstructionRobotPrototype
 local base_entity = data.raw[ConstructionRobot][ConstructionRobot]
 local base_robot_item = data.raw["item"][ConstructionRobot]
 
@@ -50,7 +52,7 @@ local function add_all_robots()
                 local robot_item = table.deepcopy(robot_item)
                 local robot_entity = table.deepcopy(robot_entity)
 
-                local suffix = utils.get_energy_suffix(c, s, e)
+                local suffix = get_robot_suffix(c, s, e)
                 local name = robot_name .. "-mk-" .. suffix
                 local localised_name = tostring(localised_name .. "Mk." .. c .. s .. e)
 
