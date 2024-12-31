@@ -49,7 +49,7 @@ energy_roboport_entity.material_slots_count = 10
 local energy_roboport_recipe = {
     type = "recipe",
     name = energy_name,
-    -- enabled = true,
+    enabled = false,
     ---@type data.IngredientPrototype[]
     ingredients = {
         {type = "item", name ="roboport", amount = 1},
