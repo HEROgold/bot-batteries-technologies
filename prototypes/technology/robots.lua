@@ -157,3 +157,5 @@ local function add_researches()
     end
   end
 end
+
+add_researches()
