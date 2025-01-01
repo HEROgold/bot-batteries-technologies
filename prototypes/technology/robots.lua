@@ -12,11 +12,11 @@ end
 
 
 local function get_research_name(upgrade_name, level)
-  return upgrade_name .. utils.get_level_suffix(level)
+  return upgrade_name .. utilities.get_level_suffix(level)
 end
 
 ---@return table<TechnologyID>
-local function get_planet_prerequisites(upgrade_name, level)
+local function get_SA_prerequisites(upgrade_name, level)
   ---@type table<TechnologyID>
   local prerequisites = {}
 
@@ -54,7 +54,7 @@ local function get_research_prerequisites(upgrade_name, level)
     }
   end
   if mods["space-age"] then
-    table.extend(prerequisites, get_planet_prerequisites(upgrade_name, level))
+    table.extend(prerequisites, get_SA_prerequisites(upgrade_name, level))
   end
   return prerequisites
 end
@@ -132,7 +132,6 @@ local function add_researches()
           {
             type = "technology",
             name = get_research_name(upgrade_type, i),
-            localised_name = get_research_localized_name(upgrade_type, i),
             icon_size = 256,
             icon_mipmaps = 4,
             icons = get_tech_sprite(upgrade_type, i),
@@ -142,7 +141,6 @@ local function add_researches()
             effects = {
               {
                 type = "nothing",
-                effect_description = get_effect_description(upgrade_type),
               }
             },
             unit = {
