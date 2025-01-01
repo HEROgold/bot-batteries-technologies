@@ -4,23 +4,21 @@ require("vars.strings")
 require("vars.settings")
 
 ---@type data.ConstructionRobotPrototype
+---@diagnostic disable-next-line: assign-type-mismatch
 local base_entity = data.raw[ConstructionRobot][ConstructionRobot]
 local base_robot_item = data.raw["item"][ConstructionRobot]
 
 local robot_entity = table.deepcopy(base_entity)
 local robot_item = table.deepcopy(base_robot_item)
 
-local localised_name = "Architect Robot"
 
 robot_name = ArchitectRobot
 robot_entity.name = robot_name
 robot_item.name = robot_name
 
 robot_item.place_result = robot_entity.name
-robot_item.localised_name = localised_name
 robot_item.hidden = false
 
-robot_entity.localised_name = localised_name
 robot_entity.minable.result = robot_item.name
 
 ---@type data.RecipePrototype
@@ -32,6 +30,7 @@ local robot_recipe = {
     ingredients = {
         {type = "item", name = ConstructionRobot, amount = 1},
         {type = "item", name = FlyingRobotFrame, amount = 1},
+        {type = "item", name = AdvancedCircuit, amount = 2},
     },
     ---@type data.ItemProductPrototype[]
     results = {{type = "item", name = robot_item.name, amount = 1},},
@@ -45,6 +44,13 @@ local function add_base_robot()
     data:extend({robot_entity})
 end
 
+local function insert_unlock()
+    table.insert(
+        data.raw["technology"]["construction-robotics"].effects,
+        {type = "unlock-recipe", recipe = ArchitectRobot}
+    )
+end
+
 local function add_all_robots()
     for c=0, robot_cargo_research_limit do
         for s=0, robot_speed_research_limit do
@@ -54,12 +60,13 @@ local function add_all_robots()
 
                 local suffix = get_robot_suffix(c, s, e)
                 local name = robot_name .. "-mk-" .. suffix
-                local localised_name = tostring(localised_name .. "Mk." .. c .. s .. e)
+
+                -- local localised_name = {"hauler-robot-mk-", c, s, e}
+                -- robot_entity.localised_name = localised_name
+                -- robot_item.localised_name = localised_name
 
                 robot_item.name = name
                 robot_entity.name = name
-                robot_entity.localised_name = localised_name
-                robot_item.localised_name = localised_name
                 robot_item.hidden = true
 
                 robot_item.place_result = robot_entity.name
@@ -85,5 +92,6 @@ local function add_all_robots()
     end
 end
 
+insert_unlock()
 add_base_robot()
 add_all_robots()

@@ -1,3 +1,4 @@
+require("__heroic_library__.number")
 
 ---@param cargo_level integer
 ---@param speed_level integer

@@ -1,3 +1,3 @@
--- require("control")
--- require("commands")
--- require("events")
+require("events.mined")
+require("events.placed")
+require("events.research")
