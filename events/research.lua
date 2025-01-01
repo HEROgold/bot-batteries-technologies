@@ -69,6 +69,33 @@ local function upgrade_robots_in_roboports(event, surface)
     end
 end
 
+---@param robot LuaEntity
+---@param surface LuaSurface
+local function upgrade_robot_in_air(robot, surface)
+    local force = robot.force
+    local levels = get_research_levels(force)
+    local upgraded_robot_name = get_upgraded_robot_name_from_levels(robot.name, levels)
+    if upgraded_robot_name == nil then return end
+
+    local to_create = table.deepcopy(robot)
+    to_create.name = upgraded_robot_name
+    surface.create_entity(table.unpack(to_create))
+    robot.destroy()
+end
+
+---@param event EventData.on_research_finished | EventData.on_research_reversed
+---@param surface LuaSurface
+local function upgrade_robots_in_air(event, surface)
+    local robots = surface.find_entities_filtered{
+        type = Robot,
+        force = event.research.force
+    }
+
+    for _, robot in pairs(robots) do
+        upgrade_robot_in_air(robot, surface)
+    end
+end
+
 script.on_event(
     defines.events.on_research_finished,
     ---@param event EventData.on_research_finished
@@ -90,6 +117,7 @@ script.on_event(
         local surfaces = game.surfaces
         for _, surface in pairs(surfaces) do
             upgrade_robots_in_roboports(event, surface)
+            upgrade_robots_in_air(event, surface)
             -- TODO: when upgrade is applied, upgrade all bots found in 
             -- TODO: inventory, chest, on the floor, logistic settings, filters
             -- TODO: Adjust the available recipe to only make new upgraded variant.
