@@ -103,6 +103,7 @@ script.on_event(
         local surfaces = game.surfaces
         for _, surface in pairs(surfaces) do
             upgrade_robots_in_roboports(event, surface)
+            upgrade_robots_in_air(event, surface)
             -- TODO: when upgrade is applied, upgrade all bots found in 
             -- inventory, chest, on the floor, logistic settings, filters
             -- TODO: Adjust the available recipe to only make new upgraded variant.
