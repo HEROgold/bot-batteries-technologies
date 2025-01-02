@@ -3,6 +3,21 @@ require("vars.strings")
 require("vars.settings")
 require("helpers.suffix")
 
+---@param entity LuaEntity
+---@param recipe RecipeID
+local function update_entity_recipe(entity, recipe)
+    if entity == nil then return end
+    if entity.get_recipe() == nil then return end
+    entity.set_recipe(recipe)
+end
+
+local function update_robot_recipes()
+    update_assembler_reciepes()
+    if mods["RoboticsFacility"] then
+        update_robotics_facility_recipes()
+    end
+end
+
 ---@param force ForceID
 ---@return table<number, number, number>
 local function get_research_levels(force)

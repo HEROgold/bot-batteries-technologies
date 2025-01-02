@@ -6,7 +6,8 @@
   "factorio_version": "2.0",
   "dependencies": [
     "base >= 2.0",
-    "heroic_library >= 1.0.4"
+    "heroic_library >= 1.0.4",
+    "? RoboticsFacility"
   ],
   "homepage": "https://discord.gg/qPe4wtHuJR",
   "description": "A  mod that adds upgradable robots!\nEvery 'tier' or upgrade adds the same value, Vanilla is 100%, level 2 would be 200%, and level 3 300%, level 4 is 400%."
