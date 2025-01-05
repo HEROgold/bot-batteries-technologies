@@ -61,9 +61,8 @@ local function add_all_robots()
                 local suffix = get_robot_suffix(c, s, e)
                 local name = robot_name .. "-mk-" .. suffix
 
-                -- local localised_name = {"hauler-robot-mk-", c, s, e}
-                -- robot_entity.localised_name = localised_name
-                -- robot_item.localised_name = localised_name
+                robot_entity.localised_name = {"entity-name." .. ArchitectRobotLeveled, tostring(c), tostring(s), tostring(e)}
+                robot_item.localised_name = {"item-name." .. ArchitectRobotLeveled, tostring(c), tostring(s), tostring(e)}
 
                 robot_item.name = name
                 robot_entity.name = name
