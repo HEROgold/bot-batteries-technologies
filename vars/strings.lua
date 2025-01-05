@@ -16,5 +16,5 @@ ResearchModifierSpeed = combine{Research, Modifier, Speed}
 ResearchModifierEnergy = combine{Research, Modifier, Energy}
 AdvancedCircuit = combine{Advanced, Circuit}
 ElectronicCircuit = combine{Electronic, Circuit}
-ArchitectRobotLeveled = combine{ArchitectRobot, Mark} .. "-"
-HaulerRobotLeveled = combine{HaulerRobot, Mark} .. "-"
+ArchitectRobotLeveled = combine{ArchitectRobot, Mark}
+HaulerRobotLeveled = combine{HaulerRobot, Mark}
