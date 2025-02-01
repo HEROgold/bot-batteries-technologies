@@ -101,10 +101,17 @@ end
 ---@param event EventData.on_research_finished | EventData.on_research_reversed
 ---@param surface LuaSurface
 local function upgrade_robots_in_air(event, surface)
-    local robots = surface.find_entities_filtered{
-        type = Robot,
-        force = event.research.force
-    }
+    local robots = {}
+    for _, surface in pairs(game.surfaces) do
+        table.extend(robots, surface.find_entities_filtered {
+            type = ArchitectRobotLeveled,
+            force=event.research.force
+        })
+        table.extend(robots, surface.find_entities_filtered {
+            type = HaulerRobotLeveled,
+            force=event.research.force
+        })
+    end
 
     for _, robot in pairs(robots) do
         upgrade_robot_in_air(robot, surface)
