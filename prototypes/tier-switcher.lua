@@ -43,7 +43,7 @@ local tier_switcher_recipe = {
     name = TierSwitcherRoboport,
     enabled = false,
     ingredients = {
-        {type = "item", name = "linked-chest", amount = 1},
+        {type = "item", name = "steel-chest", amount = 1},
         {type = "item", name = "logistic-chest-requester", amount = 1},
         {type = "item", name = "processing-unit", amount = 5}
     },
