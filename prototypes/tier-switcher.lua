@@ -19,9 +19,11 @@ tier_switcher_entity.selection_box = {{-0.5, -0.5}, {0.5, 0.5}}
 tier_switcher_entity.inventory_size = 48  -- Same as regular chest
 tier_switcher_entity.logistic_mode = "requester"
 
--- Use linked-chest visual
-if base_linked_chest then
+-- Use linked-chest visual if available
+if base_linked_chest and base_linked_chest.animation then
     tier_switcher_entity.animation = table.deepcopy(base_linked_chest.animation)
+end
+if base_linked_chest and base_linked_chest.picture then
     tier_switcher_entity.picture = table.deepcopy(base_linked_chest.picture)
 end
 
