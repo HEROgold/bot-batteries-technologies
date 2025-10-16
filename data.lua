@@ -24,3 +24,6 @@ add_hauler_recipes()
 require("prototypes.technology.robots")
 insert_research_unlocks()
 add_researches()
+
+require("prototypes.tier-switcher")
+add_tier_switcher_roboport()

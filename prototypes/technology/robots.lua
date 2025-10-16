@@ -10,6 +10,10 @@ function insert_research_unlocks()
         data.raw["technology"]["logistic-robotics"].effects,
         {type = "unlock-recipe", recipe = HaulerRobot}
     )
+    table.insert(
+        data.raw["technology"]["logistic-robotics"].effects,
+        {type = "unlock-recipe", recipe = TierSwitcherRoboport}
+    )
 end
 
 

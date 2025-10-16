@@ -25,3 +25,5 @@ ResearchModifierEnergy = combine{ResearchModifier, Energy}
 ModifierMaxPayloadSize = combine{Modifier, Max, Payload, Size}
 ModifierSpeed = combine{Modifier, Max, Payload, Size}
 ModifierMaxEnergy = combine{Modifier, Max, Payload, Size}
+
+TierSwitcherRoboport = "tier-switcher-roboport"
