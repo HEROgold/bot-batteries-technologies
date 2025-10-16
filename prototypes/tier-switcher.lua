@@ -1,0 +1,5 @@
+-- This custom roboport has one slot
+-- requests all previously requested items
+-- acts as a roboport that automatically spits out robots after converting
+-- it's goal is to upgrade lower tier robots to higher tier robots
+-- on research, it updates its requests to request higher tier robots

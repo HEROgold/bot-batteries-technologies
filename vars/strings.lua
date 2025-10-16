@@ -1,20 +1,27 @@
-require("__heroic_library__.vars.strings")
+require("__heroic-library__.vars.strings")
 require("vars.words")
 
 ArchitectRobot = combine{Architect, Robot}
 HaulerRobot = combine{Hauler, Robot}
-
-RobotCargoUpgrade = combine{Robot, Cargo, Upgrade}
-RobotSpeedUpgrade = combine{Robot, Speed, Upgrade}
-RobotEnergyUpgrade = combine{Robot, Energy, Upgrade}
-RobotCargoLimit = combine{Robot, Cargo, Limit}
-RobotSpeedLimit = combine{Robot, Speed, Limit}
-RobotEnergyLimit = combine{Robot, Energy, Limit}
-RobotResearchMinimum = combine{Robot, Research, Minimum}
-ResearchModifierCargo = combine{Research, Modifier, Cargo}
-ResearchModifierSpeed = combine{Research, Modifier, Speed}
-ResearchModifierEnergy = combine{Research, Modifier, Energy}
-AdvancedCircuit = combine{Advanced, Circuit}
-ElectronicCircuit = combine{Electronic, Circuit}
 ArchitectRobotLeveled = combine{ArchitectRobot, Mark}
 HaulerRobotLeveled = combine{HaulerRobot, Mark}
+
+RobotUpgrade = combine{Robot, Upgrade}
+RobotUpgradeCargo = combine{RobotUpgrade, Cargo}
+RobotUpgradeSpeed = combine{RobotUpgrade, Speed}
+RobotUpgradeEnergy = combine{RobotUpgrade, Energy}
+
+RobotLimit = combine{Robot, Limit}
+RobotLimitCargo = combine{RobotLimit, Cargo}
+RobotLimitSpeed = combine{RobotLimit, Speed}
+RobotLimitEnergy = combine{RobotLimit, Energy}
+
+RobotResearchMinimum = combine{Robot, Research, Minimum}
+ResearchModifier = combine{Research, Modifier}
+ResearchModifierCargo = combine{ResearchModifier, Cargo}
+ResearchModifierSpeed = combine{ResearchModifier, Speed}
+ResearchModifierEnergy = combine{ResearchModifier, Energy}
+
+ModifierMaxPayloadSize = combine{Modifier, Max, Payload, Size}
+ModifierSpeed = combine{Modifier, Max, Payload, Size}
+ModifierMaxEnergy = combine{Modifier, Max, Payload, Size}

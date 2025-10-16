@@ -7,6 +7,6 @@ script.on_event(
     },
     ---@param event EventData.on_player_mined_entity | EventData.on_robot_mined_entity | EventData.on_entity_died | EventData.script_raised_destroy
     function (event)
-    
+        -- We don't need this, as the prototypes return the correct levels for the bots when mined.
     end
 )

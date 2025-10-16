@@ -1,9 +1,20 @@
-require("__heroic_library__.utilities")
-require("__heroic_library__.technology")
-require("vars.words")
-require("vars.strings")
-require("vars.settings")
+require("__heroic-library__.utilities")
+require("__heroic-library__.technology")
 
+function insert_research_unlocks()
+    table.insert(
+        data.raw["technology"]["construction-robotics"].effects,
+        {type = "unlock-recipe", recipe = ArchitectRobot}
+    )
+    table.insert(
+        data.raw["technology"]["logistic-robotics"].effects,
+        {type = "unlock-recipe", recipe = HaulerRobot}
+    )
+end
+
+
+---@param upgrade_name string
+---@param level number
 local function get_research_name(upgrade_name, level)
   return upgrade_name .. utilities.get_level_suffix(level)
 end
@@ -13,21 +24,21 @@ local function get_SA_prerequisites(upgrade_name, level)
   ---@type table<TechnologyID>
   local prerequisites = {}
 
-  if level >= 2 then
-    if upgrade_name == RobotSpeedUpgrade then
+  if level >= 1 then
+    if upgrade_name == RobotUpgradeSpeed then
       table.insert(prerequisites, MetallurgicSciencePack)
-    elseif upgrade_name == RobotEnergyUpgrade then
+    elseif upgrade_name == RobotUpgradeEnergy then
       table.insert(prerequisites, ElectromagneticSciencePack)
-    elseif upgrade_name == RobotCargoUpgrade then
+    elseif upgrade_name == RobotUpgradeCargo then
       table.insert(prerequisites, AgriculturalSciencePack)
     end
   end
 
-  if level >= 3 then
+  if level >= 2 then
     table.insert(prerequisites, CryogenicSciencePack)
   end
 
-  if level >= 4 then
+  if level >= 3 then
     table.insert(prerequisites, PromethiumSciencePack)
   end
   return prerequisites
@@ -38,12 +49,12 @@ end
 ---@param level number
 local function add_module_prerequisites(upgrade_name, prerequisites, level)
   local level_suffix = utilities.get_level_suffix(level)
-  if upgrade_name == RobotSpeedUpgrade then
-    table.insert(prerequisites, "speed-module" .. level_suffix)
-  elseif upgrade_name == RobotEnergyUpgrade then
-    table.insert(prerequisites, "efficiency-module" .. level_suffix)
-  elseif upgrade_name == RobotCargoUpgrade then
-    table.insert(prerequisites, "productivity-module" .. level_suffix)
+  if upgrade_name == RobotUpgradeSpeed then
+    table.insert(prerequisites, "speed-module-3")
+  elseif upgrade_name == RobotUpgradeEnergy then
+    table.insert(prerequisites, "efficiency-module-3")
+  elseif upgrade_name == RobotUpgradeCargo then
+    table.insert(prerequisites, "productivity-module-3")
   end
 end
 
@@ -52,20 +63,20 @@ end
 ---@param ingredients data.IngredientPrototype
 local function add_SA_ingredients(upgrade_type, level, ingredients)
   if mods["space-age"] then
-    if level >= 2 then
-      if upgrade_type == RobotSpeedUpgrade then
+    if level >= 1 then
+      if upgrade_type == RobotUpgradeSpeed then
         table.insert(ingredients, { MetallurgicSciencePack, 1 })
-      elseif upgrade_type == RobotEnergyUpgrade then
+      elseif upgrade_type == RobotUpgradeEnergy then
         table.insert(ingredients, { ElectromagneticSciencePack, 1 })
-      elseif upgrade_type == RobotCargoUpgrade then
+      elseif upgrade_type == RobotUpgradeCargo then
         table.insert(ingredients, { AgriculturalSciencePack, 1 })
       end
     end
 
-    if level >= 3 then
+    if level >= 2 then
       table.insert(ingredients, { CryogenicSciencePack, 1 })
     end
-    if level >= 4 then
+    if level >= 3 then
       table.insert(ingredients, { PromethiumSciencePack, 1 })
     end
   end
@@ -119,18 +130,18 @@ end
 
 local function get_research_limit(upgrade_type)
   local limit = 999999
-  if upgrade_type == RobotCargoUpgrade then
+  if upgrade_type == RobotUpgradeCargo then
     limit = robot_storage_limit
-  elseif upgrade_type == RobotSpeedUpgrade then
+  elseif upgrade_type == RobotUpgradeSpeed then
     limit = material_storage_limit
-  elseif upgrade_type == RobotEnergyUpgrade then
+  elseif upgrade_type == RobotUpgradeEnergy then
     limit = construction_area_limit
   end
   return math.max(research_minimum, math.min(limit, research_maximum))
 end
 
-local function add_researches()
-  local upgrade_names = { RobotCargoUpgrade, RobotSpeedUpgrade, RobotEnergyUpgrade }
+function add_researches()
+  local upgrade_names = { RobotUpgradeCargo, RobotUpgradeSpeed, RobotUpgradeEnergy }
 
   for _, upgrade_type in pairs(upgrade_names) do
     limit = get_research_limit(upgrade_type)
@@ -162,5 +173,3 @@ local function add_researches()
     end
   end
 end
-
-add_researches()
