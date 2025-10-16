@@ -2,36 +2,9 @@ require("__heroic-library__.inventories")
 require("vars.strings")
 require("helpers.research")
 require("helpers.upgrades")
+require("helpers.suffix")
 
---- Get all lower tier robots that should be requested based on current research levels
---- @param force ForceID
---- @return table<string, integer>
-local function get_robots_to_request(force)
-    local levels = get_research_levels(force)
-    local robots_to_request = {}
-    
-    -- For each robot type (architect and hauler)
-    for robot_type, base_name in pairs({architect = ArchitectRobot, hauler = HaulerRobot}) do
-        -- Request all tiers below current research level
-        for c = 0, levels.cargo do
-            for s = 0, levels.speed do
-                for e = 0, levels.energy do
-                    -- Skip the highest tier (current research level)
-                    if not (c == levels.cargo and s == levels.speed and e == levels.energy) then
-                        local suffix = get_robot_suffix({cargo = c, speed = s, energy = e})
-                        local robot_name = base_name .. suffix
-                        -- Request a reasonable amount of each lower tier
-                        robots_to_request[robot_name] = 100
-                    end
-                end
-            end
-        end
-    end
-    
-    return robots_to_request
-end
-
---- Update logistic requests for a tier-switcher roboport
+--- Update logistic requests for a tier-switcher roboport to request all lower tier robots
 --- @param entity LuaEntity
 local function update_tier_switcher_requests(entity)
     if entity.name ~= TierSwitcherRoboport then return end
@@ -40,32 +13,53 @@ local function update_tier_switcher_requests(entity)
     local logistics = entity.get_logistic_sections()
     if logistics == nil then return end
     
+    -- Get current research levels
+    local levels = get_research_levels(entity.force)
+    
     -- Clear existing sections and create new one
     logistics.sections_count = 1
     local section = logistics.get_section(1)
     if section == nil then return end
     
-    -- Get robots to request based on current research
-    local robots = get_robots_to_request(entity.force)
-    
-    -- Set filters for each robot type
+    -- Request lower tier robots for both architect and hauler types
     local filter_index = 1
-    for robot_name, count in pairs(robots) do
-        if filter_index > 1000 then break end -- Factorio has limits on filter count
-        
-        --- @type LogisticFilter
-        local filter = {
-            index = filter_index,
-            count = count,
-            value = {
-                name = robot_name,
-                type = "item",
-                quality = "normal",
-                comparator = "=",
-            }
-        }
-        section.set_slot(filter_index, filter)
-        filter_index = filter_index + 1
+    
+    for robot_type, base_name in pairs({architect = ArchitectRobot, hauler = HaulerRobot}) do
+        -- Request all tiers below current research level
+        for c = 0, levels.cargo do
+            for s = 0, levels.speed do
+                for e = 0, levels.energy do
+                    -- Skip the highest tier (current research level)
+                    local is_highest_tier = (c == levels.cargo and s == levels.speed and e == levels.energy)
+                    if not is_highest_tier then
+                        local suffix = get_robot_suffix({cargo = c, speed = s, energy = e})
+                        local robot_name = base_name .. suffix
+                        
+                        -- Check if this robot exists in the game
+                        if game.item_prototypes[robot_name] then
+                            --- @type LogisticFilter
+                            local filter = {
+                                index = filter_index,
+                                count = 100,  -- Request up to 100 of each lower tier
+                                value = {
+                                    name = robot_name,
+                                    type = "item",
+                                    quality = "normal",
+                                    comparator = "=",
+                                }
+                            }
+                            section.set_slot(filter_index, filter)
+                            filter_index = filter_index + 1
+                            
+                            -- Factorio has limits on filter count, stop if we reach it
+                            if filter_index > 1000 then 
+                                return
+                            end
+                        end
+                    end
+                end
+            end
+        end
     end
 end
 
