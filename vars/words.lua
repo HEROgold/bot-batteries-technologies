@@ -1,4 +1,5 @@
-require("__heroic_library__.vars.words")
+require("__heroic-library__.vars.words")
 
 Architect = "architect"
 Hauler = "hauler"
+Payload = "payload"

@@ -11,3 +11,12 @@ Ths mod adds upgrades to robots
 ### /ru-uninstall
 
 Removes any of this mod's robots, and reverts them to vanilla.
+
+## TODO:
+
+Use productivity module for upgrade levels on cargo capacity
+Use speed module for upgrade levels on speed
+Use efficienty module for upgrade levels on battery
+
+Use quality module for upgrade levels on to unlock a bot, that can both construct and do logistics.
+(This needs some scripting to swap between constrution and logistic bot prototypes :( )

@@ -12,7 +12,7 @@ local robot_settings = {
     },
     {
         type = "int-setting",
-        name = RobotCargoLimit,
+        name = RobotLimitCargo,
         setting_type = "startup",
         default_value = 3,
         minimum_value = 1,
@@ -20,7 +20,7 @@ local robot_settings = {
     },
     {
         type = "int-setting",
-        name = RobotSpeedLimit,
+        name = RobotLimitSpeed,
         setting_type = "startup",
         default_value = 3,
         minimum_value = 1,
@@ -28,7 +28,7 @@ local robot_settings = {
     },
     {
         type = "int-setting",
-        name = RobotEnergyLimit,
+        name = RobotLimitEnergy,
         setting_type = "startup",
         default_value = 3,
         minimum_value = 1,
@@ -46,6 +46,21 @@ local robot_settings = {
     },{
         type = "double-setting",
         name = ResearchModifierEnergy,
+        setting_type = "startup",
+        default_value = 1,
+    }, {
+        type = "double-setting",
+        name = ModifierMaxPayloadSize,
+        setting_type = "startup",
+        default_value = 1,
+    }, {
+        type = "double-setting",
+        name = ModifierSpeed,
+        setting_type = "startup",
+        default_value = 1,
+    }, {
+        type = "double-setting",
+        name = ModifierMaxEnergy,
         setting_type = "startup",
         default_value = 1,
     }

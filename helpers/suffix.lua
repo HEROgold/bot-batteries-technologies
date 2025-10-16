@@ -1,12 +1,13 @@
-require("__heroic_library__.number")
+require("__heroic-library__.number")
+require("vars.settings")
+require("stubs.levels")
 
----@param cargo_level integer
----@param speed_level integer
----@param energy_level integer
+--- @param levels RobotUpgradeLevels
 ---@return string
-get_robot_suffix = function(cargo_level, speed_level, energy_level)
-    cargo_level = number.within_bounds(cargo_level, 0, energy_efficiency_limit)
-    speed_level = number.within_bounds(speed_level, 0, energy_productivity_limit)
-    energy_level = number.within_bounds(energy_level, 0, energy_speed_limit)
-    return tostring("c" .. cargo_level .. "s" .. speed_level .. "e" .. energy_level)
+get_robot_suffix = function(levels)
+    return tostring(
+        "c" .. number.within_bounds(levels.cargo, 0, robot_cargo_research_limit) ..
+        "s" .. number.within_bounds(levels.speed, 0, robot_speed_research_limit) ..
+        "e" .. number.within_bounds(levels.energy, 0, robot_energy_research_limit)
+    )
 end
