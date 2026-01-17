@@ -1,7 +1,8 @@
 require("__heroic-library__.entities")
-require("helpers.upgrades")
+require("helpers.robot-upgrade")
 require("helpers.research")
 
+local robot_upgrade = require("helpers.robot-upgrade")
 
 --- @param recipe LuaRecipe
 --- @param robot_type string

@@ -1,6 +1,9 @@
 require("__heroic-library__.utilities")
+require("__heroic-library__.energy")
 require("helpers.suffix")
 require("vars.settings")
+
+local Energy = require("__heroic-library__.energy")
 
 --- Create Architect Robots
 --- @param c number Cargo level
@@ -29,10 +32,12 @@ local function create_architect_robot(c, s, e)
     robot_entity.max_payload_size = c + (architect_entity.max_payload_size * c * modifier_max_payload_size)
     robot_entity.speed = s + (architect_entity.speed * s * modifier_speed)
 
-    -- TODO: Move the suffix/energy numbers to the HeroicLibrary, on energy.lua
-    local energy = tonumber(string.match(robot_entity.max_energy, "%d+"))
-    local suffix = string.match(robot_entity.max_energy, "%a+")
-    robot_entity.max_energy = e + (energy * e * modifier_max_energy) .. suffix
+    -- Use Energy class for proper energy manipulation
+    local base_energy = Energy.new(architect_entity.max_energy)
+    local energy_multiplier = e * modifier_max_energy
+    local scaled_energy = Energy.new(architect_entity.max_energy)
+    scaled_energy:set_value(base_energy:value() * (1 + energy_multiplier))
+    robot_entity.max_energy = tostring(scaled_energy)
     return robot_item, robot_entity
 end
 
