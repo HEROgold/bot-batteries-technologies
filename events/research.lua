@@ -1,7 +1,6 @@
 require("__heroic-library__.technology")
 require("__heroic-library__.string")
 require("__heroic-library__.table")
-require("vars.strings")
 require("helpers.robot-upgrade")
 require("helpers.inventory-upgrade")
 require("helpers.filter-upgrade")
@@ -72,7 +71,7 @@ local function upgrade_robots_in_air(event, surface)
     local robots = {}
     for _, surf in pairs(game.surfaces) do
         table.extend(robots, surf.find_entities_filtered {
-            type = ConstructionRobot,
+            type = "construction-robot",
             force = event.research.force
         })
         table.extend(robots, surf.find_entities_filtered {

@@ -1,5 +1,4 @@
 require("__heroic-library__.inventories")
-require("vars.strings")
 require("helpers.research")
 require("helpers.upgrades")
 require("helpers.suffix")

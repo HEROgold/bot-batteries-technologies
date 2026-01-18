@@ -1,37 +1,37 @@
 local base_recipe = {
-    type = Recipe,
+    type = "recipe",
     enabled = false,
     hidden = true,
-    category = Crafting,
+    category = "crafting",
     unlock_results = true,
 }
 
 ---@type data.ConstructionRobotPrototype
 ---@diagnostic disable-next-line: assign-type-mismatch
-local base_architect = data.raw[ConstructionRobot][ConstructionRobot]
-local base_architect_item = data.raw[Item][ConstructionRobot]
+local base_architect = data.raw["construction-robot"]["construction-robot"]
+local base_architect_item = data.raw["item"]["construction-robot"]
 
 ---@type data.LogisticRobotPrototype
 ---@diagnostic disable-next-line: assign-type-mismatch
-local base_hauler = data.raw[LogisticRobot][LogisticRobot]
-local base_hauler_item = data.raw[Item][LogisticRobot]
+local base_hauler = data.raw["logistic-robot"]["logistic-robot"]
+local base_hauler_item = data.raw["item"]["logistic-robot"]
 
 
 ---@type data.RecipePrototype
 architect_recipe = table.deepcopy(base_recipe)
-architect_recipe.name = ArchitectRobot
-architect_recipe.results = {{type = Item, name = ArchitectRobot, amount = 1},}
+architect_recipe.name = "architect-robot"
+architect_recipe.results = {{type = "item", name = "architect-robot", amount = 1},}
 architect_recipe.ingredients = {
-    {type = Item, name = ConstructionRobot, amount = 1},
-    {type = Item, name = AdvancedCircuit, amount = 2},
-    {type = Item, name = FlyingRobotFrame, amount = 1},
+    {type = "item", name = "construction-robot", amount = 1},
+    {type = "item", name = "advanced-circuit", amount = 2},
+    {type = "item", name = "flying-robot-frame", amount = 1},
 }
 
 architect_entity = table.deepcopy(base_architect)
 architect_item = table.deepcopy(base_architect_item)
 
-architect_entity.name = ArchitectRobot
-architect_item.name = ArchitectRobot
+architect_entity.name = "architect-robot"
+architect_item.name = "architect-robot"
 architect_item.place_result = architect_entity.name
 architect_item.hidden = false
 architect_entity.minable.result = architect_item.name
@@ -39,19 +39,19 @@ architect_entity.minable.result = architect_item.name
 
 ---@type data.RecipePrototype
 hauler_recipe = table.deepcopy(base_recipe)
-hauler_recipe.name = HaulerRobot
-hauler_recipe.results = {{type = Item, name = HaulerRobot, amount = 1},}
+hauler_recipe.name = "hauler-robot"
+hauler_recipe.results = {{type = "item", name = "hauler-robot", amount = 1},}
 hauler_recipe.ingredients = {
-    {type = Item, name = LogisticRobot, amount = 1},
-    {type = Item, name = ElectronicCircuit, amount = 2},
-    {type = Item, name = FlyingRobotFrame, amount = 1},
+    {type = "item", name = "logistic-robot", amount = 1},
+    {type = "item", name = "electronic-circuit", amount = 2},
+    {type = "item", name = "flying-robot-frame", amount = 1},
 }
 
 hauler_entity = table.deepcopy(base_hauler)
 hauler_item = table.deepcopy(base_hauler_item)
 
-hauler_entity.name = HaulerRobot
-hauler_item.name = HaulerRobot
+hauler_entity.name = "hauler-robot"
+hauler_item.name = "hauler-robot"
 hauler_item.place_result = hauler_entity.name
 hauler_item.hidden = false
 hauler_entity.minable.result = hauler_item.name

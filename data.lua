@@ -1,9 +1,9 @@
-mod_name = "heroic-robot-upgrades"
+mod_name = "heroic-robots"
 
 -- Global requires
-require("vars.words")
-require("vars.strings")
-require("vars.settings")
+require("settings")
+
+
 
 -- Base Functionality
 require("prototypes.base")
@@ -25,5 +25,5 @@ require("prototypes.technology.robots")
 insert_research_unlocks()
 add_researches()
 
-require("prototypes.tier-switcher")
-add_tier_switcher_roboport()
+-- require("prototypes.tier-switcher")
+-- add_tier_switcher_roboport()

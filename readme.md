@@ -1,6 +1,6 @@
 # Robot Upgrades
 
-Mod page can be found [here](https://mods.factorio.com/mod/heroic-robot-upgrades)!
+Mod page can be found [here](https://mods.factorio.com/mod/heroic-robots)!
 
 ## Content
 

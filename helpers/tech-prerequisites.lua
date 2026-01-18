@@ -1,6 +1,6 @@
 require("__heroic-library__.utilities")
 require("__heroic-library__.table")
-require("vars.strings")
+
 
 --- Helper module for technology prerequisite management
 local tech_prerequisites = {}

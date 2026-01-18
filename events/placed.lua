@@ -57,7 +57,7 @@ script.on_event(
         if entities.is_type(entity, AssemblingMachine) then
             update_assembler_recipe(entity)
         end
-        if entities.is_type(entity, ConstructionRobot) or entities.is_type(entity, LogisticRobot) then
+        if entities.is_type(entity, "construction-robot") or entities.is_type(entity, LogisticRobot) then
             -- Update the flying robot entity itself
         end
         -- TODO: update ghost entities filters just like in the research event.

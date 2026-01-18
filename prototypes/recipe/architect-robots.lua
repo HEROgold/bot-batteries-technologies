@@ -1,10 +1,10 @@
-require("vars.strings")
+
 
 
 function add_architect_recipes()
-    for c=0, robot_cargo_research_limit do
-        for s=0, robot_speed_research_limit do
-            for e=0, robot_energy_research_limit do
+    for c=0, robot_cargo_research_limit:get() do
+        for s=0, robot_speed_research_limit:get() do
+            for e=0, robot_energy_research_limit:get() do
                 ---@type data.RecipePrototype
                 local recipe = table.deepcopy(architect_recipe)
                 local suffix = get_robot_suffix{
@@ -12,9 +12,9 @@ function add_architect_recipes()
                     speed = s,
                     energy = e
                 }
-                recipe.name = combine{ArchitectRobotLeveled, suffix}
+                recipe.name = "architect-robot-mk-" .. suffix
                 recipe.results = {
-                    {type = Item, name = recipe.name, amount = 1},
+                    {type = "item", name = recipe.name, amount = 1},
                 }
                 recipe.hidden = true
                 data:extend({recipe})

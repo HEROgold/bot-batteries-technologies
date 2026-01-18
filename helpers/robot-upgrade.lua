@@ -1,5 +1,5 @@
 require("__heroic-library__.string")
-require("vars.strings")
+
 require("helpers.research")
 require("helpers.upgrades")
 

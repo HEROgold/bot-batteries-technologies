@@ -1,7 +1,6 @@
 require("__heroic-library__.utilities")
 require("__heroic-library__.energy")
 require("helpers.suffix")
-require("vars.settings")
 
 local Energy = require("__heroic-library__.energy")
 
@@ -14,10 +13,10 @@ local function create_architect_robot(c, s, e)
     local robot_entity = table.deepcopy(architect_entity)
 
     local suffix = get_robot_suffix({cargo = c, speed = s, energy = e})
-    local name = combine{ArchitectRobotLeveled, suffix}
+    local name = "architect-robot-mk-" .. suffix
 
-    robot_entity.localised_name = {"entity-name." .. ArchitectRobotLeveled, tostring(c), tostring(s), tostring(e)}
-    robot_item.localised_name = {"item-name." .. ArchitectRobotLeveled, tostring(c), tostring(s), tostring(e)}
+    robot_entity.localised_name = {"entity-name.architect-robot-mk-", tostring(c), tostring(s), tostring(e)}
+    robot_item.localised_name = {"item-name.architect-robot-mk-", tostring(c), tostring(s), tostring(e)}
 
     robot_item.name = name
     robot_entity.name = name
@@ -25,16 +24,16 @@ local function create_architect_robot(c, s, e)
 
     robot_item.place_result = robot_entity.name
 
-    robot_entity.fast_replaceable_group = ConstructionRobot
+    robot_entity.fast_replaceable_group = "construction-robot"
     robot_entity.minable = robot_entity.minable
     robot_entity.minable.result = robot_item.name
 
-    robot_entity.max_payload_size = c + (architect_entity.max_payload_size * c * modifier_max_payload_size)
-    robot_entity.speed = s + (architect_entity.speed * s * modifier_speed)
+    robot_entity.max_payload_size = c + (architect_entity.max_payload_size * c * modifier_max_payload_size:get())
+    robot_entity.speed = s + (architect_entity.speed * s * modifier_speed:get())
 
     -- Use Energy class for proper energy manipulation
     local base_energy = Energy.new(architect_entity.max_energy)
-    local energy_multiplier = e * modifier_max_energy
+    local energy_multiplier = e * modifier_max_energy:get()
     local scaled_energy = Energy.new(architect_entity.max_energy)
     scaled_energy:set_value(base_energy:value() * (1 + energy_multiplier))
     robot_entity.max_energy = tostring(scaled_energy)
@@ -42,15 +41,15 @@ local function create_architect_robot(c, s, e)
 end
 
 function add_architect_robots()
-    for c=0, robot_cargo_research_limit do
-        for s=0, robot_speed_research_limit do
-            for e=0, robot_energy_research_limit do
+    for c=0, robot_cargo_research_limit:get() do
+        for s=0, robot_speed_research_limit:get() do
+            for e=0, robot_energy_research_limit:get() do
                 robot_item, robot_entity = create_architect_robot(c, s, e)
 
-                if settings.startup[ShowItems].value == true then
-                    robot_item.subgroup = ItemSubGroupRobot
-                    data:extend({robot_item})
+                if group_items:get() == true then
+                    robot_item.subgroup = "item-sub-group-robot"
                 end
+                data:extend({robot_item})
                 data:extend({robot_entity})
             end
         end
