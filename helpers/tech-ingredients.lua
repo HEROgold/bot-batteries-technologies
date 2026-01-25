@@ -1,4 +1,5 @@
 require("__heroic-library__.table")
+local Tech = require("__heroic-library__.technology")
 
 
 --- Helper module for technology ingredient management
@@ -11,11 +12,11 @@ function tech_ingredients.add_space_age_ingredients(upgrade_type, level, ingredi
     if not mods["space-age"] then return end
 
     if level >= 1 then
-        if upgrade_type == RobotUpgradeSpeed then
+        if upgrade_type == "robot-upgrade-speed" then
             table.insert(ingredients, { "metallurgic-science-pack", 1 })
-        elseif upgrade_type == RobotUpgradeEnergy then
+        elseif upgrade_type == "robot-upgrade-energy" then
             table.insert(ingredients, { "electromagnetic-science-pack", 1 })
-        elseif upgrade_type == RobotUpgradeCargo then
+        elseif upgrade_type == "robot-upgrade-cargo" then
             table.insert(ingredients, { "agricultural-science-pack", 1 })
         end
     end
@@ -34,7 +35,7 @@ end
 ---@param prerequisites table<TechnologyID>
 ---@return data.IngredientPrototype[]
 function tech_ingredients.get_all(upgrade_type, level, prerequisites)
-    local ingredients = combined_ingredients(
+    local ingredients = Tech.combined_ingredients(
         prerequisites,
         {
             { "automation-science-pack", 1 },

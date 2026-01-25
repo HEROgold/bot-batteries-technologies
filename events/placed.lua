@@ -1,4 +1,4 @@
-require("__heroic-library__.entities")
+local entities = require("__heroic-library__.entities")
 require("helpers.robot-upgrade")
 require("helpers.research")
 
