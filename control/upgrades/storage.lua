@@ -37,14 +37,11 @@ end
 ---Upgrades robots in a given entity
 ---@param entity LuaEntity
 function upgrade_robot(entity)
-    if not validate_storage(entity) then return end
+    if not validate_storage(entity) then
+        return
+    end
     for i, inventory in pairs(defines.inventory) do
-        replace_item(
-            entity,
-            inventory,
-            get_previous_robot_level(),
-            get_current_robot_level()
-        )
+        replace_item(entity, inventory, get_previous_robot_level(), get_current_robot_level())
     end
 end
 

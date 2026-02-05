@@ -3,8 +3,6 @@ mod_name = "heroic-robots"
 -- Global requires
 require("settings")
 
-
-
 -- Base Functionality
 require("prototypes.base")
 add_base_robots()
