@@ -6,7 +6,7 @@ require("helpers.suffix")
 --- Update logistic requests for a tier-switcher roboport to request all lower tier robots
 --- @param entity LuaEntity
 local function update_tier_switcher_requests(entity)
-    if entity.name ~= TierSwitcherRoboport then return end
+    if entity.name ~= "tier-switcher-roboport" then return end
     if not entity.valid then return end
     
     local logistics = entity.get_logistic_sections()
@@ -23,7 +23,7 @@ local function update_tier_switcher_requests(entity)
     -- Request lower tier robots for both architect and hauler types
     local filter_index = 1
     
-    for robot_type, base_name in pairs({architect = ArchitectRobot, hauler = HaulerRobot}) do
+    for robot_type, base_name in pairs({architect = "architect-robot", hauler = "hauler-robot"}) do
         -- Request all tiers below current research level
         for c = 0, levels.cargo do
             for s = 0, levels.speed do
@@ -38,6 +38,7 @@ local function update_tier_switcher_requests(entity)
                         if game.item_prototypes[robot_name] then
                             --- @type LogisticFilter
                             local filter = {
+                                name = "filter-" .. filter_index,
                                 index = filter_index,
                                 count = 100,  -- Request up to 100 of each lower tier
                                 value = {
@@ -65,7 +66,7 @@ end
 --- Convert robots in the tier-switcher inventory to highest tier
 --- @param entity LuaEntity
 local function convert_robots_in_tier_switcher(entity)
-    if entity.name ~= TierSwitcherRoboport then return end
+    if entity.name ~= "tier-switcher-roboport" then return end
     if not entity.valid then return end
     
     local inventory = entity.get_inventory(defines.inventory.chest)
@@ -73,7 +74,7 @@ local function convert_robots_in_tier_switcher(entity)
     
     -- Find all robots in the inventory
     local contents = inventories.find(inventory, function(item)
-        return string.starts_with(item.name, ArchitectRobot) or string.starts_with(item.name, HaulerRobot)
+        return string.starts_with(item.name, "architect-robot") or string.starts_with(item.name, "hauler-robot")
     end)
     
     -- Get current research levels
@@ -102,7 +103,7 @@ end
 --- @param force ForceID
 local function update_all_tier_switchers(surface, force)
     local tier_switchers = surface.find_entities_filtered{
-        name = TierSwitcherRoboport,
+        name = "tier-switcher-roboport",
         force = force
     }
     
@@ -127,7 +128,7 @@ end
 local function on_entity_created(event)
     local entity = event.created_entity or event.entity
     if not entity or not entity.valid then return end
-    if entity.name ~= TierSwitcherRoboport then return end
+    if entity.name ~= "tier-switcher-roboport" then return end
     
     -- Set initial requests
     update_tier_switcher_requests(entity)
@@ -138,7 +139,7 @@ end
 local function on_inventory_changed(event)
     local entity = event.destination
     if not entity or not entity.valid then return end
-    if entity.name ~= TierSwitcherRoboport then return end
+    if entity.name ~= "tier-switcher-roboport" then return end
     
     -- Convert any robots in the inventory
     convert_robots_in_tier_switcher(entity)
@@ -169,7 +170,7 @@ script.on_event(
 script.on_nth_tick(60, function(event) -- Check every second (60 ticks)
     for _, surface in pairs(game.surfaces) do
         local tier_switchers = surface.find_entities_filtered{
-            name = TierSwitcherRoboport
+            name = "tier-switcher-roboport"
         }
         
         for _, tier_switcher in pairs(tier_switchers) do
