@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.2.0
+Date: 2026-07-05
+  Changes:
+    - Migrated to the heroic-library 2.0.0 Entity class (the entities module was removed from the
+      library). No gameplay changes; requires heroic-library >= 2.0.0.
+---------------------------------------------------------------------------------------------------
 Version: 1.0.1
 Date: 2025-01-05
   Changes:
